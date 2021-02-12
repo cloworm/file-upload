@@ -1,0 +1,59 @@
+<template>
+  <div class="upload-container slds-p-vertical_large slds-p-horizontal_xlarge">
+    <div class="slds-text-align_center">
+      <lightning-icon
+        class="browse-icon"
+        icon-name="utility:opened_folder"
+        alternative-text="Browse"
+        title="Browse"
+      ></lightning-icon>
+    </div>
+    <p class="slds-text-color_weak slds-text-align_center">
+      Drag & Drop or&nbsp;
+      <label>
+        <input
+          type="file"
+          style="display: none"
+          onchange={handleInputChange}
+          accept={acceptedFileTypes}
+          name="upload"
+          multiple={allowMultiple}
+        />
+        <a>Browse</a>
+      </label>
+    </p>
+  </div>
+
+  <div>
+    <h2 class="slds-text-color_weak slds-text-title_bold">Uploaded Files</h2>
+
+    <div class="flex" if:true={fileData}>
+      <div class="slds-p-right_large">
+        <lightning-icon
+          icon-name={iconName}
+          alternative-text="doctype"
+          title="doctype"
+          size="large"
+        ></lightning-icon>
+      </div>
+
+      <div>
+        <div class="flex justify-between">
+          <div>
+            <a>{fileData.filename}</a>
+            <span
+              class="slds-text-title_bold slds-text-body_small slds-float_right"
+              >10% Complete</span
+            >
+          </div>
+        </div>
+        <div>
+          <lightning-progress-bar
+            value="10"
+            size="medium"
+          ></lightning-progress-bar>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

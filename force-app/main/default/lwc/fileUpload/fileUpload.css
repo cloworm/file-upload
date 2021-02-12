@@ -1,0 +1,26 @@
+.upload-container {
+  border: 1px dashed #dddbda;
+  border-radius: 3.5px;
+  background: #fafcfe;
+}
+
+.instructions {
+  font-size: 16px;
+  text-align: center;
+}
+
+a {
+  color: #0070d2;
+}
+
+.browse-icon {
+  --sds-c-icon-color-foreground: #0070d2;
+}
+
+.flex {
+  display: flex;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
