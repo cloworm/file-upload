@@ -4,6 +4,14 @@ import { NavigationMixin } from "lightning/navigation";
 export default class FileUploadTile extends NavigationMixin(LightningElement) {
   @api file;
 
+  get isUploaded() {
+    return this.file && this.file.ContentDocumentId;
+  }
+
+  get progress() {
+    return this.file && this.file.ContentDocumentId ? 100 : 0;
+  }
+
   get iconName() {
     if (!this.file) return "doctype:unknown";
 

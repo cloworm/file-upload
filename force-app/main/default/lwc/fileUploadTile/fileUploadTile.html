@@ -1,5 +1,5 @@
 <template>
-  <div class="flex file-container" key={file.id}>
+  <div class="flex file-container items-center" key={file.id}>
     <div class="slds-p-right_large">
       <lightning-icon
         icon-name={iconName}
@@ -15,16 +15,41 @@
             >{file.filename}</a
           >
         </div>
-        <div>
-          <span class="slds-text-body_small bold">10% Complete</span>
+        <div if:false={isUploaded}>
+          <span class="slds-text-body_small bold">{progress}%</span>
         </div>
       </div>
       <div>
+        <span
+          if:true={isUploaded}
+          class="slds-text-body_small slds-text-color_weak"
+        >
+          {file.size} bytes
+        </span>
         <lightning-progress-bar
-          value="10"
+          if:false={isUploaded}
+          value={progress}
           size="medium"
         ></lightning-progress-bar>
       </div>
+    </div>
+
+    <div class="slds-p-left_medium">
+      <lightning-icon
+        if:false={isUploaded}
+        icon-name="utility:spinner"
+        alternative-text="in progress"
+        title="in progress"
+        size="small"
+      ></lightning-icon>
+      <lightning-icon
+        if:true={isUploaded}
+        icon-name="utility:success"
+        alternative-text="success"
+        title="success"
+        variant="success"
+        size="small"
+      ></lightning-icon>
     </div>
   </div>
 </template>

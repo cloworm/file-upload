@@ -17,7 +17,8 @@ export default class FileUpload extends LightningElement {
       ContentDocumentId: "0695Y00000LsOoBQAV",
       type: "application/pdf",
       base64: "",
-      recordId: this.recordId
+      recordId: null,
+      size: 2000
     }
   ];
   isDragging = false;
@@ -45,7 +46,8 @@ export default class FileUpload extends LightningElement {
         base64: base64,
         recordId: this.recordId,
         type: file.type,
-        ContentDocumentId: null
+        ContentDocumentId: null,
+        size: file.size
       };
       this.files.push(fileData);
       console.log(fileData);
