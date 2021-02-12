@@ -1,6 +1,10 @@
 import { LightningElement, api, track } from "lwc";
 import uploadFile from "@salesforce/apex/FileUploadController.uploadFile";
 
+// TO DO check file size
+// TO DO send data in chunks
+// TO DO tell user what file type they can upload
+
 export default class FileUpload extends LightningElement {
   @api recordId;
   @api prop1;
@@ -8,11 +12,12 @@ export default class FileUpload extends LightningElement {
   allowMultiple = true;
   @track files = [
     {
-      id: this.uniqueID(),
-      filename: "Test.csv",
-      base64: "test",
-      recordId: this.recordId,
-      type: "text/csv"
+      id: 1,
+      filename: "Vlocity.pdf",
+      ContentDocumentId: "0695Y00000LsOoBQAV",
+      type: "application/pdf",
+      base64: "",
+      recordId: this.recordId
     }
   ];
   isDragging = false;
@@ -39,7 +44,8 @@ export default class FileUpload extends LightningElement {
         filename: file.name,
         base64: base64,
         recordId: this.recordId,
-        type: file.type
+        type: file.type,
+        ContentDocumentId: null
       };
       this.files.push(fileData);
       console.log(fileData);
@@ -49,10 +55,12 @@ export default class FileUpload extends LightningElement {
     reader.readAsDataURL(file);
   }
 
-  handleUpload(fileData) {
-    uploadFile(fileData)
+  handleUpload({ id, base64, filename, recordId }) {
+    uploadFile({ base64, filename, recordId })
       .then((result) => {
-        console.log("result", result);
+        console.log("ContentDocumentId", result);
+        const fileUploadedIdx = this.files.findIndex((file) => file.id === id);
+        this.files[fileUploadedIdx].ContentDocumentId = result;
       })
       .catch((error) => {
         console.log("error", error);
@@ -80,9 +88,11 @@ export default class FileUpload extends LightningElement {
   }
 
   handleDrop(event) {
-    console.log("dropped!");
     event.preventDefault();
     event.stopPropagation();
+    this.files = [];
+
+    console.log("dropped!");
     console.log("files", ...event.dataTransfer.files);
 
     const dropzone = this.template.querySelector("[data-id=dropzone]");
@@ -96,31 +106,6 @@ export default class FileUpload extends LightningElement {
       console.log("file...", file);
       this.processFile(file);
     });
-  }
-
-  get iconName() {
-    switch (this.fileData.type) {
-      case "image/png":
-        return "doctype:image";
-
-      case "text/csv":
-        return "doctype:csv";
-
-      case "application/vnd.ms-excel":
-        return "doctype:excel";
-
-      case "application/pdf":
-        return "doctype:pdf";
-
-      case "application/vnd.ms-powerpoint":
-        return "doctype:ppt";
-
-      case "application/zip":
-        return "doctype:zip";
-
-      default:
-        return "doctype:unknown";
-    }
   }
 
   uniqueID() {

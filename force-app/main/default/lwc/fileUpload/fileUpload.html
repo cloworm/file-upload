@@ -40,32 +40,7 @@
     </h2>
 
     <template for:each={files} for:item="file">
-      <div class="flex file-container" key={file.id}>
-        <div class="slds-p-right_large">
-          <lightning-icon
-            icon-name="doctype:unknown"
-            alternative-text="doctype"
-            title="doctype"
-          ></lightning-icon>
-        </div>
-
-        <div class="flex-grow flex flex-col">
-          <div class="flex justify-between">
-            <div>
-              <a>{file.filename}</a>
-            </div>
-            <div>
-              <span class="slds-text-body_small bold">10% Complete</span>
-            </div>
-          </div>
-          <div>
-            <lightning-progress-bar
-              value="10"
-              size="medium"
-            ></lightning-progress-bar>
-          </div>
-        </div>
-      </div>
+      <c-file-upload-tile file={file} key={file.id}></c-file-upload-tile>
     </template>
   </div>
 </template>

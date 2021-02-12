@@ -1,27 +1,9 @@
-.instructions {
-  font-size: 16px;
-  text-align: center;
-}
-
 a {
   color: #0070d2;
 }
 
 .browse-icon {
-  --sds-c-icon-color-foreground: #0070d2;
   --sds-c-icon-color-foreground-default: #0070d2;
-}
-
-.flex {
-  display: flex;
-}
-
-.justify-between {
-  justify-content: space-between;
-}
-
-.drag {
-  border-style: solid;
 }
 
 .box {
@@ -81,20 +63,4 @@ a {
 .browse-button {
   text-decoration: underline;
   color: #0070d2;
-}
-
-.file-container {
-  padding-bottom: 10px;
-}
-
-.flex-col {
-  flex-direction: column;
-}
-
-.flex-grow {
-  flex-grow: 1;
-}
-
-.bold {
-  font-weight: bold;
 }

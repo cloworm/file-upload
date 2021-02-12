@@ -7,21 +7,24 @@ public with sharing class FileUploadController {
    * @param {String} filename - full file name with extension, i.e. 'products.csv'
    * @param {String} recordId - Id of the record you want to attach this file to
    *
-   * @return {ContentVersion} - returns the created ContentDocumentLink Id if the
+   * @return {ContentDocument} - returns the created ContentDocumentId if the
    *   upload was successful, otherwise returns null
    */
-  @AuraEnabled(cacheable=true)
+  @AuraEnabled
   public static String uploadFile(
     String base64,
     String filename,
     String recordId
   ) {
+    System.debug(base64);
+    System.debug(filename);
+    System.debug(recordId);
     ContentVersion cv = createContentVersion(base64, filename);
     ContentDocumentLink cdl = createContentLink(cv.Id, recordId);
     if (cv == null || cdl == null) {
       return null;
     }
-    return cdl.Id;
+    return cdl.ContentDocumentId;
   }
   /*
    * @method createContentVersion() [private]
