@@ -1,59 +1,71 @@
 <template>
-  <div class="upload-container slds-p-vertical_large slds-p-horizontal_xlarge">
-    <div class="slds-text-align_center">
-      <lightning-icon
-        class="browse-icon"
-        icon-name="utility:opened_folder"
-        alternative-text="Browse"
-        title="Browse"
-      ></lightning-icon>
-    </div>
-    <p class="slds-text-color_weak slds-text-align_center">
-      Drag & Drop or&nbsp;
-      <label>
-        <input
-          type="file"
-          style="display: none"
-          onchange={handleInputChange}
-          accept={acceptedFileTypes}
-          name="upload"
-          multiple={allowMultiple}
-        />
-        <a>Browse</a>
-      </label>
-    </p>
-  </div>
-
-  <div>
-    <h2 class="slds-text-color_weak slds-text-title_bold">Uploaded Files</h2>
-
-    <div class="flex" if:true={fileData}>
-      <div class="slds-p-right_large">
+  <div
+    class="box"
+    ondragenter={handleDragEnter}
+    ondragover={handleDragEnter}
+    ondragleave={handleDragLeave}
+    ondrop={handleDrop}
+    data-id="dropzone"
+  >
+    <div class="slds-p-vertical_large slds-p-horizontal_xlarge">
+      <div class="slds-text-align_center">
         <lightning-icon
-          icon-name={iconName}
-          alternative-text="doctype"
-          title="doctype"
+          class="browse-icon"
+          icon-name="utility:opened_folder"
+          alternative-text="Browse"
+          title="Browse"
           size="large"
         ></lightning-icon>
       </div>
+      <p class="slds-text-color_weak slds-text-align_center">
+        Drag and drop or&nbsp;
+        <label>
+          <input
+            type="file"
+            style="display: none"
+            onchange={handleInputChange}
+            accept={acceptedFileTypes}
+            name="upload"
+            multiple={allowMultiple}
+          />
+          <a class="browse-button">browse</a>
+        </label>
+      </p>
+    </div>
+  </div>
 
-      <div>
-        <div class="flex justify-between">
+  <div if:true={hasFiles} class="slds-p-top_large">
+    <h2 class="slds-text-color_weak slds-text-title_bold slds-p-bottom_large">
+      Uploaded Files
+    </h2>
+
+    <template for:each={files} for:item="file">
+      <div class="flex file-container" key={file.id}>
+        <div class="slds-p-right_large">
+          <lightning-icon
+            icon-name="doctype:unknown"
+            alternative-text="doctype"
+            title="doctype"
+          ></lightning-icon>
+        </div>
+
+        <div class="flex-grow flex flex-col">
+          <div class="flex justify-between">
+            <div>
+              <a>{file.filename}</a>
+            </div>
+            <div>
+              <span class="slds-text-body_small bold">10% Complete</span>
+            </div>
+          </div>
           <div>
-            <a>{fileData.filename}</a>
-            <span
-              class="slds-text-title_bold slds-text-body_small slds-float_right"
-              >10% Complete</span
-            >
+            <lightning-progress-bar
+              value="10"
+              size="medium"
+            ></lightning-progress-bar>
           </div>
         </div>
-        <div>
-          <lightning-progress-bar
-            value="10"
-            size="medium"
-          ></lightning-progress-bar>
-        </div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
