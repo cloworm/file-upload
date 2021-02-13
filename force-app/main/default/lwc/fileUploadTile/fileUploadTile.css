@@ -1,7 +1,3 @@
-.file-container {
-  padding-bottom: 10px;
-}
-
 .flex-col {
   flex-direction: column;
 }
@@ -24,4 +20,17 @@
 
 .items-center {
   align-items: center;
+}
+
+.loading-icon {
+  animation: spin 5s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotateZ(0);
+  }
+  100% {
+    transform: rotateZ(360deg);
+  }
 }

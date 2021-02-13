@@ -10,7 +10,17 @@ export default class FileUpload extends LightningElement {
   @api prop1;
   acceptedFileTypes = "image/*";
   allowMultiple = true;
+  uploadIcon = "utility:open_folder";
   @track files = [
+    {
+      id: 2,
+      filename: "Vlocity.pdf",
+      // ContentDocumentId: "0695Y00000LsOoBQAV",
+      type: "application/pdf",
+      base64: "",
+      recordId: null,
+      size: 3500
+    },
     {
       id: 1,
       filename: "Vlocity.pdf",
@@ -25,18 +35,14 @@ export default class FileUpload extends LightningElement {
 
   handleInputChange(event) {
     this.files = [];
-
     event.target.files.forEach((file) => this.processFile(file));
   }
 
   get hasFiles() {
-    console.log("hasFiles", this.files && this.files.length > 0);
     return this.files && this.files.length > 0;
   }
 
   processFile(file) {
-    console.log("processing file!", file);
-
     const reader = new FileReader();
     reader.onload = () => {
       var base64 = reader.result.split(",")[1];
@@ -50,7 +56,6 @@ export default class FileUpload extends LightningElement {
         size: file.size
       };
       this.files.push(fileData);
-      console.log(fileData);
 
       this.handleUpload(fileData);
     };
@@ -60,7 +65,6 @@ export default class FileUpload extends LightningElement {
   handleUpload({ id, base64, filename, recordId }) {
     uploadFile({ base64, filename, recordId })
       .then((result) => {
-        console.log("ContentDocumentId", result);
         const fileUploadedIdx = this.files.findIndex((file) => file.id === id);
         this.files[fileUploadedIdx].ContentDocumentId = result;
       })
@@ -74,19 +78,15 @@ export default class FileUpload extends LightningElement {
     event.stopPropagation();
 
     if (!this.isDragging) {
-      console.log("animation start");
-      const dropzone = this.template.querySelector("[data-id=dropzone]");
-      dropzone.classList.add("box-animate");
-      console.log("added box-animate", dropzone.classList);
+      this.showDropzoneHover();
     }
-
-    this.isDragging = true;
   }
 
   handleDragLeave(event) {
-    console.log("drag leave");
     event.preventDefault();
     event.stopPropagation();
+
+    this.hideDropzoneHover();
   }
 
   handleDrop(event) {
@@ -94,18 +94,11 @@ export default class FileUpload extends LightningElement {
     event.stopPropagation();
     this.files = [];
 
-    console.log("dropped!");
     console.log("files", ...event.dataTransfer.files);
 
-    const dropzone = this.template.querySelector("[data-id=dropzone]");
-    // this.log("dropzone", dropzone);
-    dropzone.classList.remove("box-animate");
-    console.log("removed drag", dropzone.classList);
-    this.isDragging = false;
-    console.log("animation end");
-    console.log("files type", typeof event.dataTransfer.files);
+    this.hideDropzoneHover();
+
     [...event.dataTransfer.files].forEach((file) => {
-      console.log("file...", file);
       this.processFile(file);
     });
   }
@@ -115,5 +108,19 @@ export default class FileUpload extends LightningElement {
     // Convert it to base 36 (numbers + letters), and grab the first 9 characters
     // after the decimal.
     return "_" + Math.random().toString(36).substr(2, 9);
+  }
+
+  showDropzoneHover() {
+    const dropzone = this.template.querySelector("[data-id=dropzone]");
+    dropzone.classList.add("box-animate");
+    this.uploadIcon = "utility:opened_folder";
+    this.isDragging = true;
+  }
+
+  hideDropzoneHover() {
+    const dropzone = this.template.querySelector("[data-id=dropzone]");
+    dropzone.classList.remove("box-animate");
+    this.uploadIcon = "utility:open_folder";
+    this.isDragging = false;
   }
 }

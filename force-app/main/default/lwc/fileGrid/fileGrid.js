@@ -24,4 +24,8 @@ export default class FileGrid extends LightningElement {
       console.error("error");
     }
   }
+
+  get fileCount() {
+    return this.files && this.files.length ? this.files.length : 0;
+  }
 }

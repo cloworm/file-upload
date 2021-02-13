@@ -1,5 +1,10 @@
 <template>
-  <div class="flex file-container items-center" key={file.id}>
+  <!-- Uploading Component State -->
+  <div
+    class="flex file-container items-center slds-p-bottom_medium"
+    key={file.id}
+    if:false={isUploaded}
+  >
     <div class="slds-p-right_large">
       <lightning-icon
         icon-name={iconName}
@@ -15,35 +20,52 @@
             >{file.filename}</a
           >
         </div>
-        <div if:false={isUploaded}>
-          <span class="slds-text-body_small bold">{progress}%</span>
-        </div>
       </div>
       <div>
-        <span
-          if:true={isUploaded}
-          class="slds-text-body_small slds-text-color_weak"
-        >
-          {file.size} bytes
+        <span class="slds-text-body_small slds-text-color_weak">
+          Uploading...
         </span>
-        <lightning-progress-bar
-          if:false={isUploaded}
-          value={progress}
-          size="medium"
-        ></lightning-progress-bar>
       </div>
     </div>
 
     <div class="slds-p-left_medium">
       <lightning-icon
-        if:false={isUploaded}
+        class="loading-icon"
         icon-name="utility:spinner"
         alternative-text="in progress"
         title="in progress"
         size="small"
       ></lightning-icon>
+    </div>
+  </div>
+
+  <!-- Uploaded Component State -->
+  <div
+    class="flex file-container items-center slds-p-bottom_medium"
+    key={file.id}
+    if:true={isUploaded}
+  >
+    <div class="slds-p-right_large">
       <lightning-icon
-        if:true={isUploaded}
+        icon-name={iconName}
+        alternative-text="doctype"
+        title="doctype"
+      ></lightning-icon>
+    </div>
+
+    <div class="flex-grow flex flex-col">
+      <div class="flex justify-between">
+        <div>{file.filename}</div>
+      </div>
+      <div>
+        <span class="slds-text-body_small slds-text-color_weak">
+          {file.size} bytes
+        </span>
+      </div>
+    </div>
+
+    <div class="slds-p-left_medium">
+      <lightning-icon
         icon-name="utility:success"
         alternative-text="success"
         title="success"
