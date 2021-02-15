@@ -7,8 +7,12 @@ import uploadFile from "@salesforce/apex/FileUploadController.uploadFile";
 
 export default class FileUpload extends LightningElement {
   @api recordId;
-  @api prop1;
-  acceptedFileTypes = "image/*";
+
+  // Admin Config properties
+  @api allowImages;
+  @api allowVideos;
+  @api showGrid;
+
   allowMultiple = true;
   uploadIcon = "utility:open_folder";
   @track files = [
@@ -32,6 +36,22 @@ export default class FileUpload extends LightningElement {
     }
   ];
   isDragging = false;
+
+  // return file types options allowed by admin
+  get acceptedFileTypes() {
+    const acceptedTypes = [];
+
+    // set allowed types based on properties set by admin
+    if (this.allowImages) {
+      acceptedTypes.push("image/*");
+    }
+
+    if (this.allowVideos) {
+      acceptedTypes.push("video/*");
+    }
+
+    return acceptedTypes.join(" ");
+  }
 
   handleInputChange(event) {
     this.files = [];

@@ -17,7 +17,7 @@
           size="large"
         ></lightning-icon>
       </div>
-      <p class="slds-text-color_weak slds-text-align_center">
+      <p class="slds-text-color_weak slds-text-align_center slds-p-top_small">
         Drag and drop or&nbsp;
         <label>
           <input
@@ -44,5 +44,5 @@
     </template>
   </div>
 
-  <c-file-grid record={recordId}></c-file-grid>
+  <c-file-grid if:true={showGrid} record={recordId}></c-file-grid>
 </template>

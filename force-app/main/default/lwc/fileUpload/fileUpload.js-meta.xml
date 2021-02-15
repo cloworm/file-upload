@@ -9,7 +9,25 @@
    </targets>
    <targetConfigs>
         <targetConfig targets="lightning__RecordPage">
-            <property name="prop1" type="String" />
+            <property
+        name="allowImages"
+        label="Allow Images"
+        type="Boolean"
+        default="true"
+      />
+                <property
+        name="allowVideos"
+        label="Allow Videos"
+        type="Boolean"
+        default="true"
+      />
+      <property
+        name="showGrid"
+        label="Show Grid Component"
+        type="Boolean"
+        default="true"
+      />
+
         </targetConfig>
    </targetConfigs>
 </LightningComponentBundle>

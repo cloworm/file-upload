@@ -3,9 +3,20 @@ import getFiles from "@salesforce/apex/FileGridController.getFiles";
 
 const columns = [
   { label: "Title", fieldName: "Title" },
-  { label: "Size", fieldName: "ContentSize" },
-  { label: "FileType", fieldName: "FileType" },
-  { label: "Modified On", fieldName: "ContentModifiedDate", type: "date" }
+  { label: "Size (bytes)", fieldName: "ContentSize" },
+  { label: "Type", fieldName: "FileType" },
+  {
+    label: "Modified On",
+    fieldName: "ContentModifiedDate",
+    type: "date",
+    typeAttributes: {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit"
+    }
+  }
 ];
 
 export default class FileGrid extends LightningElement {
