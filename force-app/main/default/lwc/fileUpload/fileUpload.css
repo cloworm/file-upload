@@ -64,3 +64,7 @@ a {
   text-decoration: underline;
   color: #0070d2;
 }
+
+.text-light {
+  color: #ccc;
+}

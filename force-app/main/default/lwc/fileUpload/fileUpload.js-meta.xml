@@ -21,6 +21,12 @@
         type="Boolean"
         default="true"
       />
+                      <property
+        name="allowPDFs"
+        label="Allow PDFs"
+        type="Boolean"
+        default="true"
+      />
       <property
         name="showGrid"
         label="Show Grid Component"
