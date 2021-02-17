@@ -1,4 +1,4 @@
-import { LightningElement, wire, api } from "lwc";
+import { LightningElement, wire, api, track } from "lwc";
 import getFiles from "@salesforce/apex/FileGridController.getFiles";
 import { NavigationMixin } from "lightning/navigation";
 import { deleteRecord } from "lightning/uiRecordApi";
@@ -13,7 +13,7 @@ const SUCCESS_VARIANT = "success";
 
 const columns = [
   {
-    label: "Title",
+    label: "Filename",
     fieldName: "Title",
     wrapText: true,
     hideDefaultActions: true
@@ -21,6 +21,7 @@ const columns = [
   {
     label: "Size (bytes)",
     fieldName: "ContentSize",
+    type: "number",
     wrapText: true,
     hideDefaultActions: true
   },
@@ -76,10 +77,12 @@ const columns = [
 export default class FileGrid extends NavigationMixin(LightningElement) {
   @api record;
   files;
+  @track filteredFiles;
   columns = columns;
   showDialog = false;
   recordToDelete;
   wiredFilesResult;
+  searchTerm;
 
   @wire(getFiles, { id: "$record" })
   wiredFiles(result) {
@@ -87,6 +90,9 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
 
     if (!result.data) return;
     this.files = result.data;
+
+    // Set value of filteredFiles
+    this.applyFilter();
 
     if (result.error) {
       console.error("error", result.error);
@@ -175,5 +181,23 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
   @api
   async refresh() {
     refreshApex(this.wiredFilesResult);
+  }
+
+  handleInputChange(event) {
+    const search = event.target.value;
+    this.searchTerm = search ? search.trim() : "";
+    this.applyFilter();
+  }
+
+  // Filter files by title
+  applyFilter() {
+    if (!this.searchTerm || this.searchTerm.trim().length === 0) {
+      this.filteredFiles = this.files;
+      return;
+    }
+
+    this.filteredFiles = this.files.filter((file) => {
+      return file.Title.match(this.searchTerm, "i");
+    });
   }
 }

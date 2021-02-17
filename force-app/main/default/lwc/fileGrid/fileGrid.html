@@ -3,10 +3,18 @@
     All Files ({fileCount})
   </h2>
 
+  <div class="slds-p-bottom_medium">
+    <lightning-input
+      type="search"
+      label="Search by filename"
+      onchange={handleInputChange}
+    ></lightning-input>
+  </div>
+
   <lightning-datatable
     hide-checkbox-column
     key-field="Id"
-    data={files}
+    data={filteredFiles}
     columns={columns}
     onrowaction={handleRowAction}
   ></lightning-datatable>
