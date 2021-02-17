@@ -1,0 +1,70 @@
+a {
+  color: #0070d2;
+}
+
+.browse-icon {
+  --sds-c-icon-color-foreground-default: #0070d2;
+}
+
+.box {
+  border-radius: 3.5px;
+  background-color: #fafcfe;
+  background-image: repeating-linear-gradient(
+      0deg,
+      #5eb4ff,
+      #5eb4ff 7px,
+      transparent 7px,
+      transparent 14px,
+      #5eb4ff 14px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      #5eb4ff,
+      #5eb4ff 7px,
+      transparent 7px,
+      transparent 14px,
+      #5eb4ff 14px
+    ),
+    repeating-linear-gradient(
+      180deg,
+      #5eb4ff,
+      #5eb4ff 7px,
+      transparent 7px,
+      transparent 14px,
+      #5eb4ff 14px
+    ),
+    repeating-linear-gradient(
+      270deg,
+      #5eb4ff,
+      #5eb4ff 7px,
+      transparent 7px,
+      transparent 14px,
+      #5eb4ff 14px
+    );
+  background-size: 1px calc(100% + 14px), calc(100% + 14px) 1px,
+    1px calc(100% + 14px), calc(100% + 14px) 1px;
+  background-position: 0 0, 0 0, 100% 0, 0 100%;
+  background-repeat: no-repeat;
+}
+
+.box-animate {
+  animation: borderAnimation 0.5s infinite linear;
+}
+
+@keyframes borderAnimation {
+  from {
+    background-position: 0 0, -14px 0, 100% -14px, 0 100%;
+  }
+  to {
+    background-position: 0 -14px, 0 0, 100% 0, -14px 100%;
+  }
+}
+
+.browse-button {
+  text-decoration: underline;
+  color: #0070d2;
+}
+
+.text-light {
+  color: #ccc;
+}

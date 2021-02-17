@@ -1,0 +1,48 @@
+<template>
+  <div
+    class="box"
+    ondragenter={handleDragEnter}
+    ondragover={handleDragEnter}
+    ondragleave={handleDragLeave}
+    ondrop={handleDrop}
+    data-id="dropzone"
+  >
+    <div class="slds-p-vertical_x-large slds-p-horizontal_large">
+      <div class="slds-text-align_center">
+        <lightning-icon
+          class="browse-icon"
+          icon-name={uploadIcon}
+          alternative-text="Browse"
+          title="Browse"
+          size="large"
+        ></lightning-icon>
+      </div>
+      <p class="slds-text-color_weak slds-text-align_center slds-p-top_medium">
+        Drag and drop or&nbsp;
+        <label>
+          <input
+            type="file"
+            style="display: none"
+            onchange={handleInputChange}
+            accept={acceptedFileTypes.mimeTypes}
+            name="upload"
+            multiple={allowMultiple}
+          />
+          <a class="browse-button">browse</a>
+        </label>
+      </p>
+    </div>
+  </div>
+
+  <div if:true={hasFiles} class="slds-p-top_large">
+    <h2 class="slds-text-color_weak slds-text-title_bold slds-p-bottom_large">
+      Uploaded Files
+    </h2>
+
+    <template for:each={files} for:item="file">
+      <c-file-upload-tile file={file} key={file.id}></c-file-upload-tile>
+    </template>
+  </div>
+
+  <c-file-grid if:true={showGrid} record={recordId}></c-file-grid>
+</template>
