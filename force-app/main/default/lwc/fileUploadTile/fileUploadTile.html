@@ -18,8 +18,17 @@
         <div>{file.filename}</div>
       </div>
       <div>
-        <span class="slds-text-body_small slds-text-color_weak">
+        <span
+          class="slds-text-body_small slds-text-color_weak"
+          if:false={file.error}
+        >
           Uploading...
+        </span>
+        <span
+          class="slds-text-body_small slds-text-color_error"
+          if:true={file.error}
+        >
+          {file.error}
         </span>
       </div>
     </div>
@@ -31,6 +40,15 @@
         alternative-text="in progress"
         title="in progress"
         size="small"
+        if:false={file.error}
+      ></lightning-icon>
+      <lightning-icon
+        icon-name="utility:error"
+        alternative-text="error"
+        title="Error"
+        size="small"
+        if:true={file.error}
+        variant="error"
       ></lightning-icon>
     </div>
   </div>

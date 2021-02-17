@@ -53,6 +53,7 @@ export default class FileUpload extends LightningElement {
   @api recordId;
 
   // Component Properties
+  // TO DO convert to getter & setter, getter returns an array
   @api allowedFileExtensions;
   @api showGrid;
 
@@ -137,8 +138,15 @@ export default class FileUpload extends LightningElement {
         error: null
       };
 
-      // Check mime type
-      console.log("type", file.type);
+      // Check if file extension is allowed
+      const extension = this.getFileExtension(file.name);
+      if (
+        !file.type ||
+        !this.allowedFileExtensions.split(",").includes("." + extension)
+      ) {
+        // Display error if not an allowed type
+        fileData.error = "File extension is not allowed";
+      }
 
       // Add to uploaded file list
       this.files.push(fileData);
@@ -148,6 +156,10 @@ export default class FileUpload extends LightningElement {
     };
 
     reader.readAsDataURL(file);
+  }
+
+  getFileExtension(filename) {
+    return filename.split(".").pop();
   }
 
   // Create a ContentVersion and attach file to the given recordId using the provided base64 and filename

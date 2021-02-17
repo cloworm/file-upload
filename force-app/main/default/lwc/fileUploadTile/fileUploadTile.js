@@ -41,7 +41,6 @@ export default class FileUploadTile extends NavigationMixin(LightningElement) {
 
   handlePreview(event) {
     const recordId = event.currentTarget.dataset.id;
-    console.log("handling preview of file with ContentDocumentId", recordId);
 
     this[NavigationMixin.Navigate]({
       type: "standard__namedPage",
