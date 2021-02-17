@@ -1,16 +1,63 @@
 import { LightningElement, api, track } from "lwc";
 import uploadFile from "@salesforce/apex/FileUploadController.uploadFile";
 
+const extensionToMimeType = {
+  csv: "text/csv",
+  doc: "application/msword",
+  docx:
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  dot: "application/msword",
+  ics: "text/calendar",
+  mdb: "application/vnd.ms-access",
+  pdf: "application/pdf",
+  pps: "application/vnd.ms-powerpoint",
+  ppsx:
+    "application/vnd.openxmlformats-officedocument.presentationml.slideshow",
+  ppt: "application/vnd.ms-powerpoint",
+  pptx:
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  rtf: "application/rtf",
+  sxc: "application/vnd.sun.xml.calc",
+  sxi: "application/vnd.sun.xml.impress",
+  sxw: "application/vnd.sun.xml.writer",
+  txt: "text/plain",
+  xls: "application/vnd.ms-excel",
+  xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  bmp: "image/bmp",
+  gif: "image/gif",
+  jpeg: "image/jpeg",
+  jpg: "image/jpeg",
+  png: "image/png",
+  tif: "image/tiff",
+  tiff: "image/tiff",
+  vsd: "application/vnd.visio",
+  mp3: "audio/mpeg",
+  ogg: "application/ogg",
+  wav: "audio/wav",
+  mov: "video/quicktime",
+  mpeg: "video/mpeg",
+  mpg: "video/mpeg",
+  zip: "application/zip",
+  css: "text/css",
+  htm: "text/html",
+  html: "text/html",
+  js: "text/javascript",
+  xml: "	text/xml",
+  xsl: "text/xsl",
+  xslt: "application/xslt+xml"
+};
+
 // TO DO check file size
 // TO DO send data in chunks
 export default class FileUpload extends LightningElement {
   @api recordId;
 
-  // Admin Config properties
-  @api acceptedMimeTypes;
+  // Component Properties
+  @api allowedFileExtensions;
   @api showGrid;
 
   uploadIcon = "utility:open_folder";
+  extensionToMimeType = extensionToMimeType;
   @track files = [
     // {
     //   id: 2,
@@ -33,13 +80,39 @@ export default class FileUpload extends LightningElement {
   ];
   isDragging = false;
 
-  // return file types options allowed by admin
-  get acceptedFileTypes() {
-    return "images";
+  get hasInvalidConfig() {
+    return [...new Set(this.allowedFileExtensions.split(","))].find(
+      (extension) => {
+        let key = extension.replace(".", "");
+        return !this.extensionToMimeType[key];
+      }
+    );
+  }
+
+  // Get list of extensions set by admin in component properties
+  get allowedExtensions() {
+    // Remove any duplicates
+    const uniqueExtensions = [
+      ...new Set(this.allowedFileExtensions.split(","))
+    ];
+
+    return uniqueExtensions.sort().join(", ");
+  }
+
+  // Use allowedFileExtensions to get list of allowed mime types
+  get acceptedMimeTypes() {
+    if (!this.allowedFileExtensions) return "";
+
+    return this.allowedFileExtensions
+      .split(",")
+      .map((extension) => {
+        let key = extension.replace(".", "");
+        return this.extensionToMimeType[key];
+      })
+      .join(",");
   }
 
   handleInputChange(event) {
-    console.log("files", ...event.target.files);
     [...event.target.files].forEach((file) => this.processFile(file));
   }
 
@@ -60,8 +133,12 @@ export default class FileUpload extends LightningElement {
         recordId: this.recordId,
         type: file.type,
         ContentDocumentId: null,
-        size: file.size
+        size: file.size,
+        error: null
       };
+
+      // Check mime type
+      console.log("type", file.type);
 
       // Add to uploaded file list
       this.files.push(fileData);
@@ -73,7 +150,7 @@ export default class FileUpload extends LightningElement {
     reader.readAsDataURL(file);
   }
 
-  // Creates a ContentVersion and attaches file to the given recordId using the provided base64 and filename
+  // Create a ContentVersion and attach file to the given recordId using the provided base64 and filename
   handleUpload({ id, base64, filename, recordId }) {
     uploadFile({ base64, filename, recordId })
       .then((result) => {
@@ -81,7 +158,7 @@ export default class FileUpload extends LightningElement {
         this.files[fileUploadedIdx].ContentDocumentId = result;
 
         if (this.showGrid) {
-          // Refreshes the file grid component
+          // Refresh the file grid component
           this.template.querySelector("c-file-grid").refresh();
         }
       })
@@ -114,7 +191,6 @@ export default class FileUpload extends LightningElement {
     event.preventDefault();
     event.stopPropagation();
 
-    // Reset uploaded files list
     console.log("files", ...event.dataTransfer.files);
 
     this.hideDropzoneHover();
