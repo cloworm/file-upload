@@ -70,6 +70,11 @@ Ex: .png,.gif,.docx
 | .xsl      | text/xsl                                                                  |
 | .xslt     | application/xslt+xml                                                      |
 
+## Requirements
+
+- [Node.js](https://nodejs.org/en/)
+- [Salesforce CLI](https://developer.salesforce.com/tools/sfdxcli)
+
 ## Usage
 
 Clone project
