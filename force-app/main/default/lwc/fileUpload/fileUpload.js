@@ -84,7 +84,7 @@ export default class FileUpload extends LightningElement {
   get hasInvalidConfig() {
     return [...new Set(this.allowedFileExtensions.split(","))].find(
       (extension) => {
-        let key = extension.replace(".", "");
+        let key = extension.replace(".", "").toLowerCase();
         return !this.extensionToMimeType[key];
       }
     );
@@ -152,7 +152,9 @@ export default class FileUpload extends LightningElement {
       this.files.push(fileData);
 
       // Upload file
-      this.handleUpload(fileData);
+      if (!fileData.error) {
+        this.handleUpload(fileData);
+      }
     };
 
     reader.readAsDataURL(file);
