@@ -3,6 +3,7 @@ import getFiles from "@salesforce/apex/FileGridController.getFiles";
 import { NavigationMixin } from "lightning/navigation";
 import { deleteRecord } from "lightning/uiRecordApi";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
+import { refreshApex } from "@salesforce/apex";
 
 const ERROR_TITLE = "Error";
 const ERROR_VARIANT = "error";
@@ -78,15 +79,17 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
   columns = columns;
   showDialog = false;
   recordToDelete;
+  wiredFilesResult;
 
   @wire(getFiles, { id: "$record" })
-  wiredFiles({ error, data }) {
-    if (!data) return;
-    console.log("wiredFiles", data);
-    this.files = data;
+  wiredFiles(result) {
+    this.wiredFilesResult = result;
 
-    if (error) {
-      console.error("error");
+    if (!result.data) return;
+    this.files = result.data;
+
+    if (result.error) {
+      console.error("error", result.error);
     }
   }
 
@@ -153,7 +156,6 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
 
       // Refresh file list
       await this.refresh();
-      // await refreshApex(this.files);
     } catch (error) {
       const evt = new ShowToastEvent({
         title: ERROR_TITLE,
@@ -172,8 +174,6 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
   // Refresh file list
   @api
   async refresh() {
-    const files = await getFiles({ id: this.record });
-    this.files = files;
-    console.log("refreshed files", files);
+    refreshApex(this.wiredFilesResult);
   }
 }

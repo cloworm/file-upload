@@ -39,7 +39,8 @@ export default class FileUpload extends LightningElement {
   }
 
   handleInputChange(event) {
-    event.target.files.forEach((file) => this.processFile(file));
+    console.log("files", ...event.target.files);
+    [...event.target.files].forEach((file) => this.processFile(file));
   }
 
   get hasFiles() {
