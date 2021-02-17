@@ -8,5 +8,16 @@
     key-field="Id"
     data={files}
     columns={columns}
+    onrowaction={handleRowAction}
   ></lightning-datatable>
+
+  <c-confirm-dialog
+    show={showDialog}
+    title="Confirm Delete"
+    message="Are you sure you want to delete this file?"
+    confirmlabel="Delete"
+    onconfirm={handleConfirm}
+    onclose={handleClose}
+    record={recordToDelete}
+  ></c-confirm-dialog>
 </template>

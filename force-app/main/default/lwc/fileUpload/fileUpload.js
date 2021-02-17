@@ -1,69 +1,41 @@
 import { LightningElement, api, track } from "lwc";
 import uploadFile from "@salesforce/apex/FileUploadController.uploadFile";
-import { getRecordNotifyChange } from "lightning/uiRecordApi";
 
 // TO DO check file size
 // TO DO send data in chunks
-// TO DO tell user what file type they can upload
-
 export default class FileUpload extends LightningElement {
   @api recordId;
 
   // Admin Config properties
-  @api allowImages;
-  @api allowVideos;
-  @api allowPDFs;
+  @api acceptedMimeTypes;
   @api showGrid;
 
-  allowMultiple = true;
   uploadIcon = "utility:open_folder";
   @track files = [
-    {
-      id: 2,
-      filename: "Vlocity.pdf",
-      // ContentDocumentId: "0695Y00000LsOoBQAV",
-      type: "application/pdf",
-      base64: "",
-      recordId: null,
-      size: 3500
-    },
-    {
-      id: 1,
-      filename: "Vlocity.pdf",
-      ContentDocumentId: "0695Y00000LsOoBQAV",
-      type: "application/pdf",
-      base64: "",
-      recordId: null,
-      size: 2000
-    }
+    // {
+    //   id: 2,
+    //   filename: "Vlocity.pdf",
+    //   // ContentDocumentId: "0695Y00000LsOoBQAV",
+    //   type: "application/pdf",
+    //   base64: "",
+    //   recordId: null,
+    //   size: 3500
+    // },
+    // {
+    //   id: 1,
+    //   filename: "Vlocity.pdf",
+    //   ContentDocumentId: "0695Y00000LsOoBQAV",
+    //   type: "application/pdf",
+    //   base64: "",
+    //   recordId: null,
+    //   size: 2000
+    // }
   ];
   isDragging = false;
 
   // return file types options allowed by admin
   get acceptedFileTypes() {
-    const acceptedMimeTypes = [];
-    const acceptedTypes = [];
-
-    // set allowed types based on properties set by admin
-    if (this.allowImages) {
-      acceptedMimeTypes.push("image/*");
-      acceptedTypes.push("image");
-    }
-
-    if (this.allowVideos) {
-      acceptedMimeTypes.push("video/*");
-      acceptedTypes.push("video");
-    }
-
-    if (this.allowPDFs) {
-      acceptedMimeTypes.push("application/pdf");
-      acceptedTypes.push("PDF");
-    }
-
-    return {
-      mimeTypes: acceptedMimeTypes.join(","),
-      message: "File should be  " + acceptedTypes.join(", ")
-    };
+    return "images";
   }
 
   handleInputChange(event) {
@@ -107,8 +79,10 @@ export default class FileUpload extends LightningElement {
         const fileUploadedIdx = this.files.findIndex((file) => file.id === id);
         this.files[fileUploadedIdx].ContentDocumentId = result;
 
-        // Notify LDS that you've changed the record outside its mechanisms.
-        getRecordNotifyChange([{ recordId: this.recordId }]);
+        if (this.showGrid) {
+          // Refreshes the file grid component
+          this.template.querySelector("c-file-grid").refresh();
+        }
       })
       .catch((error) => {
         console.log("error", error);
@@ -134,6 +108,7 @@ export default class FileUpload extends LightningElement {
   }
 
   // Get files dropped on dropzone
+  // TODO - check mime type
   handleDrop(event) {
     event.preventDefault();
     event.stopPropagation();

@@ -15,6 +15,7 @@ public inherited sharing class FileGridController {
       SELECT Id, FileType, Title, ContentModifiedDate, ContentSize
       FROM ContentDocument
       WHERE Id IN :contentDocumentIds
+      ORDER BY ContentModifiedDate DESC
     ];
   }
 }

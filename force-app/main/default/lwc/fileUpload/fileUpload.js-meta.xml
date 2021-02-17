@@ -1,39 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
-    <apiVersion>50.0</apiVersion>
-    <isExposed>true</isExposed>
-    <targets>
-        <target>lightning__RecordPage</target>
-        <target>lightning__AppPage</target>
-        <target>lightning__HomePage</target>
-   </targets>
-   <targetConfigs>
-        <targetConfig targets="lightning__RecordPage">
-            <property
-        name="allowImages"
-        label="Allow Images"
-        type="Boolean"
-        default="true"
+<apiVersion>50.0</apiVersion>
+<isExposed>true</isExposed>
+<targets>
+  <target>lightning__RecordPage</target>
+  <target>lightning__AppPage</target>
+  <target>lightning__HomePage</target>
+</targets>
+<targetConfigs>
+  <targetConfig targets="lightning__RecordPage">
+    <property
+        name="acceptedMimeTypes"
+        label="Allowed Mime Types"
+        type="String"
+        default="image/*,application/pdf,application/msword,application/vnd.ms-powerpointapplication/vnd.openxmlformats-officedocument.presentationml.presentation"
       />
-                <property
-        name="allowVideos"
-        label="Allow Videos"
-        type="Boolean"
-        default="true"
-      />
-                      <property
-        name="allowPDFs"
-        label="Allow PDFs"
-        type="Boolean"
-        default="true"
-      />
-      <property
+
+    <property
         name="showGrid"
         label="Show Grid Component"
         type="Boolean"
         default="true"
       />
 
-        </targetConfig>
-   </targetConfigs>
+  </targetConfig>
+</targetConfigs>
 </LightningComponentBundle>
