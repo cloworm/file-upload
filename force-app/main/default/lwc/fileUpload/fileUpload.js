@@ -166,8 +166,8 @@ export default class FileUpload extends LightningElement {
   handleUpload({ id, base64, filename, recordId }) {
     uploadFile({ base64, filename, recordId })
       .then((result) => {
-        const fileUploadedIdx = this.files.findIndex((file) => file.id === id);
-        this.files[fileUploadedIdx].ContentDocumentId = result;
+        const idx = this.getFileIdxById(id);
+        this.files[idx].ContentDocumentId = result;
 
         if (this.showGrid) {
           // Refresh the file grid component
@@ -176,6 +176,8 @@ export default class FileUpload extends LightningElement {
       })
       .catch((error) => {
         console.log("error", error);
+        const idx = this.getFileIdxById(id);
+        this.files[idx].error = "Server error";
       });
   }
 
@@ -187,6 +189,10 @@ export default class FileUpload extends LightningElement {
     if (!this.isDragging) {
       this.showDropzoneHover();
     }
+  }
+
+  getFileIdxById(id) {
+    return this.files.findIndex((file) => file.id === id);
   }
 
   // Remove dropzone hover styles ondragleave
