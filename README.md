@@ -1,18 +1,48 @@
-# Salesforce DX Project: Next Steps
+# File Upload LWC
 
-Now that you’ve created a Salesforce DX project, what’s next? Here are some documentation resources to get you started.
+> The File Upload Lightning Web Component uses the HTML Drag and Drop API to let your users upload files via drag and drop or browse on any Salesforce record page.
 
-## How Do You Plan to Deploy Your Changes?
+## Demo
 
-Do you want to deploy a set of changes, or create a self-contained application? Choose a [development model](https://developer.salesforce.com/tools/vscode/en/user-guide/development-models).
+![Demo](https://user-images.githubusercontent.com/5566310/108149734-73379480-70a1-11eb-96fe-1a9eb3588a83.png)
 
-## Configure Your Salesforce DX Project
+## Features
 
-The `sfdx-project.json` file contains useful configuration information for your project. See [Salesforce DX Project Configuration](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ws_config.htm) in the _Salesforce DX Developer Guide_ for details about this file.
+- Drag and Drop to upload files
+- Configurable mimetypes
+- Optional grid component to display all files on a record which can be filtered by filename
 
-## Read All About It
+## Component Properties
 
-- [Salesforce Extensions Documentation](https://developer.salesforce.com/tools/vscode/)
-- [Salesforce CLI Setup Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_intro.htm)
-- [Salesforce DX Developer Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_intro.htm)
-- [Salesforce CLI Command Reference](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference.htm)
+<!-- ![Component Properties](https://user-images.githubusercontent.com/5566310/108149925-c3165b80-70a1-11eb-9072-e8de416fc4ec.png) -->
+
+| Property            | Type     | Description                                   |
+| ------------------- | -------- | --------------------------------------------- |
+| Allowed Mime Types  | String   | Comma separated list of allowed mime types    |
+| Show Grid Component | Checkbox | Display datatable of all files for the record |
+
+## Usage
+
+Clone project
+
+```
+git clone https://github.com/cloworm/file-upload
+```
+
+Install dependencies
+
+```
+npm i
+```
+
+Deploy to a sandbox
+
+```
+sfdx force:source:deploy -p force-app/main/default -u {org-alias}
+```
+
+or, Deploy to a scratch org
+
+```
+sfdx force:source:push -p force-app/main/default -u {org-alias}
+```
