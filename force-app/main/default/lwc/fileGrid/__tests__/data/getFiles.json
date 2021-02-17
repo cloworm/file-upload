@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "Title": {
+      "value": "Test.png"
+    },
+    "ContentSize": {
+      "value": 3000
+    },
+    "FileType": {
+      "value": "PNG"
+    },
+    "ContentModifiedDate": {
+      "value": 1613417232115
+    },
+    "ContentDocumentId": {
+      "value": "12345"
+    }
+  }
+}

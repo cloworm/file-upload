@@ -1,75 +1,95 @@
 <template>
-  <!-- Uploading Component State -->
-  <div
-    class="flex file-container items-center slds-p-bottom_medium"
-    key={file.id}
-    if:false={isUploaded}
-  >
-    <div class="slds-p-right_large">
-      <lightning-icon
-        icon-name={iconName}
-        alternative-text="doctype"
-        title="doctype"
-      ></lightning-icon>
-    </div>
-
-    <div class="flex-grow flex flex-col">
-      <div class="flex justify-between">
-        <div>{file.filename}</div>
+  <template if:true={file}>
+    <!-- Uploading Component State -->
+    <div
+      class="flex file-container items-center slds-p-bottom_medium"
+      key={file.id}
+      if:false={isUploaded}
+    >
+      <div class="slds-p-right_large">
+        <lightning-icon
+          icon-name={iconName}
+          alternative-text="doctype"
+          title="doctype"
+        ></lightning-icon>
       </div>
-      <div>
-        <span class="slds-text-body_small slds-text-color_weak">
-          Uploading...
-        </span>
+
+      <div class="flex-grow flex flex-col">
+        <div class="flex justify-between">
+          <div>{file.filename}</div>
+        </div>
+        <div>
+          <span
+            class="slds-text-body_small slds-text-color_weak"
+            if:false={file.error}
+          >
+            Uploading...
+          </span>
+          <span
+            class="slds-text-body_small slds-text-color_error"
+            if:true={file.error}
+          >
+            {file.error}
+          </span>
+        </div>
       </div>
-    </div>
 
-    <div class="slds-p-left_medium">
-      <lightning-icon
-        class="loading-icon"
-        icon-name="utility:spinner"
-        alternative-text="in progress"
-        title="in progress"
-        size="small"
-      ></lightning-icon>
-    </div>
-  </div>
-
-  <!-- Uploaded Component State -->
-  <div
-    class="flex file-container items-center slds-p-bottom_medium"
-    key={file.id}
-    if:true={isUploaded}
-  >
-    <div class="slds-p-right_large">
-      <lightning-icon
-        icon-name={iconName}
-        alternative-text="doctype"
-        title="doctype"
-      ></lightning-icon>
-    </div>
-
-    <div class="flex-grow flex flex-col">
-      <div class="flex justify-between">
-        <a data-id={file.ContentDocumentId} onclick={handlePreview}
-          >{file.filename}</a
-        >
-      </div>
-      <div>
-        <span class="slds-text-body_small slds-text-color_weak">
-          {file.size} bytes
-        </span>
+      <div class="slds-p-left_medium">
+        <lightning-icon
+          class="loading-icon"
+          icon-name="utility:spinner"
+          alternative-text="uploading"
+          title="uploading"
+          size="small"
+          if:false={file.error}
+        ></lightning-icon>
+        <lightning-icon
+          icon-name="utility:error"
+          alternative-text="error"
+          title="error"
+          size="small"
+          if:true={file.error}
+          variant="error"
+        ></lightning-icon>
       </div>
     </div>
 
-    <div class="slds-p-left_medium">
-      <lightning-icon
-        icon-name="utility:success"
-        alternative-text="success"
-        title="success"
-        variant="success"
-        size="small"
-      ></lightning-icon>
+    <!-- Uploaded Component State -->
+    <div
+      class="flex file-container items-center slds-p-bottom_medium"
+      key={file.id}
+      if:true={isUploaded}
+    >
+      <div class="slds-p-right_large">
+        <lightning-icon
+          icon-name={iconName}
+          alternative-text="doctype"
+          title="doctype"
+        ></lightning-icon>
+      </div>
+
+      <div class="flex-grow flex flex-col">
+        <div class="flex justify-between">
+          <a data-id={file.ContentDocumentId} onclick={handlePreview}
+            >{file.filename}</a
+          >
+        </div>
+        <div>
+          <span class="slds-text-body_small slds-text-color_weak">
+            {file.size} bytes
+          </span>
+        </div>
+      </div>
+
+      <div class="slds-p-left_medium">
+        <lightning-icon
+          icon-name="utility:success"
+          alternative-text="success"
+          title="success"
+          variant="success"
+          size="small"
+        ></lightning-icon>
+      </div>
     </div>
-  </div>
+  </template>
 </template>

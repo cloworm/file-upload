@@ -1,6 +1,37 @@
 import { LightningElement, api } from "lwc";
 import { NavigationMixin } from "lightning/navigation";
 
+const extensionToMimeType = {
+  csv: "doctype:csv",
+  doc: "doctype:word",
+  docx: "doctype:word",
+  pdf: "doctype:pdf",
+  ppt: "doctype:ppt",
+  pptx: "doctype:ppt",
+  rtf: "doctype:rtf",
+  txt: "doctype:txt",
+  xls: "doctype:excel",
+  xlsx: "doctype:excel",
+  bmp: "doctype:image",
+  gif: "doctype:image",
+  jpeg: "doctype:image",
+  jpg: "doctype:image",
+  png: "doctype:image",
+  tif: "doctype:image",
+  tiff: "doctype:image",
+  vsd: "doctype:visio",
+  mp3: "doctype:audio",
+  ogg: "doctype:audio",
+  wav: "doctype:audio",
+  mov: "doctype:video",
+  mpeg: "doctype:video",
+  mpg: "doctype:video",
+  zip: "doctype:zip",
+  htm: "doctype:html",
+  html: "doctype:html",
+  xml: "doctype:xml"
+};
+
 export default class FileUploadTile extends NavigationMixin(LightningElement) {
   @api file;
 
@@ -13,35 +44,18 @@ export default class FileUploadTile extends NavigationMixin(LightningElement) {
   }
 
   get iconName() {
-    if (!this.file) return "doctype:unknown";
+    const extension = this.getFileExtension(this.file.filename);
+    if (!this.file || !extension) return "doctype:unknown";
 
-    switch (this.file.type) {
-      case "image/png":
-        return "doctype:image";
+    return extensionToMimeType[extension.toLowerCase()] || "doctype:unknown";
+  }
 
-      case "text/csv":
-        return "doctype:csv";
-
-      case "application/vnd.ms-excel":
-        return "doctype:excel";
-
-      case "application/pdf":
-        return "doctype:pdf";
-
-      case "application/vnd.ms-powerpoint":
-        return "doctype:ppt";
-
-      case "application/zip":
-        return "doctype:zip";
-
-      default:
-        return "doctype:unknown";
-    }
+  getFileExtension(filename) {
+    return filename.split(".").pop();
   }
 
   handlePreview(event) {
     const recordId = event.currentTarget.dataset.id;
-    console.log("handling preview of file with ContentDocumentId", recordId);
 
     this[NavigationMixin.Navigate]({
       type: "standard__namedPage",

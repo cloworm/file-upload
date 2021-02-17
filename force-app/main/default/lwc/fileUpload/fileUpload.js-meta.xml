@@ -10,10 +10,11 @@
 <targetConfigs>
   <targetConfig targets="lightning__RecordPage">
     <property
-        name="acceptedMimeTypes"
-        label="Allowed Mime Types"
+        name="allowedFileExtensions"
+        label="Allowed File Extensions"
         type="String"
-        default="image/*,application/pdf,application/msword,application/vnd.ms-powerpointapplication/vnd.openxmlformats-officedocument.presentationml.presentation"
+        default=".png,.gif,.docx"
+        required="true"
       />
 
     <property

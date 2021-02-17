@@ -197,7 +197,8 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
     }
 
     this.filteredFiles = this.files.filter((file) => {
-      return file.Title.match(this.searchTerm, "i");
+      const re = new RegExp(this.searchTerm, "i");
+      return file.Title.match(re);
     });
   }
 }
