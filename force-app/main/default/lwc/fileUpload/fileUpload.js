@@ -56,7 +56,8 @@ export default class FileUpload extends LightningElement {
   // TO DO convert to getter & setter, getter returns an array
   @api fileExtensions;
   @api grid;
-  @api deleteRecords;
+  @api deleteColumn;
+  @api downloadColumn;
 
   uploadIcon = "utility:open_folder";
   extensionToMimeType = extensionToMimeType;

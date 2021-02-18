@@ -23,8 +23,14 @@
         default="true"
       />
     <property
-        name="deleteRecords"
-        label="Allow Record Deletion"
+        name="deleteColumn"
+        label="Use Delete Column"
+        type="Boolean"
+        default="true"
+      />
+    <property
+        name="downloadColumn"
+        label="Use Download Column"
         type="Boolean"
         default="true"
       />

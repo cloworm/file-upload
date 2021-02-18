@@ -64,8 +64,8 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
   @api recordId;
   @track filteredFiles;
   @track columns = defaultColumns;
-  _deleteRecords;
-  _preview;
+  _deleteColumn;
+  _previewColumn;
   files;
   showDialog = false;
   recordToDelete;
@@ -87,14 +87,14 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
     }
   }
 
-  // Using getter/setter for delete so that columns can be changed when delete changes
   @api
-  get deleteRecords() {
-    return this._deleteRecords;
+  get deleteColumn() {
+    return this._deleteColumn;
   }
-  set deleteRecords(value) {
-    const hasDelete = this.columns.some((column) => column.name === "delete");
+  // Show delete column when deleteColumn prop is true
+  set deleteColumn(value) {
     if (value) {
+      const hasDelete = this.columns.some((column) => column.name === "delete");
       if (!hasDelete) {
         this.columns.push({
           name: "delete",
@@ -118,6 +118,40 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
   }
 
   @api
+  get downloadColumn() {
+    return this._downloadColumn;
+  }
+  // Show download column when downloadColumn prop is true
+  set downloadColumn(value) {
+    if (value) {
+      const hasDownload = this.columns.some(
+        (column) => column.name === "download"
+      );
+      if (!hasDownload) {
+        // Insert download column before delete if deleteColumn is true
+        this.columns.splice(
+          this.deleteColumn ? this.columns.length : this.columns.length - 1,
+          0,
+          {
+            name: "download",
+            label: "",
+            type: "button-icon",
+            typeAttributes: {
+              alternativeText: "Download",
+              title: "Download",
+              name: "Download",
+              variant: "border-filled",
+              iconName: "utility:download",
+              iconPosition: "left"
+            },
+            fixedWidth: 35
+          }
+        );
+      }
+    } else {
+      this.columns = this.columns.filter((col) => col.name !== "download");
+    }
+  }
 
   // Get # of files
   get fileCount() {
@@ -158,7 +192,7 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
 
   // Display confirmation dialog to user before deleting
   handleDelete(file) {
-    if (!this.deleteRecords) return;
+    if (!this.deleteColumn) return;
 
     this.showDialog = true;
     this.recordToDelete = file.Id;
