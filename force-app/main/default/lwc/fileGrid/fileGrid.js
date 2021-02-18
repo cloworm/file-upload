@@ -172,6 +172,10 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
         this.handleDelete(row);
         break;
 
+      case "Download":
+        this.handleDownload(row);
+        break;
+
       default:
         break;
     }
@@ -186,6 +190,16 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
       },
       state: {
         selectedRecordId: file.Id
+      }
+    });
+  }
+
+  // Download file
+  handleDownload(file) {
+    this[NavigationMixin.Navigate]({
+      type: "standard__webPage",
+      attributes: {
+        url: `/sfc/servlet.shepherd/document/download/${file.Id}?operationContext=S1`
       }
     });
   }
