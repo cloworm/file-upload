@@ -76,7 +76,6 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
   _deleteColumn;
   _previewColumn;
   files;
-  showDialog = false;
   recordToDelete;
   wiredFilesResult;
   searchTerm;
@@ -93,14 +92,9 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
 
       return file;
     });
-    console.log("files", this.files);
 
     // Set value of filteredFiles
     this.applyFilter();
-
-    if (result.error) {
-      console.error("error", result.error);
-    }
   }
 
   @api
@@ -109,6 +103,8 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
   }
   // Show delete column when deleteColumn prop is true
   set deleteColumn(value) {
+    this._deleteColumn = value;
+
     if (value) {
       const hasDelete = this.columns.some((column) => column.name === "delete");
       if (!hasDelete) {
@@ -139,6 +135,8 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
   }
   // Show download column when downloadColumn prop is true
   set downloadColumn(value) {
+    this._downloadColumn = value;
+
     if (value) {
       const hasDownload = this.columns.some(
         (column) => column.name === "download"
@@ -220,19 +218,22 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
     });
   }
 
-  // Display confirmation dialog to user before deleting
+  // Display confirmation modal to user before deleting
   handleDelete(file) {
     if (!this.deleteColumn) return;
-
-    this.showDialog = true;
     this.recordToDelete = file.Id;
+
+    const modal = this.template.querySelector("c-modal");
+    modal.show();
   }
 
   // Handle dialog confirm event
-  async handleConfirm(event) {
-    const recordId = event.detail;
-    // Hide dialog
-    this.showDialog = false;
+  async handleCloseModal() {
+    const recordId = this.recordToDelete;
+
+    // Hide modal
+    const modal = this.template.querySelector("c-modal");
+    modal.hide();
 
     try {
       // Delete record
@@ -246,21 +247,25 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
       });
       this.dispatchEvent(evt);
 
+      this.recordToDelete = null;
+
       // Refresh file list
       await this.refresh();
     } catch (error) {
       const evt = new ShowToastEvent({
         title: ERROR_TITLE,
-        message: error.body.message,
+        message: "Error deleting record",
         variant: ERROR_VARIANT
       });
       this.dispatchEvent(evt);
+
+      this.recordToDelete = null;
     }
   }
 
-  // Handle dialog close event
-  handleClose() {
-    this.showDialog = false;
+  handleCancelModal() {
+    const modal = this.template.querySelector("c-modal");
+    modal.hide();
   }
 
   // Refresh file list
