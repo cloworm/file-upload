@@ -19,6 +19,12 @@ const defaultColumns = [
     hideDefaultActions: true
   },
   {
+    label: "File Extension",
+    fieldName: "FileType",
+    wrapText: true,
+    hideDefaultActions: true
+  },
+  {
     label: "Size (bytes)",
     fieldName: "ContentSize",
     type: "number",
@@ -26,10 +32,13 @@ const defaultColumns = [
     hideDefaultActions: true
   },
   {
-    label: "Type",
-    fieldName: "FileType",
-    wrapText: true,
-    hideDefaultActions: true
+    label: "Uploaded By",
+    type: "url",
+    fieldName: "OwnerUrl",
+    typeAttributes: {
+      label: { fieldName: "OwnerName" },
+      target: "_blank"
+    }
   },
   {
     label: "Modified On",
@@ -77,7 +86,14 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
     this.wiredFilesResult = result;
 
     if (!result.data) return;
-    this.files = result.data;
+    this.files = result.data.map((row) => {
+      const file = JSON.parse(JSON.stringify(row));
+      file.OwnerName = file.Owner?.Name;
+      file.OwnerUrl = `/lightning/r/User/${file.OwnerId}/view`;
+
+      return file;
+    });
+    console.log("files", this.files);
 
     // Set value of filteredFiles
     this.applyFilter();
