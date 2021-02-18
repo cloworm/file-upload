@@ -20,6 +20,7 @@
 | ----------------------- | -------- | -------- | --------------- |
 | Allowed File Extensions | X        | String   | .png,.gif,.docx |
 | Show Grid Component     |          | Checkbox | Checked         |
+| Allow Record Deletion   |          | Checkbox | Checked         |
 
 ## Allowed File Types
 

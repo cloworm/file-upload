@@ -10,23 +10,23 @@
 <targetConfigs>
   <targetConfig targets="lightning__RecordPage">
     <property
-        name="allowedFileExtensions"
+        name="fileExtensions"
         label="Allowed File Extensions"
         type="String"
         default=".png,.gif,.docx"
         required="true"
       />
     <property
-        name="showGrid"
+        name="grid"
         label="Show Grid Component"
         type="Boolean"
         default="true"
       />
     <property
-        name="allowDelete"
-        label="Allow Grid Delete"
+        name="deleteRecords"
+        label="Allow Record Deletion"
         type="Boolean"
-        default="false"
+        default="true"
       />
   </targetConfig>
 </targetConfigs>

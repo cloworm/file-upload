@@ -54,9 +54,9 @@ export default class FileUpload extends LightningElement {
 
   // Component Properties
   // TO DO convert to getter & setter, getter returns an array
-  @api allowedFileExtensions;
-  @api showGrid;
-  @api allowDelete;
+  @api fileExtensions;
+  @api grid;
+  @api deleteRecords;
 
   uploadIcon = "utility:open_folder";
   extensionToMimeType = extensionToMimeType;
@@ -95,29 +95,25 @@ export default class FileUpload extends LightningElement {
   isDragging = false;
 
   get hasInvalidConfig() {
-    return [...new Set(this.allowedFileExtensions.split(","))].find(
-      (extension) => {
-        let key = extension.replace(".", "").toLowerCase();
-        return !this.extensionToMimeType[key];
-      }
-    );
+    return [...new Set(this.fileExtensions.split(","))].find((extension) => {
+      let key = extension.replace(".", "").toLowerCase();
+      return !this.extensionToMimeType[key];
+    });
   }
 
   // Get list of extensions set by admin in component properties
   get allowedExtensions() {
     // Remove any duplicates
-    const uniqueExtensions = [
-      ...new Set(this.allowedFileExtensions.split(","))
-    ];
+    const uniqueExtensions = [...new Set(this.fileExtensions.split(","))];
 
     return uniqueExtensions.sort().join(", ");
   }
 
-  // Use allowedFileExtensions to get list of allowed mime types
+  // Use fileExtensions to get list of allowed mime types
   get acceptedMimeTypes() {
-    if (!this.allowedFileExtensions) return "";
+    if (!this.fileExtensions) return "";
 
-    return this.allowedFileExtensions
+    return this.fileExtensions
       .split(",")
       .map((extension) => {
         let key = extension.replace(".", "");
@@ -155,7 +151,7 @@ export default class FileUpload extends LightningElement {
       const extension = this.getFileExtension(file.name);
       if (
         !file.type ||
-        !this.allowedFileExtensions.split(",").includes("." + extension)
+        !this.fileExtensions.split(",").includes("." + extension)
       ) {
         // Display error if not an allowed type
         fileData.error = "File extension is not allowed";
@@ -184,7 +180,7 @@ export default class FileUpload extends LightningElement {
         const idx = this.getFileIdxById(id);
         this.files[idx].ContentDocumentId = result;
 
-        if (this.showGrid) {
+        if (this.grid) {
           // Refresh the file grid component
           this.template.querySelector("c-file-grid").refresh();
         }

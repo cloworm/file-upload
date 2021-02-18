@@ -64,7 +64,8 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
   @api recordId;
   @track filteredFiles;
   @track columns = defaultColumns;
-  _allowDelete;
+  _deleteRecords;
+  _preview;
   files;
   showDialog = false;
   recordToDelete;
@@ -86,12 +87,12 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
     }
   }
 
-  // Using getter/setter for allowDelete so that columns can be changed when allowDelete changes
+  // Using getter/setter for delete so that columns can be changed when delete changes
   @api
-  get allowDelete() {
-    return this._allowDelete;
+  get deleteRecords() {
+    return this._deleteRecords;
   }
-  set allowDelete(value) {
+  set deleteRecords(value) {
     const hasDelete = this.columns.some((column) => column.name === "delete");
     if (value) {
       if (!hasDelete) {
@@ -116,33 +117,12 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
     }
   }
 
+  @api
+
   // Get # of files
   get fileCount() {
     return this.files && this.files.length ? this.files.length : 0;
   }
-
-  // Get default columns with optional columns set in component properties
-  // get columns() {
-  //   console.log("get columns called");
-  //   const cols = defaultColumns;
-  //   if (this.allowDelete) {
-  //     cols.push({
-  //       label: "",
-  //       type: "button-icon",
-  //       typeAttributes: {
-  //         alternativeText: "Delete",
-  //         iconClass: "slds-text-color_destructive",
-  //         title: "Delete",
-  //         name: "Delete",
-  //         variant: "border-filled",
-  //         iconName: "utility:delete",
-  //         iconPosition: "left"
-  //       },
-  //       fixedWidth: 35
-  //     });
-  //   }
-  //   return cols;
-  // }
 
   // Handle row actions
   handleRowAction(event) {
@@ -178,6 +158,8 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
 
   // Display confirmation dialog to user before deleting
   handleDelete(file) {
+    if (!this.deleteRecords) return;
+
     this.showDialog = true;
     this.recordToDelete = file.Id;
   }
