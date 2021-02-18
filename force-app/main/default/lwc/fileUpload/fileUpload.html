@@ -70,6 +70,10 @@
       </template>
     </div>
 
-    <c-file-grid if:true={showGrid} record={recordId}></c-file-grid>
+    <c-file-grid
+      if:true={showGrid}
+      record-id={recordId}
+      allow-delete={allowDelete}
+    ></c-file-grid>
   </template>
 </template>

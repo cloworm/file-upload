@@ -56,40 +56,41 @@ export default class FileUpload extends LightningElement {
   // TO DO convert to getter & setter, getter returns an array
   @api allowedFileExtensions;
   @api showGrid;
+  @api allowDelete;
 
   uploadIcon = "utility:open_folder";
   extensionToMimeType = extensionToMimeType;
   @track files = [
-    {
-      id: 2,
-      filename: "Vlocity.pdf",
-      // ContentDocumentId: "0695Y00000LsOoBQAV",
-      type: "application/pdf",
-      base64: "",
-      recordId: null,
-      size: 3500,
-      error: null
-    },
-    {
-      id: 1,
-      filename: "Vlocity.pdf",
-      ContentDocumentId: "0695Y00000LsOoBQAV",
-      type: "application/pdf",
-      base64: "",
-      recordId: null,
-      size: 2000,
-      error: null
-    },
-    {
-      id: 3,
-      filename: "Test.xls",
-      ContentDocumentId: null,
-      type: "application/pdf",
-      base64: "",
-      recordId: null,
-      size: 2000,
-      error: "Server error"
-    }
+    // {
+    //   id: 2,
+    //   filename: "Vlocity.pdf",
+    //   // ContentDocumentId: "0695Y00000LsOoBQAV",
+    //   type: "application/pdf",
+    //   base64: "",
+    //   recordId: null,
+    //   size: 3500,
+    //   error: null
+    // },
+    // {
+    //   id: 1,
+    //   filename: "Vlocity.pdf",
+    //   ContentDocumentId: "0695Y00000LsOoBQAV",
+    //   type: "application/pdf",
+    //   base64: "",
+    //   recordId: null,
+    //   size: 2000,
+    //   error: null
+    // },
+    // {
+    //   id: 3,
+    //   filename: "Test.xls",
+    //   ContentDocumentId: null,
+    //   type: "application/pdf",
+    //   base64: "",
+    //   recordId: null,
+    //   size: 2000,
+    //   error: "Server error"
+    // }
   ];
   isDragging = false;
 

@@ -11,7 +11,7 @@ const SUCCESS_TITLE = "Success";
 const SUCCESS_MESSAGE = "File deleted";
 const SUCCESS_VARIANT = "success";
 
-const columns = [
+const defaultColumns = [
   {
     label: "Filename",
     fieldName: "Title",
@@ -57,34 +57,21 @@ const columns = [
       iconPosition: "left"
     },
     fixedWidth: 35
-  },
-  {
-    label: "",
-    type: "button-icon",
-    typeAttributes: {
-      alternativeText: "Delete",
-      iconClass: "slds-text-color_destructive",
-      title: "Delete",
-      name: "Delete",
-      variant: "border-filled",
-      iconName: "utility:delete",
-      iconPosition: "left"
-    },
-    fixedWidth: 35
   }
 ];
 
 export default class FileGrid extends NavigationMixin(LightningElement) {
-  @api record;
-  files;
+  @api recordId;
   @track filteredFiles;
-  columns = columns;
+  @track columns = defaultColumns;
+  _allowDelete;
+  files;
   showDialog = false;
   recordToDelete;
   wiredFilesResult;
   searchTerm;
 
-  @wire(getFiles, { id: "$record" })
+  @wire(getFiles, { id: "$recordId" })
   wiredFiles(result) {
     this.wiredFilesResult = result;
 
@@ -99,10 +86,63 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
     }
   }
 
+  // Using getter/setter for allowDelete so that columns can be changed when allowDelete changes
+  @api
+  get allowDelete() {
+    return this._allowDelete;
+  }
+  set allowDelete(value) {
+    const hasDelete = this.columns.some((column) => column.name === "delete");
+    if (value) {
+      if (!hasDelete) {
+        this.columns.push({
+          name: "delete",
+          label: "",
+          type: "button-icon",
+          typeAttributes: {
+            alternativeText: "Delete",
+            iconClass: "slds-text-color_destructive",
+            title: "Delete",
+            name: "Delete",
+            variant: "border-filled",
+            iconName: "utility:delete",
+            iconPosition: "left"
+          },
+          fixedWidth: 35
+        });
+      }
+    } else {
+      this.columns = this.columns.filter((col) => col.name !== "delete");
+    }
+  }
+
   // Get # of files
   get fileCount() {
     return this.files && this.files.length ? this.files.length : 0;
   }
+
+  // Get default columns with optional columns set in component properties
+  // get columns() {
+  //   console.log("get columns called");
+  //   const cols = defaultColumns;
+  //   if (this.allowDelete) {
+  //     cols.push({
+  //       label: "",
+  //       type: "button-icon",
+  //       typeAttributes: {
+  //         alternativeText: "Delete",
+  //         iconClass: "slds-text-color_destructive",
+  //         title: "Delete",
+  //         name: "Delete",
+  //         variant: "border-filled",
+  //         iconName: "utility:delete",
+  //         iconPosition: "left"
+  //       },
+  //       fixedWidth: 35
+  //     });
+  //   }
+  //   return cols;
+  // }
 
   // Handle row actions
   handleRowAction(event) {
