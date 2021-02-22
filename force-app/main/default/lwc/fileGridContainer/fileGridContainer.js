@@ -16,20 +16,23 @@ const defaultColumns = [
     label: "Filename",
     fieldName: "Title",
     wrapText: true,
-    hideDefaultActions: true
+    hideDefaultActions: true,
+    sortable: true
   },
   {
     label: "File Extension",
     fieldName: "FileType",
     wrapText: true,
-    hideDefaultActions: true
+    hideDefaultActions: true,
+    sortable: true
   },
   {
     label: "Size (bytes)",
     fieldName: "ContentSize",
     type: "number",
     wrapText: true,
-    hideDefaultActions: true
+    hideDefaultActions: true,
+    sortable: true
   },
   {
     label: "Type",
@@ -38,7 +41,8 @@ const defaultColumns = [
     typeAttributes: {
       id: { fieldName: "Id" },
       label: { fieldName: "Type__c" }
-    }
+    },
+    hideDefaultActions: true
   },
   {
     label: "Uploaded By",
@@ -49,17 +53,10 @@ const defaultColumns = [
       name: { fieldName: "Owner" },
       photo: { fieldName: "OwnerSmallPhotoUrl" },
       url: { fieldName: "OwnerUrl" }
-    }
+    },
+    hideDefaultActions: true,
+    sortable: true
   },
-  // {
-  //   label: "Uploaded By",
-  //   type: "url",
-  //   fieldName: "OwnerUrl",
-  //   typeAttributes: {
-  //     label: { fieldName: "OwnerName" },
-  //     target: "_blank"
-  //   }
-  // },
   {
     label: "Modified On",
     fieldName: "ContentModifiedDate",
@@ -72,7 +69,8 @@ const defaultColumns = [
       minute: "2-digit"
     },
     wrapText: true,
-    hideDefaultActions: true
+    hideDefaultActions: true,
+    sortable: true
   },
   {
     label: "",
