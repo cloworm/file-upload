@@ -34,9 +34,11 @@
         </div>
       </div>
 
-      <div class="slds-p-left_medium">
+      <div>
+        <lightning-badge label={file.type}></lightning-badge>
+
         <lightning-icon
-          class="loading-icon"
+          class="loading-icon slds-p-left_medium"
           icon-name="utility:spinner"
           alternative-text="uploading"
           title="uploading"
@@ -44,6 +46,7 @@
           if:false={file.error}
         ></lightning-icon>
         <lightning-icon
+          class="slds-p-left_medium"
           icon-name="utility:error"
           alternative-text="error"
           title="error"
@@ -81,8 +84,11 @@
         </div>
       </div>
 
-      <div class="slds-p-left_medium">
+      <div>
+        <lightning-badge label={file.type}></lightning-badge>
+
         <lightning-icon
+          class="slds-p-left_medium"
           icon-name="utility:success"
           alternative-text="success"
           title="success"

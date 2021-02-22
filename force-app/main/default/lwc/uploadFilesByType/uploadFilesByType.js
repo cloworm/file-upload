@@ -15,7 +15,8 @@ export default class UploadFilesByType extends LightningElement {
     //   type: "png",
     //   ContentDocumentId: null,
     //   size: 1000,
-    //   error: null
+    //   error: null,
+    //   Type: "Category A"
     // },
     // {
     //   id: 2,
@@ -25,7 +26,8 @@ export default class UploadFilesByType extends LightningElement {
     //   type: "pdf",
     //   ContentDocumentId: "15235",
     //   size: 3502349,
-    //   error: null
+    //   error: null,
+    //   Type: "Category B"
     // }
   ];
   @track fileQueue = [];
