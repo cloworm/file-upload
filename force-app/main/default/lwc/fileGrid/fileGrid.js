@@ -118,8 +118,6 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
       file.OwnerId = file.ContentDocument?.OwnerId;
       file.OwnerSmallPhotoUrl = file.ContentDocument?.Owner.SmallPhotoUrl;
 
-      console.log("FILE", JSON.parse(JSON.stringify(file)));
-
       return file;
     });
 
@@ -313,7 +311,19 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
   // Filter files by title
   // Group files by Type__c
   applyFilter() {
-    this.activeSections = [];
+    this.activeSections = this.files
+      .reduce((sections, file) => {
+        const type = file.Type__c
+          ? this.getTypeName(file.Type__c)
+          : "Uncategorized";
+
+        if (!sections.includes(type)) {
+          sections.push(type);
+        }
+
+        return sections;
+      }, [])
+      .sort();
 
     const filesByType = this.files
       .filter((file) => {
@@ -325,30 +335,48 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
         return file.Title.match(re);
       })
       .reduce((group, file) => {
-        if (Object.prototype.hasOwnProperty.call(group, file.Type__c)) {
-          group[file.Type__c].push(file);
+        const key = file.Type__c
+          ? this.getTypeName(file.Type__c)
+          : "Uncategorized";
+
+        if (Object.prototype.hasOwnProperty.call(group, key)) {
+          group[key].push(file);
         } else {
-          group[file.Type__c] = [file];
+          group[key] = [file];
         }
 
         return group;
       }, {});
 
-    this.filteredFiles = Object.keys(filesByType)
-      .sort()
-      .map((key) => {
-        const type = key.replace(/\s+/g, "_");
-        this.activeSections.push(type);
+    this.filteredFiles = this.activeSections.map((section) => {
+      return {
+        data: filesByType[section],
+        type: section,
+        label: `${section} (${
+          filesByType[section] ? filesByType[section].length : 0
+        })`
+      };
+    });
 
-        return {
-          data: filesByType[key],
-          type,
-          label: key
-        };
-      });
+    // this.filteredFiles = Object.keys(filesByType)
+    //   .sort()
+    //   .map((key) => {
+    //     const type = this.getTypeName(key);
+
+    //     return {
+    //       data: filesByType[key],
+    //       type,
+    //       label: key
+    //     };
+    //   });
   }
 
   escapeRegExp(text) {
     return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+  }
+
+  getTypeName(type) {
+    return type;
+    // return type.replace(/\s+/g, "_");
   }
 }
