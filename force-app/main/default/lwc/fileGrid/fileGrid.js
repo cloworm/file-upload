@@ -34,17 +34,32 @@ const defaultColumns = [
   {
     label: "Type",
     fieldName: "Type__c",
-    type: "badge"
+    type: "badge",
+    typeAttributes: {
+      id: { fieldName: "Id" },
+      label: { fieldName: "Type__c" }
+    }
   },
   {
     label: "Uploaded By",
-    type: "url",
-    fieldName: "OwnerUrl",
+    type: "user",
+    fieldName: "Owner",
     typeAttributes: {
-      label: { fieldName: "OwnerName" },
-      target: "_blank"
+      id: { fieldName: "OwnerId" },
+      name: { fieldName: "Owner" },
+      photo: { fieldName: "OwnerSmallPhotoUrl" },
+      url: { fieldName: "OwnerUrl" }
     }
   },
+  // {
+  //   label: "Uploaded By",
+  //   type: "url",
+  //   fieldName: "OwnerUrl",
+  //   typeAttributes: {
+  //     label: { fieldName: "OwnerName" },
+  //     target: "_blank"
+  //   }
+  // },
   {
     label: "Modified On",
     fieldName: "ContentModifiedDate",
@@ -93,14 +108,16 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
     this.files = result.data.map((row) => {
       const file = JSON.parse(JSON.stringify(row));
       file.Id = file.ContentDocument?.Id;
-      file.OwnerName = file.Owner?.Name;
-      file.OwnerUrl = `/lightning/r/User/${file.OwnerId}/view`;
+      file.OwnerUrl = `/lightning/r/User/${file.ContentDocument?.OwnerId}/view`;
       file.FileType = file.ContentDocument?.FileType;
       file.Title = file.ContentDocument?.Title;
       file.ContentModifiedDate = file.ContentDocument?.ContentModifiedDate;
       file.ContentSize = file.ContentDocument?.ContentSize;
       file.Owner = file.ContentDocument?.Owner.Name;
       file.OwnerId = file.ContentDocument?.OwnerId;
+      file.OwnerSmallPhotoUrl = file.ContentDocument?.Owner.SmallPhotoUrl;
+
+      console.log("FILE", JSON.parse(JSON.stringify(file)));
 
       return file;
     });

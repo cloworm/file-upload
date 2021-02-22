@@ -1,0 +1,12 @@
+<template>
+  <div row-id={typeAttributes.id}>
+    <lightning-avatar
+      class="slds-m-right_xx-small"
+      fallback-icon-name="action_user"
+      alternative-text={typeAttributes.name}
+      src={typeAttributes.photo}
+      size="small"
+    ></lightning-avatar>
+    <a href={typeAttributes.url} target="_blank"> {typeAttributes.name} </a>
+  </div>
+</template>

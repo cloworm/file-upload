@@ -22,6 +22,7 @@ public inherited sharing class FileGridController {
         ContentDocument.ContentModifiedDate,
         ContentDocument.ContentSize,
         ContentDocument.Owner.Name,
+        ContentDocument.Owner.SmallPhotoUrl,
         ContentDocument.OwnerId
       FROM ContentVersion
       WHERE Id IN :latestPublishedVersionIds
