@@ -6,6 +6,7 @@ public with sharing class FileUploadController {
    * @param {String} base64 - base64 string that represents the file
    * @param {String} filename - full file name with extension, i.e. 'products.csv'
    * @param {String} recordId - Id of the record you want to attach this file to
+   * @param {String} type - value for Type__c custom picklist field
    *
    * @return {ContentDocument} - returns the created ContentDocumentId if the
    *   upload was successful, otherwise returns null
@@ -14,12 +15,10 @@ public with sharing class FileUploadController {
   public static String uploadFile(
     String base64,
     String filename,
-    String recordId
+    String recordId,
+    String type
   ) {
-    System.debug(base64);
-    System.debug(filename);
-    System.debug(recordId);
-    ContentVersion cv = createContentVersion(base64, filename);
+    ContentVersion cv = createContentVersion(base64, filename, type);
     ContentDocumentLink cdl = createContentLink(cv.Id, recordId);
     if (cv == null || cdl == null) {
       return null;
@@ -32,18 +31,21 @@ public with sharing class FileUploadController {
    *
    * @param {String} base64 - base64 string that represents the file
    * @param {String} filename - full file name with extension, i.e. 'products.csv'
+   * @param {String} type - value for Type__c custom picklist field
    *
    * @return {ContentVersion} - returns the newly created ContentVersion, or null
    *   if there was an error inserting the record
    */
   private static ContentVersion createContentVersion(
     String base64,
-    String filename
+    String filename,
+    String type
   ) {
     ContentVersion cv = new ContentVersion();
     cv.VersionData = EncodingUtil.base64Decode(base64);
     cv.Title = filename;
     cv.PathOnClient = filename;
+    cv.Type__c = type;
     try {
       insert cv;
       return cv;

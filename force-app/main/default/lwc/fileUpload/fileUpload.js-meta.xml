@@ -7,33 +7,4 @@
   <target>lightning__AppPage</target>
   <target>lightning__HomePage</target>
 </targets>
-<targetConfigs>
-  <targetConfig targets="lightning__RecordPage">
-    <property
-        name="fileExtensions"
-        label="Allowed File Extensions"
-        type="String"
-        default=".png,.gif,.docx"
-        required="true"
-      />
-    <property
-        name="grid"
-        label="Show Grid Component"
-        type="Boolean"
-        default="true"
-      />
-    <property
-        name="deleteColumn"
-        label="Use Delete Column"
-        type="Boolean"
-        default="true"
-      />
-    <property
-        name="downloadColumn"
-        label="Use Download Column"
-        type="Boolean"
-        default="true"
-      />
-  </targetConfig>
-</targetConfigs>
 </LightningComponentBundle>

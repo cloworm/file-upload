@@ -40,7 +40,11 @@
           class="slds-modal__content slds-p-around_medium"
           id="modal-content-id-1"
         >
-          <slot></slot>
+          <div class="slds-is-relative">
+            <div class="scroll-container">
+              <slot></slot>
+            </div>
+          </div>
         </div>
 
         <footer class="slds-modal__footer modal-hidden">

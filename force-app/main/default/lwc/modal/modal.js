@@ -4,6 +4,7 @@ const CSS_CLASS = "modal-hidden";
 
 export default class Modal extends LightningElement {
   showModal = false;
+
   @api
   set header(value) {
     this.hasHeaderString = value !== "";
@@ -26,8 +27,8 @@ export default class Modal extends LightningElement {
 
   handleDialogClose() {
     //Let parent know that dialog is closed (mainly by that cross button) so it can set proper variables if needed
-    const closedialog = new CustomEvent("closedialog");
-    this.dispatchEvent(closedialog);
+    const evt = new CustomEvent("closedialog");
+    this.dispatchEvent(evt);
     this.hide();
   }
 

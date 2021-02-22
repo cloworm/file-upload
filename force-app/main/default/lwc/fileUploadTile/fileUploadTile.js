@@ -51,6 +51,7 @@ export default class FileUploadTile extends NavigationMixin(LightningElement) {
   }
 
   getFileExtension(filename) {
+    if (!filename) return "";
     return filename.split(".").pop();
   }
 

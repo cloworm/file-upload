@@ -59,22 +59,5 @@
         </p>
       </div>
     </div>
-
-    <div if:true={hasFiles} class="slds-p-top_large">
-      <h2 class="slds-text-color_weak slds-text-title_bold slds-p-bottom_large">
-        Uploaded Files
-      </h2>
-
-      <template for:each={files} for:item="file">
-        <c-file-upload-tile file={file} key={file.id}></c-file-upload-tile>
-      </template>
-    </div>
-
-    <c-file-grid
-      if:true={grid}
-      record-id={recordId}
-      delete-column={deleteColumn}
-      download-column={downloadColumn}
-    ></c-file-grid>
   </template>
 </template>

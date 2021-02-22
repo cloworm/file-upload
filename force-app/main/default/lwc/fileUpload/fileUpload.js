@@ -1,5 +1,4 @@
-import { LightningElement, api, track } from "lwc";
-import uploadFile from "@salesforce/apex/FileUploadController.uploadFile";
+import { LightningElement, api } from "lwc";
 
 const extensionToMimeType = {
   csv: "text/csv",
@@ -55,44 +54,9 @@ export default class FileUpload extends LightningElement {
   // Component Properties
   // TO DO convert to getter & setter, getter returns an array
   @api fileExtensions;
-  @api grid;
-  @api deleteColumn;
-  @api downloadColumn;
 
   uploadIcon = "utility:open_folder";
   extensionToMimeType = extensionToMimeType;
-  @track files = [
-    // {
-    //   id: 2,
-    //   filename: "Vlocity.pdf",
-    //   // ContentDocumentId: "0695Y00000LsOoBQAV",
-    //   type: "application/pdf",
-    //   base64: "",
-    //   recordId: null,
-    //   size: 3500,
-    //   error: null
-    // },
-    // {
-    //   id: 1,
-    //   filename: "Vlocity.pdf",
-    //   ContentDocumentId: "0695Y00000LsOoBQAV",
-    //   type: "application/pdf",
-    //   base64: "",
-    //   recordId: null,
-    //   size: 2000,
-    //   error: null
-    // },
-    // {
-    //   id: 3,
-    //   filename: "Test.xls",
-    //   ContentDocumentId: null,
-    //   type: "application/pdf",
-    //   base64: "",
-    //   recordId: null,
-    //   size: 2000,
-    //   error: "Server error"
-    // }
-  ];
   isDragging = false;
 
   get hasInvalidConfig() {
@@ -127,10 +91,6 @@ export default class FileUpload extends LightningElement {
     [...event.target.files].forEach((file) => this.processFile(file));
   }
 
-  get hasFiles() {
-    return this.files && this.files.length > 0;
-  }
-
   // Read file contents and convert to base64 encoded string
   processFile(file) {
     const reader = new FileReader();
@@ -158,13 +118,8 @@ export default class FileUpload extends LightningElement {
         fileData.error = "File extension is not allowed";
       }
 
-      // Add to uploaded file list
-      this.files.push(fileData);
-
-      // Upload file
-      if (!fileData.error) {
-        this.handleUpload(fileData);
-      }
+      const evt = new CustomEvent("load", { detail: fileData });
+      this.dispatchEvent(evt);
     };
 
     reader.readAsDataURL(file);
@@ -172,25 +127,6 @@ export default class FileUpload extends LightningElement {
 
   getFileExtension(filename) {
     return filename.split(".").pop();
-  }
-
-  // Create a ContentVersion and attach file to the given recordId using the provided base64 and filename
-  handleUpload({ id, base64, filename, recordId }) {
-    uploadFile({ base64, filename, recordId })
-      .then((result) => {
-        const idx = this.getFileIdxById(id);
-        this.files[idx].ContentDocumentId = result;
-
-        if (this.grid) {
-          // Refresh the file grid component
-          this.template.querySelector("c-file-grid").refresh();
-        }
-      })
-      .catch((error) => {
-        console.log("error", error);
-        const idx = this.getFileIdxById(id);
-        this.files[idx].error = "Server error";
-      });
   }
 
   // Apply dropzone hover styles ondragenter
@@ -201,10 +137,6 @@ export default class FileUpload extends LightningElement {
     if (!this.isDragging) {
       this.showDropzoneHover();
     }
-  }
-
-  getFileIdxById(id) {
-    return this.files.findIndex((file) => file.id === id);
   }
 
   // Remove dropzone hover styles ondragleave
@@ -220,8 +152,6 @@ export default class FileUpload extends LightningElement {
   handleDrop(event) {
     event.preventDefault();
     event.stopPropagation();
-
-    console.log("files", ...event.dataTransfer.files);
 
     this.hideDropzoneHover();
 
