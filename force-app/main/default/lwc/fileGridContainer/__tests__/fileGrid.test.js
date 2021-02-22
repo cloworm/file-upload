@@ -1,7 +1,7 @@
 import { createElement } from "lwc";
-import FileGrid from "c/fileGrid";
+import FileGrid from "c/fileGridContainer";
 
-describe("c-file-grid", () => {
+describe("c-file-grid-container", () => {
   afterEach(() => {
     // The jsdom instance is shared across test cases in a single file so reset the DOM
     while (document.body.firstChild) {
@@ -10,7 +10,7 @@ describe("c-file-grid", () => {
   });
 
   it('Displays the message "This record has no files yet" if the record has none', () => {
-    const element = createElement("c-file-grid", {
+    const element = createElement("c-file-grid-container", {
       is: FileGrid
     });
     document.body.appendChild(element);

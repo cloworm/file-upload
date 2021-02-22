@@ -15,12 +15,12 @@
     </template>
   </div>
 
-  <c-file-grid
+  <c-file-grid-container
     if:true={grid}
     record-id={recordId}
     delete-column={deleteColumn}
     download-column={downloadColumn}
-  ></c-file-grid>
+  ></c-file-grid-container>
 
   <c-modal header="Assign Types">
     <lightning-layout>
