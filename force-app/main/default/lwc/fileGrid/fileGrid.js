@@ -13,11 +13,11 @@ export default class FileGrid extends LightningElement {
     }
 
     if (!this.sortedBy) {
-      this.data = value;
+      this.data = [...value];
       return;
     }
 
-    this.data = value.sort(
+    this.data = [...value].sort(
       this.sortBy(this.sortedBy, this.sortDirection === "asc" ? 1 : -1)
     );
   }

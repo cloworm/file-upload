@@ -74,7 +74,7 @@ export default class UploadFilesByType extends LightningElement {
 
         if (this.grid) {
           // Refresh the file grid component
-          this.template.querySelector("c-file-grid").refresh();
+          this.template.querySelector("c-file-grid-container").refresh();
         }
       })
       .catch((error) => {
