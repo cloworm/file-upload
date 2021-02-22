@@ -93,6 +93,7 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
   @api recordId;
   @track filteredFiles;
   @track columns = defaultColumns;
+  @track activeSections;
   _deleteColumn;
   _previewColumn;
   files;
@@ -310,15 +311,40 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
   }
 
   // Filter files by title
+  // Group files by Type__c
   applyFilter() {
-    if (!this.searchTerm || this.searchTerm.trim().length === 0) {
-      this.filteredFiles = this.files;
-      return;
-    }
+    this.activeSections = [];
 
-    this.filteredFiles = this.files.filter((file) => {
-      const re = new RegExp(this.searchTerm, "i");
-      return file.Title.match(re);
-    });
+    const filesByType = this.files
+      .filter((file) => {
+        if (!this.searchTerm || this.searchTerm.trim().length === 0) {
+          return true;
+        }
+
+        const re = new RegExp(this.searchTerm, "i");
+        return file.Title.match(re);
+      })
+      .reduce((group, file) => {
+        if (Object.prototype.hasOwnProperty.call(group, file.Type__c)) {
+          group[file.Type__c].push(file);
+        } else {
+          group[file.Type__c] = [file];
+        }
+
+        return group;
+      }, {});
+
+    this.filteredFiles = Object.keys(filesByType)
+      .sort()
+      .map((key) => {
+        const type = key.replace(/\s+/g, "_");
+        this.activeSections.push(type);
+
+        return {
+          data: filesByType[key],
+          type,
+          label: key
+        };
+      });
   }
 }

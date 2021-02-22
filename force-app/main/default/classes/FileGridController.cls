@@ -26,7 +26,7 @@ public inherited sharing class FileGridController {
         ContentDocument.OwnerId
       FROM ContentVersion
       WHERE Id IN :latestPublishedVersionIds
-      ORDER BY ContentDocument.ContentModifiedDate DESC
+      ORDER BY ContentDocument.Title ASC
     ];
   }
 }

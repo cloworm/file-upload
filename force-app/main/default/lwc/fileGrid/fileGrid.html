@@ -11,13 +11,26 @@
     ></lightning-input>
   </div>
 
-  <c-file-datatable
-    hide-checkbox-column
-    key-field="Id"
-    data={filteredFiles}
-    columns={columns}
-    onrowaction={handleRowAction}
-  ></c-file-datatable>
+  <lightning-accordion
+    allow-multiple-sections-open
+    active-section-name={activeSections}
+  >
+    <template for:each={filteredFiles} for:item="group">
+      <lightning-accordion-section
+        key={group.type}
+        name={group.type}
+        label={group.label}
+      >
+        <c-file-datatable
+          hide-checkbox-column
+          key-field="Id"
+          data={group.data}
+          columns={columns}
+          onrowaction={handleRowAction}
+        ></c-file-datatable>
+      </lightning-accordion-section>
+    </template>
+  </lightning-accordion>
 
   <p class="slds-p-vertical_medium slds-text-align_center slds-text-color_weak">
     This record has no files yet
