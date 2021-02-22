@@ -32,6 +32,11 @@ const defaultColumns = [
     hideDefaultActions: true
   },
   {
+    label: "Type",
+    fieldName: "Type__c",
+    type: "badge"
+  },
+  {
     label: "Uploaded By",
     type: "url",
     fieldName: "OwnerUrl",
@@ -87,8 +92,15 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
     if (!result.data) return;
     this.files = result.data.map((row) => {
       const file = JSON.parse(JSON.stringify(row));
+      file.Id = file.ContentDocument?.Id;
       file.OwnerName = file.Owner?.Name;
       file.OwnerUrl = `/lightning/r/User/${file.OwnerId}/view`;
+      file.FileType = file.ContentDocument?.FileType;
+      file.Title = file.ContentDocument?.Title;
+      file.ContentModifiedDate = file.ContentDocument?.ContentModifiedDate;
+      file.ContentSize = file.ContentDocument?.ContentSize;
+      file.Owner = file.ContentDocument?.Owner.Name;
+      file.OwnerId = file.ContentDocument?.OwnerId;
 
       return file;
     });

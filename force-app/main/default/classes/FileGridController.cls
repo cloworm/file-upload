@@ -1,28 +1,31 @@
 public inherited sharing class FileGridController {
   @AuraEnabled(cacheable=true)
-  public static List<ContentDocument> getFiles(Id id) {
+  public static List<ContentVersion> getFiles(Id id) {
     List<ContentDocumentLink> cdl = [
-      SELECT ContentDocumentId
+      SELECT ContentDocument.LatestPublishedVersionId
       FROM ContentDocumentLink
       WHERE LinkedEntityId = :id
     ];
-    List<Id> contentDocumentIds = new List<Id>();
+    List<Id> latestPublishedVersionIds = new List<Id>();
     for (ContentDocumentLink doc : cdl) {
-      contentDocumentIds.add(doc.ContentDocumentId);
+      latestPublishedVersionIds.add(
+        doc.ContentDocument.LatestPublishedVersionId
+      );
     }
 
     return [
       SELECT
-        Id,
-        FileType,
-        Title,
-        ContentModifiedDate,
-        ContentSize,
-        Owner.Name,
-        OwnerId
-      FROM ContentDocument
-      WHERE Id IN :contentDocumentIds
-      ORDER BY ContentModifiedDate DESC
+        Type__c,
+        ContentDocument.Id,
+        ContentDocument.FileType,
+        ContentDocument.Title,
+        ContentDocument.ContentModifiedDate,
+        ContentDocument.ContentSize,
+        ContentDocument.Owner.Name,
+        ContentDocument.OwnerId
+      FROM ContentVersion
+      WHERE Id IN :latestPublishedVersionIds
+      ORDER BY ContentDocument.ContentModifiedDate DESC
     ];
   }
 }

@@ -11,13 +11,13 @@
     ></lightning-input>
   </div>
 
-  <lightning-datatable
+  <c-file-datatable
     hide-checkbox-column
     key-field="Id"
     data={filteredFiles}
     columns={columns}
     onrowaction={handleRowAction}
-  ></lightning-datatable>
+  ></c-file-datatable>
 
   <p class="slds-p-vertical_medium slds-text-align_center slds-text-color_weak">
     This record has no files yet
