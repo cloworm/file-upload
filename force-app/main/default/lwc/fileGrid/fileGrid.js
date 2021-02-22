@@ -321,7 +321,7 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
           return true;
         }
 
-        const re = new RegExp(this.searchTerm, "i");
+        const re = new RegExp(this.escapeRegExp(this.searchTerm), "i");
         return file.Title.match(re);
       })
       .reduce((group, file) => {
@@ -346,5 +346,9 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
           label: key
         };
       });
+  }
+
+  escapeRegExp(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
   }
 }
