@@ -202,10 +202,7 @@ export default class FileGridContainer extends NavigationMixin(
   }
 
   // Handle row actions
-  handleRowAction(event) {
-    const actionName = event.detail.action.name;
-    const row = event.detail.row;
-
+  handleRowAction({ detail: { actionName, row } }) {
     switch (actionName) {
       case "Preview":
         this.handlePreview(row);

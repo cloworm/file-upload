@@ -8,16 +8,18 @@ export default class FileGrid extends LightningElement {
 
   @api
   set gridData(value) {
+    if (!value) {
+      this.data = [];
+    }
+
     if (!this.sortedBy) {
       this.data = value;
-      console.log("no sortedBy", this.data);
       return;
     }
 
     this.data = value.sort(
       this.sortBy(this.sortedBy, this.sortDirection === "asc" ? 1 : -1)
     );
-    console.log("sortedBy", this.data);
   }
   get gridData() {
     return this.data;
@@ -28,7 +30,10 @@ export default class FileGrid extends LightningElement {
   }
 
   handleRowAction(event) {
-    const evt = new CustomEvent("rowaction", { detail: event });
+    const actionName = event.detail.action.name;
+    const row = event.detail.row;
+
+    const evt = new CustomEvent("rowaction", { detail: { actionName, row } });
     this.dispatchEvent(evt);
   }
 
