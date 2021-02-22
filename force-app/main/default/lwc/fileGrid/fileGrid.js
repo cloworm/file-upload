@@ -19,6 +19,15 @@ const defaultColumns = [
     hideDefaultActions: true
   },
   {
+    label: "Type",
+    fieldName: "Type__c",
+    type: "badge",
+    typeAttributes: {
+      id: { fieldName: "Id" },
+      label: { fieldName: "Type__c" }
+    }
+  },
+  {
     label: "File Extension",
     fieldName: "FileType",
     wrapText: true,
@@ -30,15 +39,6 @@ const defaultColumns = [
     type: "number",
     wrapText: true,
     hideDefaultActions: true
-  },
-  {
-    label: "Type",
-    fieldName: "Type__c",
-    type: "badge",
-    typeAttributes: {
-      id: { fieldName: "Id" },
-      label: { fieldName: "Type__c" }
-    }
   },
   {
     label: "Uploaded By",
@@ -93,6 +93,7 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
   @api recordId;
   @track filteredFiles;
   @track columns = defaultColumns;
+  @track availableSections;
   @track activeSections;
   _deleteColumn;
   _previewColumn;
@@ -311,11 +312,9 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
   // Filter files by title
   // Group files by Type__c
   applyFilter() {
-    this.activeSections = this.files
+    this.availableSections = this.files
       .reduce((sections, file) => {
-        const type = file.Type__c
-          ? this.getTypeName(file.Type__c)
-          : "Uncategorized";
+        const type = file.Type__c ? file.Type__c : "Uncategorized";
 
         if (!sections.includes(type)) {
           sections.push(type);
@@ -335,9 +334,7 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
         return file.Title.match(re);
       })
       .reduce((group, file) => {
-        const key = file.Type__c
-          ? this.getTypeName(file.Type__c)
-          : "Uncategorized";
+        const key = file.Type__c ? file.Type__c : "Uncategorized";
 
         if (Object.prototype.hasOwnProperty.call(group, key)) {
           group[key].push(file);
@@ -348,7 +345,7 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
         return group;
       }, {});
 
-    this.filteredFiles = this.activeSections.map((section) => {
+    this.filteredFiles = this.availableSections.map((section) => {
       return {
         data: filesByType[section],
         type: section,
@@ -357,26 +354,13 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
         })`
       };
     });
-
-    // this.filteredFiles = Object.keys(filesByType)
-    //   .sort()
-    //   .map((key) => {
-    //     const type = this.getTypeName(key);
-
-    //     return {
-    //       data: filesByType[key],
-    //       type,
-    //       label: key
-    //     };
-    //   });
   }
 
   escapeRegExp(text) {
     return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
   }
 
-  getTypeName(type) {
-    return type;
-    // return type.replace(/\s+/g, "_");
+  handleSectionToggle(event) {
+    this.activeSections = event.detail.openSections;
   }
 }
