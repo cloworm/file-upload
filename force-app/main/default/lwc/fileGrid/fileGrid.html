@@ -17,6 +17,7 @@
   >
     <template for:each={filteredFiles} for:item="group">
       <lightning-accordion-section
+        class={group.class}
         key={group.type}
         name={group.type}
         label={group.label}

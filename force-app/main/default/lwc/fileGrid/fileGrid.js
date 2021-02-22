@@ -19,15 +19,6 @@ const defaultColumns = [
     hideDefaultActions: true
   },
   {
-    label: "Type",
-    fieldName: "Type__c",
-    type: "badge",
-    typeAttributes: {
-      id: { fieldName: "Id" },
-      label: { fieldName: "Type__c" }
-    }
-  },
-  {
     label: "File Extension",
     fieldName: "FileType",
     wrapText: true,
@@ -39,6 +30,15 @@ const defaultColumns = [
     type: "number",
     wrapText: true,
     hideDefaultActions: true
+  },
+  {
+    label: "Type",
+    fieldName: "Type__c",
+    type: "badge",
+    typeAttributes: {
+      id: { fieldName: "Id" },
+      label: { fieldName: "Type__c" }
+    }
   },
   {
     label: "Uploaded By",
@@ -351,7 +351,9 @@ export default class FileGrid extends NavigationMixin(LightningElement) {
         type: section,
         label: `${section} (${
           filesByType[section] ? filesByType[section].length : 0
-        })`
+        })`,
+        class:
+          filesByType[section] && filesByType[section].length > 0 ? "" : "empty"
       };
     });
   }
