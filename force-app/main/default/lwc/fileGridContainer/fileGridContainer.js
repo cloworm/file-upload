@@ -20,11 +20,12 @@ const defaultColumns = [
     sortable: true
   },
   {
-    label: "File Extension",
+    label: "Extension",
     fieldName: "FileType",
     wrapText: true,
     hideDefaultActions: true,
-    sortable: true
+    sortable: true,
+    fixedWidth: 100
   },
   {
     label: "Size (bytes)",
