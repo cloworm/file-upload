@@ -20,13 +20,6 @@
         description="Enter recordId for Lightning or {!recordId} for Experience Cloud"
       />
     <property
-        name="isExperienceCloud"
-        label="Is Experience Cloud"
-        type="Boolean"
-        default="true"
-        description="Check this box if this component is being used in Experience Cloud"
-      />
-    <property
         name="fileExtensions"
         label="Allowed File Extensions"
         type="String"

@@ -4,6 +4,7 @@ import { NavigationMixin } from "lightning/navigation";
 import { deleteRecord } from "lightning/uiRecordApi";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import { refreshApex } from "@salesforce/apex";
+import getSiteUrl from "@salesforce/apex/GetSite.getSiteUrl";
 
 const ERROR_TITLE = "Error";
 const ERROR_VARIANT = "error";
@@ -92,7 +93,6 @@ export default class FileGridContainer extends NavigationMixin(
   LightningElement
 ) {
   @api recordId;
-  @api isExperienceCloud;
   @track filteredFiles;
   @track columns = defaultColumns;
   @track availableSections;
@@ -104,6 +104,7 @@ export default class FileGridContainer extends NavigationMixin(
   recordToDelete;
   wiredFilesResult;
   searchTerm;
+  isExperienceCloud;
 
   // File Preview
   previewContentVersionId;
@@ -130,6 +131,17 @@ export default class FileGridContainer extends NavigationMixin(
 
     // Set value of filteredFiles
     this.applyFilter();
+  }
+
+  @wire(getSiteUrl)
+  wiredSite({ error, data }) {
+    if (data) {
+      this.isExperienceCloud = true;
+    }
+
+    if (error) {
+      console.error("error", error);
+    }
   }
 
   @api

@@ -6,7 +6,6 @@ import TYPE_FIELD from "@salesforce/schema/ContentVersion.Type__c";
 
 export default class UploadFilesByType extends LightningElement {
   @api recordId;
-  @api isExperienceCloud;
   @track filesUploaded = [
     // {
     //   id: 1,
@@ -70,7 +69,6 @@ export default class UploadFilesByType extends LightningElement {
     this.filesUploaded.push(file);
     uploadFile(file)
       .then((result) => {
-        console.log("RESULT", JSON.parse(JSON.stringify(result)));
         const idx = this.getFileIdxById(file.id);
         this.filesUploaded[idx].Id = result.Id;
         this.filesUploaded[idx].ContentDocumentId = result.ContentDocumentId;

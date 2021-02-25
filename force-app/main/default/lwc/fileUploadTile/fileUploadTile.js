@@ -73,7 +73,6 @@ export default class FileUploadTile extends NavigationMixin(LightningElement) {
 
   handlePreview(event) {
     if (this.isExperienceCloud) {
-      console.log("FILE", JSON.parse(JSON.stringify(this.file)));
       this.previewContentVersionId = this.file.Id;
       this.previewContentDocumentId = this.file.ContentDocumentId;
       this.previewType = this.file.FileType;
