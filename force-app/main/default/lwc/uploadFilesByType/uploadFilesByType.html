@@ -35,18 +35,17 @@
       <template for:each={fileQueue} for:item="file">
         <lightning-layout horizontal-align="spread" key={file.id}>
           <lightning-layout-item size="6">
-            <lightning-input
-              class="slds-p-bottom_small"
-              name="filename"
-              label="Filename"
-              type="text"
-              value={file.filename}
-              variant="label-hidden"
-              read-only
-            ></lightning-input>
+            <p class="slds-p-vertical_x-small">{file.filename}</p>
           </lightning-layout-item>
           <lightning-layout-item size="6">
+            <p
+              if:true={file.error}
+              class="slds-text-color_error slds-p-vertical_x-small"
+            >
+              {file.error}
+            </p>
             <c-select
+              if:false={file.error}
               select-id={file.id}
               options={types}
               onchange={handleTypeChange}

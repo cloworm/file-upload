@@ -61,6 +61,7 @@ export default class UploadFilesByType extends LightningElement {
   handleLoad(event) {
     const file = event.detail;
     this.fileQueue.push(file);
+
     this.handleOpenModal();
   }
 
@@ -118,7 +119,11 @@ export default class UploadFilesByType extends LightningElement {
     modal.hide();
 
     // upload files
-    this.fileQueue.forEach((file) => this.handleUpload(file));
+    this.fileQueue.forEach((file) => {
+      if (file.error) return;
+
+      this.handleUpload(file);
+    });
 
     // reset file queue
     this.fileQueue = [];
