@@ -15,6 +15,7 @@ public inherited sharing class FileGridController {
 
     return [
       SELECT
+        Id,
         Type__c,
         ContentDocument.Id,
         ContentDocument.FileType,

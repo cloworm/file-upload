@@ -3,9 +3,11 @@ import uploadFile from "@salesforce/apex/FileUploadController.uploadFile";
 import { getPicklistValues, getObjectInfo } from "lightning/uiObjectInfoApi";
 import CONTENT_VERSION_OBJECT from "@salesforce/schema/ContentVersion";
 import TYPE_FIELD from "@salesforce/schema/ContentVersion.Type__c";
+import getVersionData from "@salesforce/apex/GetVersionData.getData";
 
 export default class UploadFilesByType extends LightningElement {
   @api recordId;
+  @api isExperienceCloud;
   @track filesUploaded = [
     // {
     //   id: 1,
@@ -67,6 +69,7 @@ export default class UploadFilesByType extends LightningElement {
   // Create a ContentVersion and attach file to the given recordId using the provided base64 and filename
   handleUpload(file) {
     this.filesUploaded.push(file);
+    console.log("uploading", JSON.parse(JSON.stringify(file)));
     uploadFile(file)
       .then((result) => {
         const idx = this.getFileIdxById(file.id);
@@ -93,12 +96,14 @@ export default class UploadFilesByType extends LightningElement {
   }
 
   handleOpenModal() {
-    const modal = this.template.querySelector("c-modal");
+    // const modal = this.template.querySelector("c-modal");
+    const modal = this.template.querySelector(`[data-id="types"]`);
     modal.show();
   }
 
   handleCancelModal() {
-    const modal = this.template.querySelector("c-modal");
+    // const modal = this.template.querySelector("c-modal");
+    const modal = this.template.querySelector(`[data-id="types"]`);
     modal.hide();
 
     this.files = [];
@@ -106,11 +111,11 @@ export default class UploadFilesByType extends LightningElement {
 
   handleCloseModal() {
     // validate form
-    this.formValid = this.isValid();
 
     if (!this.formValid) return;
 
-    const modal = this.template.querySelector("c-modal");
+    // const modal = this.template.querySelector("c-modal");
+    const modal = this.template.querySelector(`[data-id="types"]`);
     modal.hide();
 
     // upload files

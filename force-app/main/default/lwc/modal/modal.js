@@ -4,6 +4,19 @@ const CSS_CLASS = "modal-hidden";
 
 export default class Modal extends LightningElement {
   showModal = false;
+  modalClass = "slds-modal slds-fade-in-open";
+  _size;
+
+  @api
+  set size(value) {
+    this._size = value;
+    if (this._size === "large") {
+      this.modalClass += " slds-modal_large";
+    }
+  }
+  get size() {
+    return this._size;
+  }
 
   @api
   set header(value) {

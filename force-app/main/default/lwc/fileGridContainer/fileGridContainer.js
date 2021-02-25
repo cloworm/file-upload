@@ -92,16 +92,22 @@ export default class FileGridContainer extends NavigationMixin(
   LightningElement
 ) {
   @api recordId;
+  @api isExperienceCloud;
   @track filteredFiles;
   @track columns = defaultColumns;
   @track availableSections;
   @track activeSections;
   _deleteColumn;
+  _recordId;
   _previewColumn;
   files;
   recordToDelete;
   wiredFilesResult;
   searchTerm;
+
+  // File Preview
+  previewContentVersionId;
+  previewContentDocumentId;
 
   @wire(getFiles, { id: "$recordId" })
   wiredFiles(result) {
@@ -109,8 +115,7 @@ export default class FileGridContainer extends NavigationMixin(
 
     if (!result.data) return;
     this.files = result.data.map((row) => {
-      const file = JSON.parse(JSON.stringify(row));
-      file.Id = file.ContentDocument?.Id;
+      let file = { ...row };
       file.OwnerUrl = `/lightning/r/User/${file.ContentDocument?.OwnerId}/view`;
       file.FileType = file.ContentDocument?.FileType;
       file.Title = file.ContentDocument?.Title;
@@ -224,15 +229,22 @@ export default class FileGridContainer extends NavigationMixin(
 
   // Open file in preview window
   handlePreview(file) {
-    this[NavigationMixin.Navigate]({
-      type: "standard__namedPage",
-      attributes: {
-        pageName: "filePreview"
-      },
-      state: {
-        selectedRecordId: file.Id
-      }
-    });
+    if (this.isExperienceCloud) {
+      this.previewContentVersionId = file.Id;
+      this.previewContentDocumentId = file.ContentDocumentId;
+
+      this.handleShowPreview();
+    } else {
+      this[NavigationMixin.Navigate]({
+        type: "standard__namedPage",
+        attributes: {
+          pageName: "filePreview"
+        },
+        state: {
+          selectedRecordId: file.ContentDocumentId
+        }
+      });
+    }
   }
 
   // Download file
@@ -240,7 +252,10 @@ export default class FileGridContainer extends NavigationMixin(
     this[NavigationMixin.Navigate]({
       type: "standard__webPage",
       attributes: {
-        url: `/sfc/servlet.shepherd/document/download/${file.Id}?operationContext=S1`
+        url: this.isExperienceCloud
+          ? window.location.origin +
+            `/sfc/servlet.shepherd/document/download/${file.ContentDocumentId}`
+          : `/sfc/servlet.shepherd/document/download/${file.ContentDocumentId}?operationContext=S1`
       }
     });
   }
@@ -248,9 +263,11 @@ export default class FileGridContainer extends NavigationMixin(
   // Display confirmation modal to user before deleting
   handleDelete(file) {
     if (!this.deleteColumn) return;
-    this.recordToDelete = file.Id;
+    this.recordToDelete = file.ContentDocumentId;
 
-    const modal = this.template.querySelector("c-modal");
+    // const modal = this.template.querySelector("c-modal");
+    const modal = this.template.querySelector(`[data-id="delete"]`);
+
     modal.show();
   }
 
@@ -259,7 +276,9 @@ export default class FileGridContainer extends NavigationMixin(
     const recordId = this.recordToDelete;
 
     // Hide modal
-    const modal = this.template.querySelector("c-modal");
+    // const modal = this.template.querySelector("c-modal");
+    const modal = this.template.querySelector(`[data-id="delete"]`);
+
     modal.hide();
 
     try {
@@ -362,5 +381,15 @@ export default class FileGridContainer extends NavigationMixin(
 
   handleSectionToggle(event) {
     this.activeSections = event.detail.openSections;
+  }
+
+  handleShowPreview() {
+    const modal = this.template.querySelector(`[data-id="preview"]`);
+    modal.show();
+  }
+
+  handleHidePreview() {
+    const modal = this.template.querySelector(`[data-id="preview"]`);
+    modal.hide();
   }
 }

@@ -1,0 +1,10 @@
+<template>
+  <template for:each={imgUrls} for:item="imgUrl">
+    <img
+      key={imgUrl}
+      src={imgUrl}
+      onerror={handleImgLoadError}
+      onload={handleImgLoadSuccess}
+    />
+  </template>
+</template>
