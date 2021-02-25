@@ -3,7 +3,6 @@ import uploadFile from "@salesforce/apex/FileUploadController.uploadFile";
 import { getPicklistValues, getObjectInfo } from "lightning/uiObjectInfoApi";
 import CONTENT_VERSION_OBJECT from "@salesforce/schema/ContentVersion";
 import TYPE_FIELD from "@salesforce/schema/ContentVersion.Type__c";
-import getVersionData from "@salesforce/apex/GetVersionData.getData";
 
 export default class UploadFilesByType extends LightningElement {
   @api recordId;
@@ -69,11 +68,13 @@ export default class UploadFilesByType extends LightningElement {
   // Create a ContentVersion and attach file to the given recordId using the provided base64 and filename
   handleUpload(file) {
     this.filesUploaded.push(file);
-    console.log("uploading", JSON.parse(JSON.stringify(file)));
     uploadFile(file)
       .then((result) => {
+        console.log("RESULT", JSON.parse(JSON.stringify(result)));
         const idx = this.getFileIdxById(file.id);
-        this.filesUploaded[idx].ContentDocumentId = result;
+        this.filesUploaded[idx].Id = result.Id;
+        this.filesUploaded[idx].ContentDocumentId = result.ContentDocumentId;
+        this.filesUploaded[idx].FileType = result.FileType;
 
         if (this.grid) {
           // Refresh the file grid component

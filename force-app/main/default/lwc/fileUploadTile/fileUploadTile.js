@@ -1,5 +1,6 @@
-import { LightningElement, api } from "lwc";
+import { LightningElement, api, wire } from "lwc";
 import { NavigationMixin } from "lightning/navigation";
+import getSiteUrl from "@salesforce/apex/GetSite.getSiteUrl";
 
 const extensionToMimeType = {
   csv: "doctype:csv",
@@ -34,6 +35,21 @@ const extensionToMimeType = {
 
 export default class FileUploadTile extends NavigationMixin(LightningElement) {
   @api file;
+  isExperienceCloud;
+  previewContentVersionId;
+  previewContentDocumentId;
+  previewType;
+
+  @wire(getSiteUrl)
+  wiredSite({ error, data }) {
+    if (data) {
+      this.isExperienceCloud = true;
+    }
+
+    if (error) {
+      console.error("error", error);
+    }
+  }
 
   get isUploaded() {
     return this.file && this.file.ContentDocumentId;
@@ -56,16 +72,35 @@ export default class FileUploadTile extends NavigationMixin(LightningElement) {
   }
 
   handlePreview(event) {
-    const recordId = event.currentTarget.dataset.id;
+    if (this.isExperienceCloud) {
+      console.log("FILE", JSON.parse(JSON.stringify(this.file)));
+      this.previewContentVersionId = this.file.Id;
+      this.previewContentDocumentId = this.file.ContentDocumentId;
+      this.previewType = this.file.FileType;
 
-    this[NavigationMixin.Navigate]({
-      type: "standard__namedPage",
-      attributes: {
-        pageName: "filePreview"
-      },
-      state: {
-        selectedRecordId: recordId
-      }
-    });
+      this.handleShowPreview();
+    } else {
+      const recordId = event.currentTarget.dataset.id;
+
+      this[NavigationMixin.Navigate]({
+        type: "standard__namedPage",
+        attributes: {
+          pageName: "filePreview"
+        },
+        state: {
+          selectedRecordId: recordId
+        }
+      });
+    }
+  }
+
+  handleShowPreview() {
+    const modal = this.template.querySelector(`[data-id="preview"]`);
+    modal.show();
+  }
+
+  handleHidePreview() {
+    const modal = this.template.querySelector(`[data-id="preview"]`);
+    modal.hide();
   }
 }

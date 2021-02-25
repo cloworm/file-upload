@@ -8,11 +8,11 @@ public with sharing class FileUploadController {
    * @param {String} recordId - Id of the record you want to attach this file to
    * @param {String} type - value for Type__c custom picklist field
    *
-   * @return {ContentDocument} - returns the created ContentDocumentId if the
+   * @return {ContentVersion} - returns the created ContentVersion.Id and ContentDocumentId if the
    *   upload was successful, otherwise returns null
    */
   @AuraEnabled
-  public static String uploadFile(
+  public static ContentVersion uploadFile(
     String base64,
     String filename,
     String recordId,
@@ -23,7 +23,11 @@ public with sharing class FileUploadController {
     if (cv == null || cdl == null) {
       return null;
     }
-    return cdl.ContentDocumentId;
+    return [
+      SELECT Id, FileType, ContentDocumentId
+      FROM ContentVersion
+      WHERE Id = :cv.Id
+    ];
   }
   /*
    * @method createContentVersion() [private]

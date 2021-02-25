@@ -1,11 +1,22 @@
 import { LightningElement, api, track } from "lwc";
+import getSiteUrl from "@salesforce/apex/GetSite.getSiteUrl";
 
 export default class FilePreview extends LightningElement {
   @api contentVersionId;
   @api contentDocumentId;
+  @api type;
+
+  get isImage() {
+    if (!this.type) return false;
+
+    return ["BMP", "GIF", "JPG", "JPEG", "PNG"].includes(
+      this.type.toUpperCase()
+    );
+  }
 
   // List of all potential img urls
-  @track imgUrls = [];
+  @track
+  imgUrls = [];
 
   // Page num used for tracking pages
   pageNum = 0;
@@ -18,28 +29,34 @@ export default class FilePreview extends LightningElement {
     this.generateImgUrl();
   }
 
-  handleImgLoadError(event) {
+  handleImgLoadError() {
     // When onerror event is triggered on img element, then mark it and don't generate any new img urls
     this.loadFailed = true;
-    console.log("failed!");
+    // {"message":"Creating renditions of the file."}
     this.imgUrls.pop();
   }
 
-  handleImgLoadSuccess(event) {
+  handleImgLoadSuccess() {
     // When onload event is triggered on img element, then increase pageNum and try to render one more img
     this.pageNum++;
     this.generateImgUrl();
   }
 
   generateImgUrl() {
-    // let previewUrl = "/sfc/servlet.shepherd/version/renditionDownload";
-    // previewUrl += `?rendition=$SVGZ`;
-    // previewUrl += `&versionId=${this.contentVersionId}`;
-    // previewUrl += `&contentId=${this.contentDocumentId}`;
-    // previewUrl += `&page=${this.pageNum}`;
-    let community = "test2";
-    let previewUrl = `/${community}/sfc/servlet.shepherd/version/renditionDownload?rendition=SVGZ&versionId=${this.contentVersionId}&operationContext=CHATTER&contentId=${this.contentDocumentId}&page=${this.pageNum}`;
+    getSiteUrl().then((url) => {
+      let siteUrl;
 
-    this.imgUrls.push(previewUrl);
+      if (url) {
+        siteUrl = url.replace(/\/s$/g, "");
+      }
+
+      const previewUrl = `${siteUrl}/sfc/servlet.shepherd/version/renditionDownload?rendition=${
+        this.isImage ? "THUMB720BY480" : "SVGZ"
+      }&versionId=${this.contentVersionId}&operationContext=CHATTER&contentId=${
+        this.contentDocumentId
+      }&page=${this.pageNum}`;
+      console.log("preview", previewUrl);
+      this.imgUrls.push(previewUrl);
+    });
   }
 }

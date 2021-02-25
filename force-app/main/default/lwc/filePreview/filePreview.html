@@ -1,6 +1,7 @@
 <template>
   <template for:each={imgUrls} for:item="imgUrl">
     <img
+      class="preview"
       key={imgUrl}
       src={imgUrl}
       onerror={handleImgLoadError}

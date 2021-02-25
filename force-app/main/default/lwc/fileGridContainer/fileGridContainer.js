@@ -232,6 +232,7 @@ export default class FileGridContainer extends NavigationMixin(
     if (this.isExperienceCloud) {
       this.previewContentVersionId = file.Id;
       this.previewContentDocumentId = file.ContentDocumentId;
+      this.previewType = file.FileType;
 
       this.handleShowPreview();
     } else {

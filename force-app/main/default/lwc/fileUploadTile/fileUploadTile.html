@@ -98,4 +98,20 @@
       </div>
     </div>
   </template>
+
+  <c-modal data-id="preview" header="Preview" size="large">
+    <c-file-preview
+      content-version-id={previewContentVersionId}
+      content-document-id={previewContentDocumentId}
+      type={previewType}
+    ></c-file-preview>
+    <div slot="footer">
+      <lightning-button
+        label="Close"
+        variant="neutral"
+        onclick={handleHidePreview}
+        class="slds-p-right_x-small"
+      ></lightning-button>
+    </div>
+  </c-modal>
 </template>
