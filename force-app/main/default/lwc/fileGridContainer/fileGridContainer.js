@@ -375,7 +375,7 @@ export default class FileGridContainer extends NavigationMixin(
 
     this.filteredFiles = this.availableSections.map((section) => {
       return {
-        data: filesByType[section],
+        data: filesByType[section] ? filesByType[section] : [],
         type: section,
         label: `${section} (${
           filesByType[section] ? filesByType[section].length : 0
