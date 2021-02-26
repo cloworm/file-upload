@@ -61,4 +61,8 @@ export default class FilePreview extends LightningElement {
       this.imgUrls.push(previewUrl);
     });
   }
+
+  get hasPreview() {
+    return this.imgUrls && this.imgUrls.length > 0;
+  }
 }
