@@ -53,8 +53,7 @@ const defaultColumns = [
     typeAttributes: {
       id: { fieldName: "OwnerId" },
       name: { fieldName: "Owner" },
-      photo: { fieldName: "OwnerSmallPhotoUrl" },
-      url: { fieldName: "OwnerUrl" }
+      photo: { fieldName: "OwnerSmallPhotoUrl" }
     },
     hideDefaultActions: true,
     sortable: true
@@ -116,15 +115,14 @@ export default class FileGridContainer extends NavigationMixin(
 
     if (!result.data) return;
     this.files = result.data.map((row) => {
-      let file = { ...row };
-      file.OwnerUrl = `/lightning/r/User/${file.ContentDocument?.OwnerId}/view`;
-      file.FileType = file.ContentDocument?.FileType;
-      file.Title = file.ContentDocument?.Title;
-      file.ContentModifiedDate = file.ContentDocument?.ContentModifiedDate;
-      file.ContentSize = file.ContentDocument?.ContentSize;
-      file.Owner = file.ContentDocument?.Owner.Name;
-      file.OwnerId = file.ContentDocument?.OwnerId;
-      file.OwnerSmallPhotoUrl = file.ContentDocument?.Owner.SmallPhotoUrl;
+      const file = {
+        ...row,
+        FileType: row.ContentDocument?.FileType,
+        Title: row.ContentDocument?.Title,
+        ContentModifiedDate: row.ContentDocument?.ContentModifiedDate,
+        Owner: row.Owner?.Name,
+        OwnerSmallPhotoUrl: row.Owner?.SmallPhotoUrl
+      };
 
       return file;
     });

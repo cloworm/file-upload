@@ -12,7 +12,7 @@ export default class FileDataTable extends LightningDatatable {
     user: {
       template: userColumn,
       standardCellLayout: true,
-      typeAttributes: ["id", "name", "photo", "url"]
+      typeAttributes: ["id", "name", "photo"]
     }
   };
 }

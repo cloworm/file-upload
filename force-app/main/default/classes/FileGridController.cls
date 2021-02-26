@@ -17,14 +17,14 @@ public inherited sharing class FileGridController {
       SELECT
         Id,
         Type__c,
+        OwnerId,
+        Owner.Name,
+        Owner.SmallPhotoUrl,
         ContentDocument.Id,
         ContentDocument.FileType,
         ContentDocument.Title,
         ContentDocument.ContentModifiedDate,
-        ContentDocument.ContentSize,
-        ContentDocument.Owner.Name,
-        ContentDocument.Owner.SmallPhotoUrl,
-        ContentDocument.OwnerId
+        ContentDocument.ContentSize
       FROM ContentVersion
       WHERE Id IN :latestPublishedVersionIds
       ORDER BY ContentDocument.Title ASC
