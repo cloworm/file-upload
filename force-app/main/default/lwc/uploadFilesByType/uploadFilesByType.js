@@ -75,7 +75,6 @@ export default class UploadFilesByType extends LightningElement {
             contentVersionId: file.Id,
             recordId: this.recordId
           });
-          console.log("finalized", JSON.parse(JSON.stringify(final)));
           const idx = this.getFileIdxById(file.id);
           this.filesUploaded[idx].Id = final.Id;
           this.filesUploaded[idx].ContentDocumentId = final.ContentDocumentId;

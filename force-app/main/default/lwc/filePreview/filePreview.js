@@ -39,7 +39,10 @@ export default class FilePreview extends LightningElement {
   handleImgLoadSuccess() {
     // When onload event is triggered on img element, then increase pageNum and try to render one more img
     this.pageNum++;
-    this.generateImgUrl();
+
+    if (!this.isImage) {
+      this.generateImgUrl();
+    }
   }
 
   generateImgUrl() {
@@ -51,12 +54,10 @@ export default class FilePreview extends LightningElement {
       }
 
       const previewUrl = `${siteUrl}/sfc/servlet.shepherd/version/renditionDownload?rendition=${
-        this.isImage ? "THUMB720BY480" : "SVGZ"
+        this.isImage ? this.getRendition() : "SVGZ"
       }&versionId=${this.contentVersionId}&operationContext=CHATTER&contentId=${
         this.contentDocumentId
-      }&page=${this.pageNum}`;
-
-      console.log("previewUrl", previewUrl);
+      }${this.isImage ? "" : `&page=${this.pageNum}`}`;
 
       this.imgUrls.push(previewUrl);
     });
@@ -64,5 +65,27 @@ export default class FilePreview extends LightningElement {
 
   get hasPreview() {
     return this.imgUrls && this.imgUrls.length > 0;
+  }
+
+  getRendition() {
+    switch (this.type.toUpperCase()) {
+      case "PNG":
+        return "ORIGINAL_Png";
+
+      case "JPEG":
+        return "ORIGINAL_Jpeg";
+
+      case "GIF":
+        return "ORIGINAL_Gif";
+
+      case "BMP":
+        return "ORIGINAL_Bmp";
+
+      case "JPG":
+        return "ORIGINAL_Jpg";
+
+      default:
+        return "THUMB720BY480";
+    }
   }
 }
