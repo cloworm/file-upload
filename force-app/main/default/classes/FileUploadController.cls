@@ -13,20 +13,28 @@ public with sharing class FileUploadController {
    */
   @AuraEnabled
   public static ContentVersion uploadFile(
-    String base64,
+    String chunk,
     String filename,
     String recordId,
-    String type
+    String type,
+    String versionId
   ) {
-    ContentVersion cv = createContentVersion(base64, filename, type);
-    ContentDocumentLink cdl = createContentLink(cv.Id, recordId);
-    if (cv == null || cdl == null) {
+    if (String.isBlank(versionId)) {
+      ContentVersion cv = createContentVersion(chunk, filename, type);
+      ContentDocumentLink cdl = createContentLink(cv.Id, recordId);
+      versionId = cv.Id;
+    } else {
+      addChunk(versionId, chunk);
+    }
+
+    if (versionId == null) {
       return null;
     }
+
     return [
       SELECT Id, FileType, ContentDocumentId
       FROM ContentVersion
-      WHERE Id = :cv.Id
+      WHERE Id = :versionId
     ];
   }
   /*
@@ -41,15 +49,18 @@ public with sharing class FileUploadController {
    *   if there was an error inserting the record
    */
   private static ContentVersion createContentVersion(
-    String base64,
+    String chunk,
     String filename,
     String type
   ) {
     ContentVersion cv = new ContentVersion();
-    cv.VersionData = EncodingUtil.base64Decode(base64);
+    cv.VersionData = EncodingUtil.base64Decode(chunk);
     cv.Title = filename;
-    cv.PathOnClient = filename;
     cv.Type__c = type;
+
+    cv.PathOnClient = filename;
+    cv.IsMajorVersion = false;
+
     try {
       insert cv;
       return cv;
@@ -94,5 +105,54 @@ public with sharing class FileUploadController {
       System.debug(e);
       return null;
     }
+  }
+
+  private static void addChunk(Id contentVersionId, String chunk) {
+    ContentVersion existingVersion = [
+      SELECT Id, VersionData
+      FROM ContentVersion
+      WHERE Id = :contentVersionId
+    ];
+    String existingBody = EncodingUtil.base64Encode(
+      existingVersion.VersionData
+    );
+    existingVersion.VersionData = EncodingUtil.base64Decode(
+      existingBody + chunk
+    );
+    update existingVersion;
+  }
+
+  @AuraEnabled
+  public static ContentVersion finalizeVersion(
+    String recordId,
+    String contentVersionId
+  ) {
+    ContentVersion cv = [
+      SELECT Id, VersionData, Title, Type__c, ContentDocumentId
+      FROM ContentVersion
+      WHERE Id = :contentVersionId
+    ];
+
+    ContentVersion finalVersion = createContentVersion(
+      EncodingUtil.base64Encode(cv.VersionData),
+      cv.Title,
+      cv.Type__c
+    );
+
+    System.debug(recordId);
+    ContentDocumentLink finalCDL = createContentLink(finalVersion.Id, recordId);
+
+    try {
+      delete [SELECT Id FROM ContentDocument WHERE Id = :cv.ContentDocumentId];
+    } catch (DMLException e) {
+      System.debug(e);
+      return null;
+    }
+
+    return [
+      SELECT Id, FileType, ContentDocumentId
+      FROM ContentVersion
+      WHERE Id = :finalVersion.Id
+    ];
   }
 }

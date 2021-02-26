@@ -56,6 +56,8 @@ export default class FilePreview extends LightningElement {
         this.contentDocumentId
       }&page=${this.pageNum}`;
 
+      console.log("previewUrl", previewUrl);
+
       this.imgUrls.push(previewUrl);
     });
   }

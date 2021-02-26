@@ -1,35 +1,15 @@
 import { LightningElement, api, track, wire } from "lwc";
 import uploadFile from "@salesforce/apex/FileUploadController.uploadFile";
+import finalizeVersion from "@salesforce/apex/FileUploadController.finalizeVersion";
 import { getPicklistValues, getObjectInfo } from "lightning/uiObjectInfoApi";
 import CONTENT_VERSION_OBJECT from "@salesforce/schema/ContentVersion";
 import TYPE_FIELD from "@salesforce/schema/ContentVersion.Type__c";
 
+const CHUNK_SIZE = 750000;
+
 export default class UploadFilesByType extends LightningElement {
   @api recordId;
-  @track filesUploaded = [
-    // {
-    //   id: 1,
-    //   filename: "test.png",
-    //   base64: "12345",
-    //   recordId: this.recordId,
-    //   type: "png",
-    //   ContentDocumentId: null,
-    //   size: 1000,
-    //   error: null,
-    //   Type: "Category A"
-    // },
-    // {
-    //   id: 2,
-    //   filename: "test file.pdf",
-    //   base64: "12345",
-    //   recordId: this.recordId,
-    //   type: "pdf",
-    //   ContentDocumentId: "15235",
-    //   size: 3502349,
-    //   error: null,
-    //   Type: "Category B"
-    // }
-  ];
+  @track filesUploaded = [];
   @track fileQueue = [];
   formValid = true;
 
@@ -60,24 +40,51 @@ export default class UploadFilesByType extends LightningElement {
 
   handleLoad(event) {
     const file = event.detail;
-    this.fileQueue.push(file);
+    this.fileQueue.push({ ...file });
 
     this.handleOpenModal();
   }
 
   // Create a ContentVersion and attach file to the given recordId using the provided base64 and filename
   handleUpload(file) {
-    this.filesUploaded.push(file);
-    uploadFile(file)
-      .then((result) => {
-        const idx = this.getFileIdxById(file.id);
-        this.filesUploaded[idx].Id = result.Id;
-        this.filesUploaded[idx].ContentDocumentId = result.ContentDocumentId;
-        this.filesUploaded[idx].FileType = result.FileType;
+    let fromPos = 0;
+    let toPos = Math.min(file.base64.length, fromPos + CHUNK_SIZE);
 
-        if (this.grid) {
-          // Refresh the file grid component
-          this.template.querySelector("c-file-grid-container").refresh();
+    this.filesUploaded.push(file);
+
+    this.uploadChunk(file, fromPos, toPos);
+  }
+
+  uploadChunk(file, fromPos, toPos) {
+    const chunk = file.base64.substring(fromPos, toPos);
+
+    return uploadFile({
+      ...file,
+      versionId: file.Id,
+      chunk
+    })
+      .then(async (result) => {
+        file.Id = result.Id;
+        fromPos = toPos;
+        toPos = Math.min(file.base64.length, fromPos + CHUNK_SIZE);
+
+        if (fromPos < toPos) {
+          this.uploadChunk(file, fromPos, toPos);
+        } else {
+          const final = await finalizeVersion({
+            contentVersionId: file.Id,
+            recordId: this.recordId
+          });
+          console.log("finalized", JSON.parse(JSON.stringify(final)));
+          const idx = this.getFileIdxById(file.id);
+          this.filesUploaded[idx].Id = final.Id;
+          this.filesUploaded[idx].ContentDocumentId = final.ContentDocumentId;
+          this.filesUploaded[idx].FileType = final.FileType;
+
+          if (this.grid) {
+            // Refresh the file grid component
+            this.template.querySelector("c-file-grid-container").refresh();
+          }
         }
       })
       .catch((error) => {
