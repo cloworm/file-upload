@@ -109,7 +109,7 @@ export default class FileGridContainer extends NavigationMixin(
   previewContentVersionId;
   previewContentDocumentId;
 
-  @wire(getFiles, { id: "$recordId" })
+  @wire(getFiles, { recordId: "$recordId" })
   wiredFiles(result) {
     this.wiredFilesResult = result;
 
