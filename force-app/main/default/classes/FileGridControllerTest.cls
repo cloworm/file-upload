@@ -1,3 +1,13 @@
+/**
+ * @description       :
+ * @author            : Chloe Echikson
+ * @group             : Gerent LLC
+ * @last modified on  : 03-01-2021
+ * @last modified by  : Chloe Echikson
+ * Modifications Log
+ * Ver   Date         Author           Modification
+ * 1.0   03-01-2021   Chloe Echikson   Initial Version
+ **/
 @isTest
 private class FileGridControllerTest {
   @testSetup
@@ -36,12 +46,6 @@ private class FileGridControllerTest {
       ContentDocumentId = testCDL.ContentDocumentId
     );
     insert testVersion2;
-
-    // ContentDocumentLink testCDL2 = new ContentDocumentLink();
-    // testCDL2.ContentDocumentId = testVersion2.ContentDocumentId;
-    // testCDL2.LinkedEntityId = testAcct.Id;
-    // testCDL2.ShareType = 'V';
-    // insert testCDL2;
 
     ContentVersion testVersion3 = new ContentVersion(
       Title = 'Another Test File',
@@ -82,5 +86,13 @@ private class FileGridControllerTest {
     List<ContentVersion> files = FileGridController.getFiles(testAccount.Id);
 
     System.assertEquals(files.size(), 0);
+  }
+
+  @isTest
+  static void testNoRecord() {
+    String recordId = null;
+    List<ContentVersion> files = FileGridController.getFiles(recordId);
+
+    System.assertEquals(files, null);
   }
 }

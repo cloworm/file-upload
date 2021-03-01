@@ -16,7 +16,7 @@
         label="Record Id"
         type="String"
         required="true"
-        default="{!recordId}"
+        default="recordId"
         description="Enter recordId for Lightning or {!recordId} for Experience Cloud"
       />
     <property
