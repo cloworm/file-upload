@@ -23,30 +23,30 @@
         name="fileExtensions"
         label="Allowed File Extensions"
         type="String"
-        default=".png,.gif,.docx"
-        required="true"
+        default=""
+        description="Comma separated list of file extensions that can be uploaded"
       />
     <property
-        name="grid"
-        label="Show Grid Component"
+        name="table"
+        label="Show Table Component"
         type="Boolean"
         default="true"
       />
     <property
         name="deleteColumn"
-        label="Use Delete Column in Grid"
+        label="Use Delete Column in Table"
         type="Boolean"
         default="true"
       />
     <property
         name="editColumn"
-        label="Use Edit Column in Grid"
+        label="Use Edit Column in Table"
         type="Boolean"
         default="true"
       />
     <property
         name="downloadColumn"
-        label="Use Download Column in Grid"
+        label="Use Download Column in Table"
         type="Boolean"
         default="true"
       />

@@ -24,11 +24,11 @@
         name={group.type}
         label={group.label}
       >
-        <c-file-grid
-          grid-data={group.data}
+        <c-file-table
+          table-data={group.data}
           columns={columns}
           onrowaction={handleRowAction}
-        ></c-file-grid>
+        ></c-file-table>
       </lightning-accordion-section>
     </template>
   </lightning-accordion>

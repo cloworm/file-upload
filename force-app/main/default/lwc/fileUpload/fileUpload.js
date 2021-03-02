@@ -50,21 +50,6 @@ export default class FileUpload extends LightningElement {
     this.template.querySelector(".uploader").appendChild(style);
   }
 
-  get hasInvalidConfig() {
-    return false;
-    // return [...new Set(this.fileExtensions.split(","))].find((extension) => {
-    //   // let key = extension.replace(".", "").toLowerCase();
-    // });
-  }
-
-  // Get list of extensions set by admin in component properties
-  get allowedExtensions() {
-    // Remove any duplicates
-    const uniqueExtensions = [...new Set(this.fileExtensions.split(","))];
-
-    return uniqueExtensions.sort().join(", ");
-  }
-
   // Apply dropzone hover styles ondragenter
   handleDragEnter(event) {
     event.preventDefault();

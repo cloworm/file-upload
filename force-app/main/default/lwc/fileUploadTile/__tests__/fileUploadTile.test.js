@@ -24,18 +24,52 @@ describe("c-file-upload-tile", () => {
       is: FileUploadTile
     });
     element.file = {
-      id: 1,
-      filename: "Test.pdf",
+      Id: 1,
+      Title: "Test.pdf",
       ContentDocumentId: "12345",
-      type: "application/pdf",
-      base64: "",
+      Type__c: "Category A",
       recordId: null,
-      size: 3500,
-      error: null
+      ContentSize: 3500
     };
     document.body.appendChild(element);
 
     const succcessIcon = element.shadowRoot.querySelector("[title=success]");
     expect(succcessIcon).not.toBeNull();
+  });
+
+  it("Displays the file name as a link to the preview method", () => {
+    const element = createElement("c-file-upload-tile", {
+      is: FileUploadTile
+    });
+    element.file = {
+      Id: 1,
+      Title: "Test.pdf",
+      ContentDocumentId: "12345",
+      Type__c: "Category A",
+      recordId: null,
+      ContentSize: 3500
+    };
+    document.body.appendChild(element);
+
+    const filename = element.shadowRoot.querySelector("[title=filename]");
+    expect(filename.textContent).toBe("Test.pdf");
+  });
+
+  it("Displays the file size", () => {
+    const element = createElement("c-file-upload-tile", {
+      is: FileUploadTile
+    });
+    element.file = {
+      Id: 1,
+      Title: "Test.pdf",
+      ContentDocumentId: "12345",
+      Type__c: "Category A",
+      recordId: null,
+      ContentSize: 3500
+    };
+    document.body.appendChild(element);
+
+    const fileSize = element.shadowRoot.querySelector("span");
+    expect(fileSize.textContent).toBe("3500 bytes");
   });
 });

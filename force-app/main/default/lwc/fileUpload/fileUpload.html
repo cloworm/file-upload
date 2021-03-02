@@ -1,42 +1,21 @@
 <template>
-  <template if:true={hasInvalidConfig}>
-    <lightning-card class="slds-text-align_center">
-      <lightning-icon
-        icon-name="utility:warning"
-        alternative-text="error"
-        variant="error"
-        title="Error"
-      ></lightning-icon>
-      <p>
-        Something is wrong with the configured&nbsp;
-        <strong>Allowed File Extensions</strong>.
-      </p>
-      <p>
-        Please consult the component documentation and make sure you are only
-        using supported file extensions.
-      </p>
-    </lightning-card>
-  </template>
-
-  <template if:false={hasInvalidConfig}>
-    <div
-      class="box"
-      data-id="dropzone"
-      ondragenter={handleDragEnter}
-      ondragover={handleDragEnter}
-      ondragleave={handleDragLeave}
-      ondrop={handleDrop}
+  <div
+    class="box"
+    data-id="dropzone"
+    ondragenter={handleDragEnter}
+    ondragover={handleDragEnter}
+    ondragleave={handleDragLeave}
+    ondrop={handleDrop}
+  >
+    <lightning-file-upload
+      class="uploader"
+      label=""
+      name="fileUploader"
+      accept={fileExtensions}
+      record-id={recordId}
+      onuploadfinished={handleUploadFinished}
+      multiple
     >
-      <lightning-file-upload
-        class="uploader"
-        label=""
-        name="fileUploader"
-        accept={allowedExtensions}
-        record-id={recordId}
-        onuploadfinished={handleUploadFinished}
-        multiple
-      >
-      </lightning-file-upload>
-    </div>
-  </template>
+    </lightning-file-upload>
+  </div>
 </template>

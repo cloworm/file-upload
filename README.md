@@ -10,7 +10,7 @@
 
 - Drag and Drop to upload files
 - Configurable mimetypes
-- Optional grid component to display all files on a record which can be filtered by filename
+- Optional table component to display all files on a record which can be filtered by filename
 
 ## Component Properties
 
@@ -19,7 +19,7 @@
 | Property                | Required | Type     | Default Value   |
 | ----------------------- | -------- | -------- | --------------- |
 | Allowed File Extensions | X        | String   | .png,.gif,.docx |
-| Show Grid Component     |          | Checkbox | Checked         |
+| Show Table Component    |          | Checkbox | Checked         |
 | Allow Record Deletion   |          | Checkbox | Checked         |
 
 ## Allowed File Types

@@ -11,18 +11,18 @@
     </h2>
 
     <template for:each={filesUploaded} for:item="file">
-      <c-file-upload-tile file={file} key={file.id}></c-file-upload-tile>
+      <c-file-upload-tile file={file} key={file.Id}></c-file-upload-tile>
     </template>
   </div>
 
-  <c-file-grid-container
-    if:true={grid}
+  <c-file-table-container
+    if:true={table}
     types={types}
     record-id={recordId}
     delete-column={deleteColumn}
     download-column={downloadColumn}
     edit-column={editColumn}
-  ></c-file-grid-container>
+  ></c-file-table-container>
 
   <c-modal data-id="types" header="Assign Types">
     <lightning-layout>

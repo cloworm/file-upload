@@ -12,7 +12,7 @@ export default class UploadFilesByType extends LightningElement {
 
   // Component Properties
   @api fileExtensions;
-  @api grid;
+  @api table;
   @api deleteColumn;
   @api downloadColumn;
   @api editColumn;
@@ -52,20 +52,18 @@ export default class UploadFilesByType extends LightningElement {
     this.files = [];
   }
 
-  handleCloseModal() {
+  async handleCloseModal() {
     // validate form
     if (!this.formValid) return;
 
     const modal = this.template.querySelector(`[data-id="types"]`);
     modal.hide();
 
-    this.handleTypeUpdate(this.fileQueue)
-      .then((response) => {
-        console.log("response", response);
-      })
-      .catch((error) => {
-        console.log("error", error);
-      });
+    try {
+      await this.handleTypeUpdate(this.fileQueue);
+    } catch (error) {
+      console.log("handleTypeUpdate error", error);
+    }
   }
 
   handleTypeChange({ detail: { id, value } }) {
@@ -88,7 +86,6 @@ export default class UploadFilesByType extends LightningElement {
 
   handleUploaded(event) {
     const files = event.detail.files;
-    console.log("files", JSON.parse(JSON.stringify(files)));
 
     this.fileQueue = files;
     this.handleOpenModal();
@@ -96,20 +93,16 @@ export default class UploadFilesByType extends LightningElement {
 
   handleTypeUpdate(files) {
     updateVersionTypes({ contentVersions: files })
-      .then((response) => {
-        console.log("updateVersionTypes response", response);
-
+      .then(() => {
         // reset file queue
         this.fileQueue = [];
 
         // add to uploaded file list
         this.filesUploaded.push(...files);
 
-        console.log("uploaded", JSON.parse(JSON.stringify(this.filesUploaded)));
-
-        if (this.grid) {
-          // Refresh the file grid component
-          this.template.querySelector("c-file-grid-container").refresh();
+        if (this.table) {
+          // Refresh the file table component
+          this.template.querySelector("c-file-table-container").refresh();
         }
       })
       .catch((error) => {

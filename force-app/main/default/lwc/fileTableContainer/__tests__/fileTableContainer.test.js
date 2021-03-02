@@ -1,7 +1,7 @@
 import { createElement } from "lwc";
 import FileGridContainer from "c/fileGridContainer";
 
-describe("c-file-grid-container", () => {
+describe("c-file-table-container", () => {
   afterEach(() => {
     // The jsdom instance is shared across test cases in a single file so reset the DOM
     while (document.body.firstChild) {
@@ -10,7 +10,7 @@ describe("c-file-grid-container", () => {
   });
 
   it("Displays the file count in a header tag when there are no files", () => {
-    const element = createElement("c-file-grid-container", {
+    const element = createElement("c-file-table-container", {
       is: FileGridContainer
     });
     element.recordId = "12345";

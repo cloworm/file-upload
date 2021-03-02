@@ -2,7 +2,7 @@
   <template if:true={file}>
     <div
       class="flex file-container items-center slds-p-bottom_medium"
-      key={file.id}
+      key={file.Id}
     >
       <div class="slds-p-right_large">
         <lightning-icon
@@ -14,7 +14,10 @@
 
       <div class="flex-grow flex flex-col">
         <div class="flex justify-between">
-          <a data-id={file.ContentDocumentId} onclick={handlePreview}
+          <a
+            title="filename"
+            data-id={file.ContentDocumentId}
+            onclick={handlePreview}
             >{file.Title}</a
           >
         </div>

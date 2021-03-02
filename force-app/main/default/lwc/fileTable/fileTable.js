@@ -1,3 +1,13 @@
+/**
+ * @description       : A table with sortable list of files
+ * @author            : Chloe Echikson
+ * @group             : Gerent LLC
+ * @last modified on  : 03-02-2021
+ * @last modified by  : Chloe Echikson
+ * Modifications Log
+ * Ver   Date         Author           Modification
+ * 1.0   03-02-2021   Chloe Echikson   Initial Version
+ **/
 import { LightningElement, api } from "lwc";
 
 export default class FileGrid extends LightningElement {
@@ -7,7 +17,7 @@ export default class FileGrid extends LightningElement {
   sortDirection = "ASC";
 
   @api
-  set gridData(value) {
+  set fileData(value) {
     if (!value) {
       this.data = [];
     }
@@ -21,7 +31,7 @@ export default class FileGrid extends LightningElement {
       this.sortBy(this.sortedBy, this.sortDirection === "asc" ? 1 : -1)
     );
   }
-  get gridData() {
+  get fileData() {
     return this.data;
   }
 
