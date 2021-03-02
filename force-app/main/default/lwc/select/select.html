@@ -9,12 +9,14 @@
           required={required}
         >
           <option value="" label=""></option>
-          <template for:each={options} for:item="option">
-            <option
-              value={option.value}
-              label={option.label}
-              key={option.value}
-            ></option>
+          <template if:true={options}>
+            <template for:each={options} for:item="option">
+              <option
+                value={option.value}
+                label={option.label}
+                key={option.value}
+              ></option>
+            </template>
           </template>
         </select>
       </div>
