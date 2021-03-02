@@ -1,19 +1,20 @@
-{
-  "fields": {
-    "Title": {
-      "value": "Test.png"
-    },
-    "ContentSize": {
-      "value": 3000
-    },
-    "FileType": {
-      "value": "PNG"
-    },
-    "ContentModifiedDate": {
-      "value": 1613417232115
-    },
-    "ContentDocumentId": {
-      "value": "12345"
-    }
+[
+  {
+    "Id": "12345",
+    "Title": "Test.png",
+    "ContentSize": 3000,
+    "FileType": "PNG",
+    "ContentModifiedDate": 1613417232115,
+    "ContentDocumentId": "12345",
+    "Type__c": "Category A"
+  },
+  {
+    "Id": "238948",
+    "Title": "Test2.jpg",
+    "ContentSize": 3500,
+    "FileType": "JPG",
+    "ContentModifiedDate": 1613417232115,
+    "ContentDocumentId": "238948",
+    "Type__c": "Category B"
   }
-}
+]
