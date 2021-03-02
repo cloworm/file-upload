@@ -56,7 +56,6 @@ export default class FileUpload extends LightningElement {
     event.stopPropagation();
 
     if (!this.isDragging) {
-      console.log("dragenter");
       this.showDropzoneHover();
     }
   }
@@ -66,8 +65,6 @@ export default class FileUpload extends LightningElement {
     event.preventDefault();
     event.stopPropagation();
 
-    console.log("dragleave");
-
     this.hideDropzoneHover();
   }
 
@@ -76,8 +73,6 @@ export default class FileUpload extends LightningElement {
   handleDrop(event) {
     event.preventDefault();
     event.stopPropagation();
-
-    console.log("drop");
 
     this.hideDropzoneHover();
   }

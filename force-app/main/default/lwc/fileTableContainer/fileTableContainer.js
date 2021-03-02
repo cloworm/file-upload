@@ -356,7 +356,6 @@ export default class FileGridContainer extends NavigationMixin(
   // Refresh file list
   @api
   async refresh() {
-    console.log("refreshing");
     refreshApex(this.wiredFilesResult);
   }
 
