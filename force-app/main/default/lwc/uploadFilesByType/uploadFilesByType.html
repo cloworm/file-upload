@@ -2,7 +2,6 @@
   <c-file-upload
     record-id={recordId}
     file-extensions={fileExtensions}
-    onload={handleLoad}
     onuploaded={handleUploaded}
   ></c-file-upload>
 
@@ -73,9 +72,9 @@
         class="slds-p-right_x-small"
       ></lightning-button>
       <lightning-button
-        label="Upload"
+        label="Save"
         variant="brand"
-        icon-name="utility:upload"
+        icon-name="utility:save"
         onclick={handleCloseModal}
         type="submit"
       ></lightning-button>
