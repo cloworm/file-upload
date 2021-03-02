@@ -3,6 +3,7 @@
     record-id={recordId}
     file-extensions={fileExtensions}
     onload={handleLoad}
+    onuploaded={handleUploaded}
   ></c-file-upload>
 
   <div if:true={hasFiles} class="slds-p-top_large">
@@ -33,9 +34,9 @@
     </lightning-layout>
     <form>
       <template for:each={fileQueue} for:item="file">
-        <lightning-layout horizontal-align="spread" key={file.id}>
+        <lightning-layout horizontal-align="spread" key={file.Id}>
           <lightning-layout-item size="6">
-            <p class="slds-p-vertical_x-small">{file.filename}</p>
+            <p class="slds-p-vertical_x-small">{file.Title}</p>
           </lightning-layout-item>
           <lightning-layout-item size="6">
             <p
@@ -46,7 +47,7 @@
             </p>
             <c-select
               if:false={file.error}
-              select-id={file.id}
+              select-id={file.Id}
               options={types}
               onchange={handleTypeChange}
               required

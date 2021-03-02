@@ -1,4 +1,5 @@
 import { LightningElement, api } from "lwc";
+import getVersionInfo from "@salesforce/apex/FileUploadController.getVersionInfo";
 
 const extensionToMimeType = {
   csv: "text/csv",
@@ -181,5 +182,27 @@ export default class FileUpload extends LightningElement {
     dropzone.classList.remove("box-animate");
     this.uploadIcon = "utility:open_folder";
     this.isDragging = false;
+  }
+
+  handleUploadFinished(event) {
+    const files = event.detail.files;
+
+    if (!files || files.length === 0) return;
+
+    console.log("files uploaded", JSON.parse(JSON.stringify(files)));
+
+    getVersionInfo({
+      contentVersionIds: files.map((file) => file.contentVersionId)
+    })
+      .then((response) => {
+        console.log("response", response);
+        const evt = new CustomEvent("uploaded", {
+          detail: { files: response }
+        });
+        this.dispatchEvent(evt);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
   }
 }

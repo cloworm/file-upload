@@ -19,7 +19,15 @@
   </template>
 
   <template if:false={hasInvalidConfig}>
-    <div
+    <lightning-file-upload
+      label=""
+      name="fileUploader"
+      accept={allowedExtensions}
+      record-id={recordId}
+      onuploadfinished={handleUploadFinished}
+      multiple
+    ></lightning-file-upload>
+    <!-- <div
       class="box"
       ondragenter={handleDragEnter}
       ondragover={handleDragEnter}
@@ -58,6 +66,6 @@
           Accepts: {allowedExtensions}
         </p>
       </div>
-    </div>
+    </div> -->
   </template>
 </template>

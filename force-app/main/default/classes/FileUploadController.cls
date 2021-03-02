@@ -155,4 +155,31 @@ public with sharing class FileUploadController {
       WHERE Id = :finalVersion.Id
     ];
   }
+
+  @AuraEnabled
+  public static List<ContentVersion> getVersionInfo(
+    List<String> contentVersionIds
+  ) {
+    try {
+      List<ContentVersion> versions = [
+        SELECT Id, Title
+        FROM ContentVersion
+        WHERE Id IN :contentVersionIds
+      ];
+
+      return versions;
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
+  }
+
+  @AuraEnabled
+  public static void updateVersionTypes(List<ContentVersion> contentVersions) {
+    try {
+      System.debug(contentVersions);
+      update contentVersions;
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
+  }
 }

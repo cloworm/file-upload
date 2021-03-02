@@ -1,6 +1,7 @@
 import { LightningElement, api, track, wire } from "lwc";
 import uploadFile from "@salesforce/apex/FileUploadController.uploadFile";
 import finalizeVersion from "@salesforce/apex/FileUploadController.finalizeVersion";
+import updateVersionTypes from "@salesforce/apex/FileUploadController.updateVersionTypes";
 import { getPicklistValues, getObjectInfo } from "lightning/uiObjectInfoApi";
 import CONTENT_VERSION_OBJECT from "@salesforce/schema/ContentVersion";
 import TYPE_FIELD from "@salesforce/schema/ContentVersion.Type__c";
@@ -125,21 +126,27 @@ export default class UploadFilesByType extends LightningElement {
     modal.hide();
 
     // upload files
-    this.fileQueue.forEach((file) => {
-      if (file.error) return;
+    // this.fileQueue.forEach((file) => {
+    //   if (file.error) return;
 
-      this.handleUpload(file);
-    });
-
-    // reset file queue
-    this.fileQueue = [];
+    //   // this.handleTypeUpdate()
+    //   // this.handleUpload(file);
+    // });
+    this.handleTypeUpdate(this.fileQueue)
+      .then((response) => {
+        console.log("response", response);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
   }
 
   handleTypeChange({ detail: { id, value } }) {
-    // set type
+    console.log("handleTypeChange", id, value);
+    // set Type__c
     this.fileQueue = this.fileQueue.map((file) => {
-      if (file.id === id) {
-        file.type = value;
+      if (file.Id === id) {
+        file.Type__c = value;
       }
 
       return file;
@@ -151,5 +158,34 @@ export default class UploadFilesByType extends LightningElement {
     const form = this.template.querySelector("form");
     const validity = form.reportValidity();
     return validity;
+  }
+
+  handleUploaded(event) {
+    const files = event.detail.files;
+    console.log("files", JSON.parse(JSON.stringify(files)));
+    console.log("handleUploaded", files.length);
+
+    // this.fileQueue.push(...files);
+    this.fileQueue = files;
+
+    this.handleOpenModal();
+  }
+
+  handleTypeUpdate(files) {
+    updateVersionTypes({ contentVersions: files })
+      .then((response) => {
+        console.log("updateVersionTypes response", response);
+
+        // reset file queue
+        this.fileQueue = [];
+
+        if (this.grid) {
+          // Refresh the file grid component
+          this.template.querySelector("c-file-grid-container").refresh();
+        }
+      })
+      .catch((error) => {
+        console.log("updateVersionTypes error", error);
+      });
   }
 }
