@@ -21,7 +21,7 @@ export default class FilePreview extends LightningElement {
   // Page num used for tracking pages
   pageNum = 0;
 
-  // Idicator when loading should be finished, because of failure
+  // Track if image load failed
   loadFailed = false;
 
   connectedCallback() {
@@ -47,7 +47,7 @@ export default class FilePreview extends LightningElement {
 
   generateImgUrl() {
     getSiteUrl().then((url) => {
-      let siteUrl;
+      let siteUrl = "";
 
       if (url) {
         siteUrl = url.replace(/\/s$/g, "");
