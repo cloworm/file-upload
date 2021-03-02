@@ -19,15 +19,24 @@
   </template>
 
   <template if:false={hasInvalidConfig}>
-    <lightning-file-upload
-      label=""
-      class="uploader"
-      name="fileUploader"
-      accept={allowedExtensions}
-      record-id={recordId}
-      onuploadfinished={handleUploadFinished}
-      multiple
-    ></lightning-file-upload>
+    <div
+      class="box"
+      data-id="dropzone"
+      ondragenter={handleDragEnter}
+      ondragover={handleDragEnter}
+      ondragleave={handleDragLeave}
+      ondrop={handleDrop}
+    >
+      <lightning-file-upload
+        label=""
+        class="uploader"
+        name="fileUploader"
+        accept={allowedExtensions}
+        record-id={recordId}
+        onuploadfinished={handleUploadFinished}
+        multiple
+      ></lightning-file-upload>
+    </div>
     <!-- <div
       class="box"
       ondragenter={handleDragEnter}

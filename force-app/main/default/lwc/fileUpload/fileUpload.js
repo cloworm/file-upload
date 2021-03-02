@@ -47,6 +47,134 @@ const extensionToMimeType = {
   xslt: "application/xslt+xml"
 };
 
+const BASE_STYLES = `
+.slds-file-selector.slds-file-selector_files {
+  width: 100%;
+  height: 165px;
+}
+
+.slds-file-selector__dropzone {
+  height: 100%;
+  width: 100%;
+  background-color: #fafcfe;
+  background-image: repeating-linear-gradient(
+    0deg,
+    #5eb4ff,
+    #5eb4ff 7px,
+    transparent 7px,
+    transparent 14px,
+    #5eb4ff 14px
+  ),
+  repeating-linear-gradient(
+    90deg,
+    #5eb4ff,
+    #5eb4ff 7px,
+    transparent 7px,
+    transparent 14px,
+    #5eb4ff 14px
+  ),
+  repeating-linear-gradient(
+    180deg,
+    #5eb4ff,
+    #5eb4ff 7px,
+    transparent 7px,
+    transparent 14px,
+    #5eb4ff 14px
+  ),
+  repeating-linear-gradient(
+    270deg,
+    #5eb4ff,
+    #5eb4ff 7px,
+    transparent 7px,
+    transparent 14px,
+    #5eb4ff 14px
+  );
+  background-size: 1px calc(100% + 14px), calc(100% + 14px) 1px,
+    1px calc(100% + 14px), calc(100% + 14px) 1px;
+  background-position: 0 0, 0 0, 100% 0, 0 100%;
+  background-repeat: no-repeat;
+  border: none;
+}
+
+.slds-file-selector__body {
+  height: 165px;
+  justify-content: center;
+}
+
+slot[interop-primitiveFileDroppableZone_primitiveFileDroppableZone] {
+  width: 100%;
+}
+`;
+
+const HOVER_STYLES = `
+.slds-file-selector.slds-file-selector_files {
+  width: 100%;
+  height: 165px;
+}
+
+.slds-file-selector__dropzone {
+  height: 100%;
+  width: 100%;
+  background-color: #fafcfe;
+  background-image: repeating-linear-gradient(
+    0deg,
+    #5eb4ff,
+    #5eb4ff 7px,
+    transparent 7px,
+    transparent 14px,
+    #5eb4ff 14px
+  ),
+  repeating-linear-gradient(
+    90deg,
+    #5eb4ff,
+    #5eb4ff 7px,
+    transparent 7px,
+    transparent 14px,
+    #5eb4ff 14px
+  ),
+  repeating-linear-gradient(
+    180deg,
+    #5eb4ff,
+    #5eb4ff 7px,
+    transparent 7px,
+    transparent 14px,
+    #5eb4ff 14px
+  ),
+  repeating-linear-gradient(
+    270deg,
+    #5eb4ff,
+    #5eb4ff 7px,
+    transparent 7px,
+    transparent 14px,
+    #5eb4ff 14px
+  );
+  background-size: 1px calc(100% + 14px), calc(100% + 14px) 1px,
+    1px calc(100% + 14px), calc(100% + 14px) 1px;
+  background-position: 0 0, 0 0, 100% 0, 0 100%;
+  background-repeat: no-repeat;
+  border: none;
+  animation: borderAnimation 0.5s infinite linear;
+}
+
+.slds-file-selector__body {
+  height: 165px;
+  justify-content: center;
+}
+
+slot[interop-primitiveFileDroppableZone_primitiveFileDroppableZone] {
+  width: 100%;
+}
+
+@keyframes borderAnimation {
+  from {
+    background-position: 0 0, -14px 0, 100% -14px, 0 100%;
+  }
+  to {
+    background-position: 0 -14px, 0 0, 100% 0, -14px 100%;
+  }
+}
+`;
+
 // TO DO check file size
 // TO DO send data in chunks
 export default class FileUpload extends LightningElement {
@@ -67,60 +195,30 @@ export default class FileUpload extends LightningElement {
 
     const style = document.createElement("style");
     style.innerText = `
-      .slds-file-selector.slds-file-selector_files {
+      .uploader .slds-file-selector.slds-file-selector_files {
         width: 100%;
-        height: 165px;
       }
 
-      .slds-file-selector__dropzone {
-        height: 100%;
+      .uploader .slds-file-selector__dropzone {
         width: 100%;
-        background-color: #fafcfe;
-        background-image: repeating-linear-gradient(
-          0deg,
-          #5eb4ff,
-          #5eb4ff 7px,
-          transparent 7px,
-          transparent 14px,
-          #5eb4ff 14px
-        ),
-        repeating-linear-gradient(
-          90deg,
-          #5eb4ff,
-          #5eb4ff 7px,
-          transparent 7px,
-          transparent 14px,
-          #5eb4ff 14px
-        ),
-        repeating-linear-gradient(
-          180deg,
-          #5eb4ff,
-          #5eb4ff 7px,
-          transparent 7px,
-          transparent 14px,
-          #5eb4ff 14px
-        ),
-        repeating-linear-gradient(
-          270deg,
-          #5eb4ff,
-          #5eb4ff 7px,
-          transparent 7px,
-          transparent 14px,
-          #5eb4ff 14px
-        );
-        background-size: 1px calc(100% + 14px), calc(100% + 14px) 1px,
-          1px calc(100% + 14px), calc(100% + 14px) 1px;
-        background-position: 0 0, 0 0, 100% 0, 0 100%;
-        background-repeat: no-repeat;
         border: none;
       }
 
-      .slds-file-selector__body {
+      .uploader .slds-file-selector__body {
         height: 165px;
         justify-content: center;
       }
 
-      slot[interop-primitiveFileDroppableZone_primitiveFileDroppableZone] {
+      .uploader .slds-has-drag-over {
+        border: none !important;
+        box-shadow: none !important;
+      }
+
+      .uploader .slds-form-element__label {
+        display: none;
+      }
+
+      .uploader slot[interop-primitiveFileDroppableZone_primitiveFileDroppableZone] {
         width: 100%;
       }
     `;
@@ -203,6 +301,7 @@ export default class FileUpload extends LightningElement {
     event.stopPropagation();
 
     if (!this.isDragging) {
+      console.log("dragenter");
       this.showDropzoneHover();
     }
   }
@@ -211,6 +310,8 @@ export default class FileUpload extends LightningElement {
   handleDragLeave(event) {
     event.preventDefault();
     event.stopPropagation();
+
+    console.log("dragleave");
 
     this.hideDropzoneHover();
   }
@@ -221,17 +322,19 @@ export default class FileUpload extends LightningElement {
     event.preventDefault();
     event.stopPropagation();
 
+    console.log("drop");
+
     this.hideDropzoneHover();
 
     // [...event.dataTransfer.files].forEach((file) => {
     //   this.processFile(file);
     // });
-    let el = this.template.querySelector("lightning-file-upload");
-    console.log("el", JSON.parse(JSON.stringify(el)));
-    let evt = new Event("drop", {
-      event: { dataTransfer: { files: event.dataTransfer.files } }
-    });
-    el.dispatchEvent(evt);
+    // let el = this.template.querySelector("lightning-file-upload");
+    // console.log("el", JSON.parse(JSON.stringify(el)));
+    // let evt = new Event("drop", {
+    //   event: { dataTransfer: { files: event.dataTransfer.files } }
+    // });
+    // el.dispatchEvent(evt);
   }
 
   uniqueID() {
@@ -245,7 +348,13 @@ export default class FileUpload extends LightningElement {
   showDropzoneHover() {
     const dropzone = this.template.querySelector("[data-id=dropzone]");
     dropzone.classList.add("box-animate");
-    this.uploadIcon = "utility:opened_folder";
+    // this.uploadIcon = "utility:opened_folder";
+    // let uploader = this.template.querySelector(".uploader");
+    // console.log("uploader!!", JSON.parse(JSON.stringify(uploader)));
+    // let children = uploader.children;
+    // console.log("children", JSON.parse(JSON.stringify(children)));
+    // let style = this.template.querySelector("style");
+    // console.log("style", JSON.parse(JSON.stringify(style)));
     this.isDragging = true;
   }
 
@@ -253,7 +362,7 @@ export default class FileUpload extends LightningElement {
   hideDropzoneHover() {
     const dropzone = this.template.querySelector("[data-id=dropzone]");
     dropzone.classList.remove("box-animate");
-    this.uploadIcon = "utility:open_folder";
+    // this.uploadIcon = "utility:open_folder";
     this.isDragging = false;
   }
 
