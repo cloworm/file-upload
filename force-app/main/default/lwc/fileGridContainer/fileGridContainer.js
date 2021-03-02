@@ -5,6 +5,7 @@ import { deleteRecord } from "lightning/uiRecordApi";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import { refreshApex } from "@salesforce/apex";
 import getSiteUrl from "@salesforce/apex/GetSite.getSiteUrl";
+import updateVersionTypes from "@salesforce/apex/FileUploadController.updateVersionTypes";
 
 const ERROR_TITLE = "Error";
 const ERROR_VARIANT = "error";
@@ -92,20 +93,20 @@ export default class FileGridContainer extends NavigationMixin(
   LightningElement
 ) {
   @api recordId;
-  @track filteredFiles;
-  @track columns = defaultColumns;
+  @api deleteColumn;
+  @api downloadColumn;
+  @api editColumn;
+  @api types;
+  @track filteredFiles = [];
   @track availableSections;
   @track activeSections;
-  _deleteColumn;
   _recordId;
-  _previewColumn;
   files;
   recordToDelete;
+  recordToEdit;
   wiredFilesResult;
   searchTerm;
   isExperienceCloud;
-
-  // File Preview
   previewContentVersionId;
   previewContentDocumentId;
 
@@ -121,7 +122,8 @@ export default class FileGridContainer extends NavigationMixin(
         Title: row.ContentDocument?.Title,
         ContentModifiedDate: row.ContentDocument?.ContentModifiedDate,
         Owner: row.Owner?.Name,
-        OwnerSmallPhotoUrl: row.Owner?.SmallPhotoUrl
+        OwnerSmallPhotoUrl: row.Owner?.SmallPhotoUrl,
+        ContentSize: row.ContentDocument?.ContentSize
       };
 
       return file;
@@ -142,74 +144,62 @@ export default class FileGridContainer extends NavigationMixin(
     }
   }
 
-  @api
-  get deleteColumn() {
-    return this._deleteColumn;
-  }
-  // Show delete column when deleteColumn prop is true
-  set deleteColumn(value) {
-    this._deleteColumn = value;
+  get columns() {
+    const cols = [...defaultColumns];
 
-    if (value) {
-      const hasDelete = this.columns.some((column) => column.name === "delete");
-      if (!hasDelete) {
-        this.columns.push({
-          name: "delete",
-          label: "",
-          type: "button-icon",
-          typeAttributes: {
-            alternativeText: "Delete",
-            iconClass: "slds-text-color_destructive",
-            title: "Delete",
-            name: "Delete",
-            variant: "border-filled",
-            iconName: "utility:delete",
-            iconPosition: "left"
-          },
-          fixedWidth: 35
-        });
-      }
-    } else {
-      this.columns = this.columns.filter((col) => col.name !== "delete");
+    if (this.editColumn) {
+      cols.push({
+        name: "edit",
+        label: "",
+        type: "button-icon",
+        typeAttributes: {
+          alternativeText: "Edit",
+          title: "Edit",
+          name: "Edit",
+          variant: "border-filled",
+          iconName: "utility:edit",
+          iconPosition: "left"
+        },
+        fixedWidth: 35
+      });
     }
-  }
 
-  @api
-  get downloadColumn() {
-    return this._downloadColumn;
-  }
-  // Show download column when downloadColumn prop is true
-  set downloadColumn(value) {
-    this._downloadColumn = value;
-
-    if (value) {
-      const hasDownload = this.columns.some(
-        (column) => column.name === "download"
-      );
-      if (!hasDownload) {
-        // Insert download column before delete if deleteColumn is true
-        this.columns.splice(
-          this.deleteColumn ? this.columns.length : this.columns.length - 1,
-          0,
-          {
-            name: "download",
-            label: "",
-            type: "button-icon",
-            typeAttributes: {
-              alternativeText: "Download",
-              title: "Download",
-              name: "Download",
-              variant: "border-filled",
-              iconName: "utility:download",
-              iconPosition: "left"
-            },
-            fixedWidth: 35
-          }
-        );
-      }
-    } else {
-      this.columns = this.columns.filter((col) => col.name !== "download");
+    if (this.deleteColumn) {
+      cols.push({
+        name: "delete",
+        label: "",
+        type: "button-icon",
+        typeAttributes: {
+          alternativeText: "Delete",
+          iconClass: "slds-text-color_destructive",
+          title: "Delete",
+          name: "Delete",
+          variant: "border-filled",
+          iconName: "utility:delete",
+          iconPosition: "left"
+        },
+        fixedWidth: 35
+      });
     }
+
+    if (this.downloadColumn) {
+      cols.push({
+        name: "download",
+        label: "",
+        type: "button-icon",
+        typeAttributes: {
+          alternativeText: "Download",
+          title: "Download",
+          name: "Download",
+          variant: "border-filled",
+          iconName: "utility:download",
+          iconPosition: "left"
+        },
+        fixedWidth: 35
+      });
+    }
+
+    return cols;
   }
 
   // Get # of files
@@ -230,6 +220,10 @@ export default class FileGridContainer extends NavigationMixin(
 
       case "Download":
         this.handleDownload(row);
+        break;
+
+      case "Edit":
+        this.handleEdit(row);
         break;
 
       default:
@@ -271,14 +265,24 @@ export default class FileGridContainer extends NavigationMixin(
     });
   }
 
+  // Open modal allowing user to edit file type
+  handleEdit(file) {
+    const modal = this.template.querySelector(`[data-id="edit"]`);
+    this.recordToEdit = file;
+    modal.show();
+  }
+
+  handleHideEdit() {
+    const modal = this.template.querySelector(`[data-id="edit"]`);
+    modal.hide();
+  }
+
   // Display confirmation modal to user before deleting
   handleDelete(file) {
     if (!this.deleteColumn) return;
     this.recordToDelete = file.ContentDocumentId;
 
-    // const modal = this.template.querySelector("c-modal");
     const modal = this.template.querySelector(`[data-id="delete"]`);
-
     modal.show();
   }
 
@@ -287,7 +291,6 @@ export default class FileGridContainer extends NavigationMixin(
     const recordId = this.recordToDelete;
 
     // Hide modal
-    // const modal = this.template.querySelector("c-modal");
     const modal = this.template.querySelector(`[data-id="delete"]`);
 
     modal.hide();
@@ -321,8 +324,33 @@ export default class FileGridContainer extends NavigationMixin(
   }
 
   handleCancelModal() {
-    const modal = this.template.querySelector("c-modal");
+    const modal = this.template.querySelector(`[data-id="delete"]`);
     modal.hide();
+  }
+
+  handleTypeChange({ detail: { value } }) {
+    this.recordToEdit.Type__c = value;
+  }
+
+  async handleTypeSave() {
+    try {
+      await updateVersionTypes({ contentVersions: [this.recordToEdit] });
+      this.refresh();
+
+      const modal = this.template.querySelector(`[data-id="edit"]`);
+      modal.hide();
+
+      const evt = new ShowToastEvent({
+        title: SUCCESS_TITLE,
+        message: "File Type updated",
+        variant: SUCCESS_VARIANT
+      });
+      this.dispatchEvent(evt);
+
+      this.recordToEdit = null;
+    } catch (error) {
+      console.log("handleTypeChange error", error);
+    }
   }
 
   // Refresh file list

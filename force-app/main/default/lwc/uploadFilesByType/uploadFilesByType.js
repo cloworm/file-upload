@@ -15,6 +15,7 @@ export default class UploadFilesByType extends LightningElement {
   @api grid;
   @api deleteColumn;
   @api downloadColumn;
+  @api editColumn;
 
   types = [];
 
@@ -68,7 +69,6 @@ export default class UploadFilesByType extends LightningElement {
   }
 
   handleTypeChange({ detail: { id, value } }) {
-    console.log("handleTypeChange", id, value);
     // set Type__c
     this.fileQueue = this.fileQueue.map((file) => {
       if (file.Id === id) {
@@ -101,6 +101,11 @@ export default class UploadFilesByType extends LightningElement {
 
         // reset file queue
         this.fileQueue = [];
+
+        // add to uploaded file list
+        this.filesUploaded.push(...files);
+
+        console.log("uploaded", JSON.parse(JSON.stringify(this.filesUploaded)));
 
         if (this.grid) {
           // Refresh the file grid component

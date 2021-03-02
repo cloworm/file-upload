@@ -28,14 +28,15 @@
       ondrop={handleDrop}
     >
       <lightning-file-upload
-        label=""
         class="uploader"
+        label=""
         name="fileUploader"
         accept={allowedExtensions}
         record-id={recordId}
         onuploadfinished={handleUploadFinished}
         multiple
-      ></lightning-file-upload>
+      >
+      </lightning-file-upload>
     </div>
   </template>
 </template>

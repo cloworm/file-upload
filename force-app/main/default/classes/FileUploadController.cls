@@ -162,7 +162,7 @@ public with sharing class FileUploadController {
   ) {
     try {
       List<ContentVersion> versions = [
-        SELECT Id, Title
+        SELECT Id, Title, ContentSize, FileType, ContentDocumentId
         FROM ContentVersion
         WHERE Id IN :contentVersionIds
       ];
@@ -174,10 +174,13 @@ public with sharing class FileUploadController {
   }
 
   @AuraEnabled
-  public static void updateVersionTypes(List<ContentVersion> contentVersions) {
+  public static List<ContentVersion> updateVersionTypes(
+    List<ContentVersion> contentVersions
+  ) {
     try {
       System.debug(contentVersions);
       update contentVersions;
+      return contentVersions;
     } catch (Exception e) {
       throw new AuraHandledException(e.getMessage());
     }

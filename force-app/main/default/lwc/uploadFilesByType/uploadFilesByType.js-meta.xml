@@ -34,13 +34,19 @@
       />
     <property
         name="deleteColumn"
-        label="Use Delete Column"
+        label="Use Delete Column in Grid"
+        type="Boolean"
+        default="true"
+      />
+    <property
+        name="editColumn"
+        label="Use Edit Column in Grid"
         type="Boolean"
         default="true"
       />
     <property
         name="downloadColumn"
-        label="Use Download Column"
+        label="Use Download Column in Grid"
         type="Boolean"
         default="true"
       />

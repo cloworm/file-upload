@@ -3,34 +3,34 @@ import { NavigationMixin } from "lightning/navigation";
 import getSiteUrl from "@salesforce/apex/GetSite.getSiteUrl";
 
 const extensionToMimeType = {
-  csv: "doctype:csv",
-  doc: "doctype:word",
-  docx: "doctype:word",
-  pdf: "doctype:pdf",
-  ppt: "doctype:ppt",
-  pptx: "doctype:ppt",
-  rtf: "doctype:rtf",
-  txt: "doctype:txt",
-  xls: "doctype:excel",
-  xlsx: "doctype:excel",
-  bmp: "doctype:image",
-  gif: "doctype:image",
-  jpeg: "doctype:image",
-  jpg: "doctype:image",
-  png: "doctype:image",
-  tif: "doctype:image",
-  tiff: "doctype:image",
-  vsd: "doctype:visio",
-  mp3: "doctype:audio",
-  ogg: "doctype:audio",
-  wav: "doctype:audio",
-  mov: "doctype:video",
-  mpeg: "doctype:video",
-  mpg: "doctype:video",
-  zip: "doctype:zip",
-  htm: "doctype:html",
-  html: "doctype:html",
-  xml: "doctype:xml"
+  CSV: "doctype:csv",
+  DOC: "doctype:word",
+  DOCX: "doctype:word",
+  PDF: "doctype:pdf",
+  PPT: "doctype:ppt",
+  PPTX: "doctype:ppt",
+  RTF: "doctype:rtf",
+  TXT: "doctype:txt",
+  XLS: "doctype:excel",
+  XLSX: "doctype:excel",
+  BMP: "doctype:image",
+  GIF: "doctype:image",
+  JPEG: "doctype:image",
+  JPG: "doctype:image",
+  PNG: "doctype:image",
+  TIF: "doctype:image",
+  TIFF: "doctype:image",
+  VSD: "doctype:visio",
+  MP3: "doctype:audio",
+  OGG: "doctype:audio",
+  WAV: "doctype:audio",
+  MOV: "doctype:video",
+  MPEG: "doctype:video",
+  MPG: "doctype:video",
+  ZIP: "doctype:zip",
+  HTM: "doctype:html",
+  HTML: "doctype:html",
+  XML: "doctype:xml"
 };
 
 export default class FileUploadTile extends NavigationMixin(LightningElement) {
@@ -51,19 +51,10 @@ export default class FileUploadTile extends NavigationMixin(LightningElement) {
     }
   }
 
-  get isUploaded() {
-    return this.file && this.file.ContentDocumentId;
-  }
-
-  get progress() {
-    return this.file && this.file.ContentDocumentId ? 100 : 0;
-  }
-
   get iconName() {
-    const extension = this.getFileExtension(this.file.filename);
-    if (!this.file || !extension) return "doctype:unknown";
+    if (!this.file || !this.file.FileType) return "doctype:unknown";
 
-    return extensionToMimeType[extension.toLowerCase()] || "doctype:unknown";
+    return extensionToMimeType[this.file.FileType] || "doctype:unknown";
   }
 
   getFileExtension(filename) {

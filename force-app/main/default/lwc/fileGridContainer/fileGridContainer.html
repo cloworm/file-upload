@@ -1,5 +1,7 @@
 <template>
-  <h2 class="slds-text-color_weak slds-text-title_bold slds-p-vertical_large">
+  <h2
+    class="slds-text-color_weak slds-text-title_bold slds-p-top_large slds-p-bottom_small"
+  >
     All Files ({fileCount})
   </h2>
 
@@ -61,6 +63,42 @@
         label="Close"
         variant="neutral"
         onclick={handleHidePreview}
+        class="slds-p-right_x-small"
+      ></lightning-button>
+    </div>
+  </c-modal>
+
+  <c-modal data-id="edit" header="Edit">
+    <lightning-input
+      if:true={recordToEdit}
+      type="text"
+      label="Filename"
+      value={recordToEdit.Title}
+      readonly
+    ></lightning-input>
+
+    <label class="slds-form-element__label">Type</label>
+
+    <c-select
+      if:true={recordToEdit}
+      select-id={recordToEdit.Id}
+      value={recordToEdit.Type__c}
+      options={types}
+      onchange={handleTypeChange}
+      required
+    ></c-select>
+
+    <div slot="footer">
+      <lightning-button
+        label="Cancel"
+        variant="neutral"
+        onclick={handleHideEdit}
+        class="slds-p-right_x-small"
+      ></lightning-button>
+      <lightning-button
+        label="Save"
+        variant="brand"
+        onclick={handleTypeSave}
         class="slds-p-right_x-small"
       ></lightning-button>
     </div>

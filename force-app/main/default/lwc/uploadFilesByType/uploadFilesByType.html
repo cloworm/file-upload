@@ -17,9 +17,11 @@
 
   <c-file-grid-container
     if:true={grid}
+    types={types}
     record-id={recordId}
     delete-column={deleteColumn}
     download-column={downloadColumn}
+    edit-column={editColumn}
   ></c-file-grid-container>
 
   <c-modal data-id="types" header="Assign Types">
