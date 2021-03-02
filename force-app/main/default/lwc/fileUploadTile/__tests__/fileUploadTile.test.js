@@ -19,26 +19,6 @@ describe("c-file-upload-tile", () => {
     expect(div).toBeNull();
   });
 
-  it("Displays a loading spinner for uploading files", () => {
-    const element = createElement("c-file-upload-tile", {
-      is: FileUploadTile
-    });
-    element.file = {
-      id: 1,
-      filename: "Test.pdf",
-      ContentDocumentId: null,
-      type: "application/pdf",
-      base64: "",
-      recordId: null,
-      size: 3500,
-      error: null
-    };
-    document.body.appendChild(element);
-
-    const uploadingIcon = element.shadowRoot.querySelector("[title=uploading]");
-    expect(uploadingIcon).not.toBeNull();
-  });
-
   it("Displays a check mark for uploaded files", () => {
     const element = createElement("c-file-upload-tile", {
       is: FileUploadTile
@@ -57,25 +37,5 @@ describe("c-file-upload-tile", () => {
 
     const succcessIcon = element.shadowRoot.querySelector("[title=success]");
     expect(succcessIcon).not.toBeNull();
-  });
-
-  it("Displays an error icon on upload errors", () => {
-    const element = createElement("c-file-upload-tile", {
-      is: FileUploadTile
-    });
-    element.file = {
-      id: 1,
-      filename: "Test.pdf",
-      ContentDocumentId: null,
-      type: "application/pdf",
-      base64: "",
-      recordId: null,
-      size: 3500,
-      error: "Error uploading"
-    };
-    document.body.appendChild(element);
-
-    const errorIcon = element.shadowRoot.querySelector("[title=error]");
-    expect(errorIcon).not.toBeNull();
   });
 });

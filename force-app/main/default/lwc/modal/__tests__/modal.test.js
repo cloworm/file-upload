@@ -1,7 +1,12 @@
 import { createElement } from "lwc";
 import Modal from "c/modal";
+import { setup } from "@sa11y/jest";
 
 describe("c-modal", () => {
+  beforeAll(() => {
+    setup();
+  });
+
   afterEach(() => {
     // The jsdom instance is shared across test cases in a single file so reset the DOM
     while (document.body.firstChild) {
@@ -9,7 +14,7 @@ describe("c-modal", () => {
     }
   });
 
-  it("renders the header content based on a public property and doesn not render the header slot", () => {
+  it("renders the header content based on a public property and does not render the header slot", () => {
     const HEADER = "The modal header";
 
     // Create initial element
@@ -122,10 +127,4 @@ describe("c-modal", () => {
 
     return Promise.resolve().then(() => expect(element).toBeAccessible());
   });
-
-  /**
-   * It's not currently possible to pass HTML into a slot
-   * on component creation (createElement), so omitting this use case.
-   */
-  // it('is accessible when modal shown and it no public header property is set', () => {});
 });

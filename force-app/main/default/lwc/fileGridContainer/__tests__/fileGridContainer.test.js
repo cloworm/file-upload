@@ -1,5 +1,5 @@
 import { createElement } from "lwc";
-import FileGrid from "c/fileGridContainer";
+import FileGridContainer from "c/fileGridContainer";
 
 describe("c-file-grid-container", () => {
   afterEach(() => {
@@ -9,13 +9,14 @@ describe("c-file-grid-container", () => {
     }
   });
 
-  it('Displays the message "This record has no files yet" if the record has none', () => {
+  it("Displays the file count in a header tag when there are no files", () => {
     const element = createElement("c-file-grid-container", {
-      is: FileGrid
+      is: FileGridContainer
     });
+    element.recordId = "12345";
     document.body.appendChild(element);
 
-    const message = element.shadowRoot.querySelector("p");
-    expect(message.textContent).toContain("This record has no files yet");
+    const message = element.shadowRoot.querySelector("h2");
+    expect(message.textContent).toContain("All Files (0)");
   });
 });
