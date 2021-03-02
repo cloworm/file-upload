@@ -101,13 +101,10 @@ export default class FileUpload extends LightningElement {
 
     if (!files || files.length === 0) return;
 
-    console.log("files uploaded", JSON.parse(JSON.stringify(files)));
-
     getVersionInfo({
       contentVersionIds: files.map((file) => file.contentVersionId)
     })
       .then((response) => {
-        console.log("response", response);
         const evt = new CustomEvent("uploaded", {
           detail: { files: response }
         });

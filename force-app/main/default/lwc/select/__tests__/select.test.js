@@ -71,9 +71,7 @@ describe("c-select", () => {
     select.value = "Option 1";
     select.dispatchEvent(new CustomEvent("change"));
 
-    return Promise.resolve().then(() => {
-      expect(handler).toHaveBeenCalled();
-      expect(handler.mock.calls[0][0].detail.value).toEqual("Option 1");
-    });
+    expect(handler).toHaveBeenCalled();
+    expect(handler.mock.calls[0][0].detail.value).toEqual("Option 1");
   });
 });
