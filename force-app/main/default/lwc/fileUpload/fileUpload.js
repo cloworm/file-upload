@@ -55,10 +55,77 @@ export default class FileUpload extends LightningElement {
   // Component Properties
   // TO DO convert to getter & setter, getter returns an array
   @api fileExtensions;
+  hasRendered;
 
   uploadIcon = "utility:open_folder";
   extensionToMimeType = extensionToMimeType;
   isDragging = false;
+
+  renderedCallback() {
+    if (this.hasRendered) return;
+    this.hasRendered = true;
+
+    const style = document.createElement("style");
+    style.innerText = `
+      .slds-file-selector.slds-file-selector_files {
+        width: 100%;
+        height: 165px;
+      }
+
+      .slds-file-selector__dropzone {
+        height: 100%;
+        width: 100%;
+        background-color: #fafcfe;
+        background-image: repeating-linear-gradient(
+          0deg,
+          #5eb4ff,
+          #5eb4ff 7px,
+          transparent 7px,
+          transparent 14px,
+          #5eb4ff 14px
+        ),
+        repeating-linear-gradient(
+          90deg,
+          #5eb4ff,
+          #5eb4ff 7px,
+          transparent 7px,
+          transparent 14px,
+          #5eb4ff 14px
+        ),
+        repeating-linear-gradient(
+          180deg,
+          #5eb4ff,
+          #5eb4ff 7px,
+          transparent 7px,
+          transparent 14px,
+          #5eb4ff 14px
+        ),
+        repeating-linear-gradient(
+          270deg,
+          #5eb4ff,
+          #5eb4ff 7px,
+          transparent 7px,
+          transparent 14px,
+          #5eb4ff 14px
+        );
+        background-size: 1px calc(100% + 14px), calc(100% + 14px) 1px,
+          1px calc(100% + 14px), calc(100% + 14px) 1px;
+        background-position: 0 0, 0 0, 100% 0, 0 100%;
+        background-repeat: no-repeat;
+        border: none;
+      }
+
+      .slds-file-selector__body {
+        height: 165px;
+        justify-content: center;
+      }
+
+      slot[interop-primitiveFileDroppableZone_primitiveFileDroppableZone] {
+        width: 100%;
+      }
+    `;
+    this.template.querySelector(".uploader").appendChild(style);
+  }
 
   get hasInvalidConfig() {
     return [...new Set(this.fileExtensions.split(","))].find((extension) => {
@@ -156,9 +223,15 @@ export default class FileUpload extends LightningElement {
 
     this.hideDropzoneHover();
 
-    [...event.dataTransfer.files].forEach((file) => {
-      this.processFile(file);
+    // [...event.dataTransfer.files].forEach((file) => {
+    //   this.processFile(file);
+    // });
+    let el = this.template.querySelector("lightning-file-upload");
+    console.log("el", JSON.parse(JSON.stringify(el)));
+    let evt = new Event("drop", {
+      event: { dataTransfer: { files: event.dataTransfer.files } }
     });
+    el.dispatchEvent(evt);
   }
 
   uniqueID() {
