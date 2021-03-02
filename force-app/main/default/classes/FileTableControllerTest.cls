@@ -9,7 +9,7 @@
  * 1.0   03-01-2021   Chloe Echikson   Initial Version
  **/
 @isTest
-private class FileGridControllerTest {
+private class FileTableControllerTest {
   @testSetup
   static void setup() {
     // Create Account
@@ -70,7 +70,7 @@ private class FileGridControllerTest {
   @isTest
   static void testFileOrder() {
     Account testAccount = [SELECT Id FROM Account WHERE Name = 'Test Account'];
-    List<ContentVersion> files = FileGridController.getFiles(testAccount.Id);
+    List<ContentVersion> files = FileTableController.getFiles(testAccount.Id);
 
     System.assertEquals(files.size(), 2);
     System.assertEquals(files[0].ContentDocument.Title, 'Another Test File');
@@ -83,7 +83,7 @@ private class FileGridControllerTest {
       FROM Account
       WHERE Name = 'Another Test Account'
     ];
-    List<ContentVersion> files = FileGridController.getFiles(testAccount.Id);
+    List<ContentVersion> files = FileTableController.getFiles(testAccount.Id);
 
     System.assertEquals(files.size(), 0);
   }
@@ -91,7 +91,7 @@ private class FileGridControllerTest {
   @isTest
   static void testNoRecord() {
     String recordId = null;
-    List<ContentVersion> files = FileGridController.getFiles(recordId);
+    List<ContentVersion> files = FileTableController.getFiles(recordId);
 
     System.assertEquals(files, null);
   }

@@ -1,5 +1,5 @@
 import { createElement } from "lwc";
-import FileGridContainer from "c/fileGridContainer";
+import FileGridContainer from "c/fileTableContainer";
 
 describe("c-file-table-container", () => {
   afterEach(() => {

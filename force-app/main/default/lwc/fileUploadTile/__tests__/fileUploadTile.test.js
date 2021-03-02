@@ -64,7 +64,6 @@ describe("c-file-upload-tile", () => {
       Title: "Test.pdf",
       ContentDocumentId: "12345",
       Type__c: "Category A",
-      recordId: null,
       ContentSize: 3500
     };
     document.body.appendChild(element);

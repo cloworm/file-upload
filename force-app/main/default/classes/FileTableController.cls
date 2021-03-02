@@ -1,5 +1,5 @@
 /**
- * @description       : Controller class for fileGridContainer LWC
+ * @description       : Controller class for fileTableContainer LWC
  * @author            : Chloe Echikson
  * @group             : Gerent LLC
  * @last modified on  : 03-01-2021
@@ -8,7 +8,7 @@
  * Ver   Date         Author           Modification
  * 1.0   03-01-2021   Chloe Echikson   Initial Version
  **/
-public with sharing class FileGridController {
+public with sharing class FileTableController {
   /**
    * @description  Returns latest ContentVersion for all files associated to recordId
    * @author       Chloe Echikson | 03-01-2021

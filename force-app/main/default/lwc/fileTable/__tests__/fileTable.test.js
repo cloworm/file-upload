@@ -1,5 +1,5 @@
 import { createElement } from "lwc";
-import FileGrid from "c/fileGrid";
+import FileTable from "c/fileTable";
 
 describe("c-file-table", () => {
   afterEach(() => {
@@ -9,23 +9,39 @@ describe("c-file-table", () => {
     }
   });
 
-  it('displays message "No data found." when it receives no gridData', () => {
+  it('displays message "No data found." when it receives no fileData', () => {
     const element = createElement("c-file-table", {
-      is: FileGrid
+      is: FileTable
     });
-    // element.tableData = [
-    //   {
-    //     Id: 1,
-    //     Title: "Test.pdf",
-    //     ContentDocumentId: "12345",
-    //     Type__c: "Category A",
-    //     recordId: null,
-    //     ContentSize: 3500
-    //   }
-    // ];
     document.body.appendChild(element);
 
     const message = element.shadowRoot.querySelector("p");
     expect(message.textContent).toEqual("No data found.");
+  });
+
+  it("displays a c-file-datatable component with it receives fileData", () => {
+    const element = createElement("c-file-table", {
+      is: FileTable
+    });
+    element.fileData = [
+      {
+        Id: "28395",
+        Title: "Test.pdf",
+        ContentDocumentId: "12345",
+        Type__c: "Category A",
+        ContentSize: 3500
+      },
+      {
+        Id: "12345",
+        Title: "Test2.pdf",
+        ContentDocumentId: "12345",
+        Type__c: "Category B",
+        ContentSize: 3500
+      }
+    ];
+    document.body.appendChild(element);
+
+    const datatable = element.shadowRoot.querySelector("c-file-datatable");
+    expect(datatable).not.toBeUndefined();
   });
 });

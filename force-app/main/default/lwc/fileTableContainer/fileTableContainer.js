@@ -1,5 +1,5 @@
 import { LightningElement, wire, api, track } from "lwc";
-import getFiles from "@salesforce/apex/FileGridController.getFiles";
+import getFiles from "@salesforce/apex/FileTableController.getFiles";
 import { NavigationMixin } from "lightning/navigation";
 import { deleteRecord } from "lightning/uiRecordApi";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
