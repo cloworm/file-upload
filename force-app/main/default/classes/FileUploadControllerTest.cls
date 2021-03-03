@@ -51,15 +51,6 @@ private class FileUploadControllerTest {
   }
 
   @isTest
-  static void testGetVersionInfoError() {
-    List<String> versionIds = new List<String>();
-    versionIds.add('12345');
-    List<ContentVersion> versions = FileUploadController.getVersionInfo(
-      versionIds
-    );
-  }
-
-  @isTest
   static void testUpdateVersionTypes() {
     List<ContentVersion> versions = [SELECT Id, Type__c FROM ContentVersion];
     versions[0].Type__c = 'Category B';
@@ -67,20 +58,5 @@ private class FileUploadControllerTest {
       versions
     );
     System.assertEquals(versionsUpdated[0].Type__c, 'Category B');
-  }
-
-  @isTest
-  static void testUpdateVersionTypesError() {
-    try {
-      List<ContentVersion> versions = [SELECT Id, Type__c FROM ContentVersion];
-      versions[0].Type__c = 'Category B';
-      versions[0].Title = null;
-      List<ContentVersion> versionsUpdated = FileUploadController.updateVersionTypes(
-        versions
-      );
-      System.assertEquals(versionsUpdated[0].Type__c, 'Category B');
-    } catch (AuraHandledException e) {
-      System.assert(e.getMessage()).contains('System.AuraHandledException');
-    }
   }
 }

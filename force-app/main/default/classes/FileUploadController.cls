@@ -16,11 +16,7 @@ public with sharing class FileUploadController {
   public static List<ContentVersion> updateVersionTypes(
     List<ContentVersion> contentVersions
   ) {
-    try {
-      update contentVersions;
-      return contentVersions;
-    } catch (Exception e) {
-      throw new AuraHandledException(e.getMessage());
-    }
+    update contentVersions;
+    return contentVersions;
   }
 }
