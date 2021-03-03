@@ -11,7 +11,15 @@
     </h2>
 
     <template for:each={filesUploaded} for:item="file">
-      <c-file-upload-tile file={file} key={file.Id}></c-file-upload-tile>
+      <c-file-upload-tile
+        filename={file.Title}
+        filetype={file.FileType}
+        size={file.ContentSize}
+        tag={file.Type__c}
+        content-document-id={file.ContentDocumentId}
+        content-version-id={file.Id}
+        key={file.Id}
+      ></c-file-upload-tile>
     </template>
   </div>
 

@@ -30,10 +30,12 @@ const defaultColumns = [
     fixedWidth: 100
   },
   {
-    label: "Size (bytes)",
+    label: "Size",
     fieldName: "ContentSize",
-    type: "number",
-    wrapText: true,
+    type: "fileSize",
+    typeAttributes: {
+      size: { fieldName: "ContentSize" }
+    },
     hideDefaultActions: true,
     sortable: true
   },
@@ -111,6 +113,12 @@ export default class FileGridContainer extends NavigationMixin(
 
   recordToDelete;
   recordToEdit;
+
+  // Refresh apex query
+  @api
+  async refresh() {
+    refreshApex(this.wiredFilesResult);
+  }
 
   @wire(getFiles, { recordId: "$recordId" })
   wiredFiles(result) {
@@ -355,12 +363,6 @@ export default class FileGridContainer extends NavigationMixin(
     } catch (error) {
       console.log("handleTypeChange error", error);
     }
-  }
-
-  // Refresh apex query
-  @api
-  async refresh() {
-    refreshApex(this.wiredFilesResult);
   }
 
   handleInputChange(event) {
