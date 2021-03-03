@@ -8,6 +8,7 @@ export default class FileUpload extends LightningElement {
   hasRendered;
   isDragging = false;
 
+  // Apply custom styles to lightning-file-upload component
   renderedCallback() {
     if (this.hasRendered) return;
     this.hasRendered = true;
@@ -68,8 +69,7 @@ export default class FileUpload extends LightningElement {
     this.hideDropzoneHover();
   }
 
-  // Get files dropped on dropzone
-  // TODO - check mime type
+  // Remove dropzone hover styles ondrop
   handleDrop(event) {
     event.preventDefault();
     event.stopPropagation();
@@ -91,6 +91,7 @@ export default class FileUpload extends LightningElement {
     this.isDragging = false;
   }
 
+  // Get ContentVersion records for files uploaded and emit them in an onuploaded Event
   handleUploadFinished(event) {
     const files = event.detail.files;
 

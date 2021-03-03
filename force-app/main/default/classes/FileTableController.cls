@@ -1,5 +1,5 @@
 /**
- * @description       : Controller class for fileTableContainer LWC
+ * @description       : Controller for fileTableContainer LWC
  * @author            : Chloe Echikson
  * @group             : Gerent LLC
  * @last modified on  : 03-01-2021
@@ -10,7 +10,7 @@
  **/
 public with sharing class FileTableController {
   /**
-   * @description  Returns latest ContentVersion for all files associated to recordId
+   * @description  Returns latest ContentVersion for all files related to recordId
    * @author       Chloe Echikson | 03-01-2021
    * @param        recordId
    * @return       List<ContentVersion>

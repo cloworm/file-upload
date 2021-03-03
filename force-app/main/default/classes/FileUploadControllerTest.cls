@@ -1,13 +1,3 @@
-/**
- * @description       :
- * @author            : Chloe Echikson
- * @group             : Gerent LLC
- * @last modified on  : 03-01-2021
- * @last modified by  : Chloe Echikson
- * Modifications Log
- * Ver   Date         Author           Modification
- * 1.0   03-01-2021   Chloe Echikson   Initial Version
- **/
 @isTest
 private class FileUploadControllerTest {
   @TestSetup
@@ -54,7 +44,7 @@ private class FileUploadControllerTest {
   static void testUpdateVersionTypes() {
     List<ContentVersion> versions = [SELECT Id, Type__c FROM ContentVersion];
     versions[0].Type__c = 'Category B';
-    List<ContentVersion> versionsUpdated = FileUploadController.updateVersionTypes(
+    List<ContentVersion> versionsUpdated = FileUploadController.updateVersions(
       versions
     );
     System.assertEquals(versionsUpdated[0].Type__c, 'Category B');

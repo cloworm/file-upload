@@ -45,22 +45,20 @@ export default class FilePreview extends LightningElement {
     }
   }
 
-  generateImgUrl() {
-    getSiteUrl().then((url) => {
-      let siteUrl = "";
+  async generateImgUrl() {
+    let siteUrl = await getSiteUrl();
 
-      if (url) {
-        siteUrl = url.replace(/\/s$/g, "");
-      }
+    if (siteUrl) {
+      siteUrl = siteUrl.replace(/\/s$/g, "");
+    }
 
-      const previewUrl = `${siteUrl}/sfc/servlet.shepherd/version/renditionDownload?rendition=${
-        this.isImage ? this.getRendition() : "SVGZ"
-      }&versionId=${this.contentVersionId}&operationContext=CHATTER&contentId=${
-        this.contentDocumentId
-      }${this.isImage ? "" : `&page=${this.pageNum}`}`;
+    const previewUrl = `${siteUrl}/sfc/servlet.shepherd/version/renditionDownload?rendition=${
+      this.isImage ? this.getRendition() : "SVGZ"
+    }&versionId=${this.contentVersionId}&operationContext=CHATTER&contentId=${
+      this.contentDocumentId
+    }${this.isImage ? "" : `&page=${this.pageNum}`}`;
 
-      this.imgUrls.push(previewUrl);
-    });
+    this.imgUrls.push(previewUrl);
   }
 
   get hasPreview() {

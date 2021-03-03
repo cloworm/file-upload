@@ -2,6 +2,7 @@ import { LightningElement, api, wire } from "lwc";
 import { NavigationMixin } from "lightning/navigation";
 import getSiteUrl from "@salesforce/apex/GetSite.getSiteUrl";
 
+// Maps FileType to doctype icon
 const extensionToMimeType = {
   CSV: "doctype:csv",
   DOC: "doctype:word",
@@ -62,6 +63,8 @@ export default class FileUploadTile extends NavigationMixin(LightningElement) {
     return filename.split(".").pop();
   }
 
+  // Open custom filePreview component for Experience Cloud as native file preview is not yet available for LWC
+  // Refer to https://developer.salesforce.com/docs/component-library/documentation/en/lwc/use_open_files for more information
   handlePreview(event) {
     if (this.isExperienceCloud) {
       this.previewContentVersionId = this.file.Id;

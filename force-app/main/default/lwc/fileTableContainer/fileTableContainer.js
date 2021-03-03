@@ -5,7 +5,7 @@ import { deleteRecord } from "lightning/uiRecordApi";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import { refreshApex } from "@salesforce/apex";
 import getSiteUrl from "@salesforce/apex/GetSite.getSiteUrl";
-import updateVersionTypes from "@salesforce/apex/FileUploadController.updateVersionTypes";
+import updateVersions from "@salesforce/apex/FileUploadController.updateVersions";
 
 const ERROR_TITLE = "Error";
 const ERROR_VARIANT = "error";
@@ -102,13 +102,15 @@ export default class FileGridContainer extends NavigationMixin(
   @track activeSections;
   _recordId;
   files;
-  recordToDelete;
-  recordToEdit;
   wiredFilesResult;
   searchTerm;
   isExperienceCloud;
+
   previewContentVersionId;
   previewContentDocumentId;
+
+  recordToDelete;
+  recordToEdit;
 
   @wire(getFiles, { recordId: "$recordId" })
   wiredFiles(result) {
@@ -144,6 +146,7 @@ export default class FileGridContainer extends NavigationMixin(
     }
   }
 
+  // Add Edit, Delete, and Download columns according to props
   get columns() {
     const cols = [...defaultColumns];
 
@@ -202,12 +205,10 @@ export default class FileGridContainer extends NavigationMixin(
     return cols;
   }
 
-  // Get # of files
   get fileCount() {
     return this.files && this.files.length ? this.files.length : 0;
   }
 
-  // Handle row actions
   handleRowAction({ detail: { actionName, row } }) {
     switch (actionName) {
       case "Preview":
@@ -231,7 +232,8 @@ export default class FileGridContainer extends NavigationMixin(
     }
   }
 
-  // Open file in preview window
+  // Open custom filePreview component for Experience Cloud as native file preview is not yet available for LWC
+  // Refer to https://developer.salesforce.com/docs/component-library/documentation/en/lwc/use_open_files for more information
   handlePreview(file) {
     if (this.isExperienceCloud) {
       this.previewContentVersionId = file.Id;
@@ -252,7 +254,7 @@ export default class FileGridContainer extends NavigationMixin(
     }
   }
 
-  // Download file
+  // Returns different download url for Lightning vs Experience Cloud
   handleDownload(file) {
     this[NavigationMixin.Navigate]({
       type: "standard__webPage",
@@ -287,7 +289,7 @@ export default class FileGridContainer extends NavigationMixin(
   }
 
   // Handle dialog confirm event
-  async handleCloseModal() {
+  async handleConfirmDelete() {
     const recordId = this.recordToDelete;
 
     // Hide modal
@@ -323,7 +325,7 @@ export default class FileGridContainer extends NavigationMixin(
     }
   }
 
-  handleCancelModal() {
+  handleCancelDelete() {
     const modal = this.template.querySelector(`[data-id="delete"]`);
     modal.hide();
   }
@@ -334,7 +336,9 @@ export default class FileGridContainer extends NavigationMixin(
 
   async handleTypeSave() {
     try {
-      await updateVersionTypes({ contentVersions: [this.recordToEdit] });
+      await updateVersions({ contentVersions: [this.recordToEdit] });
+
+      // Refresh apex query
       this.refresh();
 
       const modal = this.template.querySelector(`[data-id="edit"]`);
@@ -353,7 +357,7 @@ export default class FileGridContainer extends NavigationMixin(
     }
   }
 
-  // Refresh file list
+  // Refresh apex query
   @api
   async refresh() {
     refreshApex(this.wiredFilesResult);

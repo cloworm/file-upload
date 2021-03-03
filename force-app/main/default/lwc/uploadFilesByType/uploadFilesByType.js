@@ -1,21 +1,19 @@
 import { LightningElement, api, track, wire } from "lwc";
-import updateVersionTypes from "@salesforce/apex/FileUploadController.updateVersionTypes";
+import updateVersions from "@salesforce/apex/FileUploadController.updateVersions";
 import { getPicklistValues, getObjectInfo } from "lightning/uiObjectInfoApi";
 import CONTENT_VERSION_OBJECT from "@salesforce/schema/ContentVersion";
 import TYPE_FIELD from "@salesforce/schema/ContentVersion.Type__c";
 
 export default class UploadFilesByType extends LightningElement {
   @api recordId;
-  @track filesUploaded = [];
-  @track fileQueue = [];
-  formValid = true;
-
-  // Component Properties
   @api fileExtensions;
   @api table;
   @api deleteColumn;
   @api downloadColumn;
   @api editColumn;
+  @track filesUploaded = [];
+  @track fileQueue = [];
+  formValid = true;
 
   types = [];
 
@@ -54,6 +52,7 @@ export default class UploadFilesByType extends LightningElement {
 
   async handleCloseModal() {
     // validate form
+    this.formValid = this.isValid();
     if (!this.formValid) return;
 
     const modal = this.template.querySelector(`[data-id="types"]`);
@@ -92,7 +91,7 @@ export default class UploadFilesByType extends LightningElement {
   }
 
   handleTypeUpdate(files) {
-    updateVersionTypes({ contentVersions: files })
+    updateVersions({ contentVersions: files })
       .then(() => {
         // reset file queue
         this.fileQueue = [];
@@ -101,12 +100,12 @@ export default class UploadFilesByType extends LightningElement {
         this.filesUploaded.push(...files);
 
         if (this.table) {
-          // Refresh the file table component
+          // Refresh the fileTableContainer apex query
           this.template.querySelector("c-file-table-container").refresh();
         }
       })
       .catch((error) => {
-        console.log("updateVersionTypes error", error);
+        console.log("updateVersions error", error);
       });
   }
 }
