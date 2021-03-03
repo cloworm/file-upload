@@ -1,0 +1,17 @@
+<template>
+  <template if:true={hasPreview}>
+    <template for:each={imgUrls} for:item="imgUrl">
+      <img
+        class="preview"
+        key={imgUrl}
+        src={imgUrl}
+        onerror={handleImgLoadError}
+        onload={handleImgLoadSuccess}
+      />
+    </template>
+  </template>
+
+  <div class="slds-text-align_center" if:false={hasPreview}>
+    <p>Salesforce is still preparing your preview, please check back later.</p>
+  </div>
+</template>

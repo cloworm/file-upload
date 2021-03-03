@@ -1,70 +1,99 @@
-import { LightningElement, api } from "lwc";
+import { LightningElement, api, wire } from "lwc";
 import { NavigationMixin } from "lightning/navigation";
+import getSiteUrl from "@salesforce/apex/GetSite.getSiteUrl";
 
+// Maps FileType to doctype icon
 const extensionToMimeType = {
-  csv: "doctype:csv",
-  doc: "doctype:word",
-  docx: "doctype:word",
-  pdf: "doctype:pdf",
-  ppt: "doctype:ppt",
-  pptx: "doctype:ppt",
-  rtf: "doctype:rtf",
-  txt: "doctype:txt",
-  xls: "doctype:excel",
-  xlsx: "doctype:excel",
-  bmp: "doctype:image",
-  gif: "doctype:image",
-  jpeg: "doctype:image",
-  jpg: "doctype:image",
-  png: "doctype:image",
-  tif: "doctype:image",
-  tiff: "doctype:image",
-  vsd: "doctype:visio",
-  mp3: "doctype:audio",
-  ogg: "doctype:audio",
-  wav: "doctype:audio",
-  mov: "doctype:video",
-  mpeg: "doctype:video",
-  mpg: "doctype:video",
-  zip: "doctype:zip",
-  htm: "doctype:html",
-  html: "doctype:html",
-  xml: "doctype:xml"
+  CSV: "doctype:csv",
+  DOC: "doctype:word",
+  DOCX: "doctype:word",
+  PDF: "doctype:pdf",
+  PPT: "doctype:ppt",
+  PPTX: "doctype:ppt",
+  RTF: "doctype:rtf",
+  TXT: "doctype:txt",
+  XLS: "doctype:excel",
+  XLSX: "doctype:excel",
+  BMP: "doctype:image",
+  GIF: "doctype:image",
+  JPEG: "doctype:image",
+  JPG: "doctype:image",
+  PNG: "doctype:image",
+  TIF: "doctype:image",
+  TIFF: "doctype:image",
+  VSD: "doctype:visio",
+  MP3: "doctype:audio",
+  OGG: "doctype:audio",
+  WAV: "doctype:audio",
+  MOV: "doctype:video",
+  MPEG: "doctype:video",
+  MPG: "doctype:video",
+  ZIP: "doctype:zip",
+  HTM: "doctype:html",
+  HTML: "doctype:html",
+  XML: "doctype:xml"
 };
 
 export default class FileUploadTile extends NavigationMixin(LightningElement) {
   @api file;
+  isExperienceCloud;
+  previewContentVersionId;
+  previewContentDocumentId;
+  previewType;
 
-  get isUploaded() {
-    return this.file && this.file.ContentDocumentId;
-  }
+  @wire(getSiteUrl)
+  wiredSite({ error, data }) {
+    if (data) {
+      this.isExperienceCloud = true;
+    }
 
-  get progress() {
-    return this.file && this.file.ContentDocumentId ? 100 : 0;
+    if (error) {
+      console.error("error", error);
+    }
   }
 
   get iconName() {
-    const extension = this.getFileExtension(this.file.filename);
-    if (!this.file || !extension) return "doctype:unknown";
+    if (!this.file || !this.file.FileType) return "doctype:unknown";
 
-    return extensionToMimeType[extension.toLowerCase()] || "doctype:unknown";
+    return extensionToMimeType[this.file.FileType] || "doctype:unknown";
   }
 
   getFileExtension(filename) {
+    if (!filename) return "";
     return filename.split(".").pop();
   }
 
+  // Open custom filePreview component for Experience Cloud as native file preview is not yet available for LWC
+  // Refer to https://developer.salesforce.com/docs/component-library/documentation/en/lwc/use_open_files for more information
   handlePreview(event) {
-    const recordId = event.currentTarget.dataset.id;
+    if (this.isExperienceCloud) {
+      this.previewContentVersionId = this.file.Id;
+      this.previewContentDocumentId = this.file.ContentDocumentId;
+      this.previewType = this.file.FileType;
 
-    this[NavigationMixin.Navigate]({
-      type: "standard__namedPage",
-      attributes: {
-        pageName: "filePreview"
-      },
-      state: {
-        selectedRecordId: recordId
-      }
-    });
+      this.handleShowPreview();
+    } else {
+      const recordId = event.currentTarget.dataset.id;
+
+      this[NavigationMixin.Navigate]({
+        type: "standard__namedPage",
+        attributes: {
+          pageName: "filePreview"
+        },
+        state: {
+          selectedRecordId: recordId
+        }
+      });
+    }
+  }
+
+  handleShowPreview() {
+    const modal = this.template.querySelector(`[data-id="preview"]`);
+    modal.show();
+  }
+
+  handleHidePreview() {
+    const modal = this.template.querySelector(`[data-id="preview"]`);
+    modal.hide();
   }
 }

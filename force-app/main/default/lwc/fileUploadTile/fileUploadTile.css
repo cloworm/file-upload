@@ -26,6 +26,11 @@
   animation: spin 5s linear infinite;
 }
 
+.badge {
+  position: relative;
+  top: 2px;
+}
+
 @keyframes spin {
   0% {
     transform: rotateZ(0);

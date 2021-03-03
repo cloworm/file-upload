@@ -19,39 +19,17 @@ describe("c-file-upload-tile", () => {
     expect(div).toBeNull();
   });
 
-  it("Displays a loading spinner for uploading files", () => {
-    const element = createElement("c-file-upload-tile", {
-      is: FileUploadTile
-    });
-    element.file = {
-      id: 1,
-      filename: "Test.pdf",
-      ContentDocumentId: null,
-      type: "application/pdf",
-      base64: "",
-      recordId: null,
-      size: 3500,
-      error: null
-    };
-    document.body.appendChild(element);
-
-    const uploadingIcon = element.shadowRoot.querySelector("[title=uploading]");
-    expect(uploadingIcon).not.toBeNull();
-  });
-
   it("Displays a check mark for uploaded files", () => {
     const element = createElement("c-file-upload-tile", {
       is: FileUploadTile
     });
     element.file = {
-      id: 1,
-      filename: "Test.pdf",
+      Id: 1,
+      Title: "Test.pdf",
       ContentDocumentId: "12345",
-      type: "application/pdf",
-      base64: "",
+      Type__c: "Category A",
       recordId: null,
-      size: 3500,
-      error: null
+      ContentSize: 3500
     };
     document.body.appendChild(element);
 
@@ -59,23 +37,38 @@ describe("c-file-upload-tile", () => {
     expect(succcessIcon).not.toBeNull();
   });
 
-  it("Displays an error icon on upload errors", () => {
+  it("Displays the file name as a link to the preview method", () => {
     const element = createElement("c-file-upload-tile", {
       is: FileUploadTile
     });
     element.file = {
-      id: 1,
-      filename: "Test.pdf",
-      ContentDocumentId: null,
-      type: "application/pdf",
-      base64: "",
+      Id: 1,
+      Title: "Test.pdf",
+      ContentDocumentId: "12345",
+      Type__c: "Category A",
       recordId: null,
-      size: 3500,
-      error: "Error uploading"
+      ContentSize: 3500
     };
     document.body.appendChild(element);
 
-    const errorIcon = element.shadowRoot.querySelector("[title=error]");
-    expect(errorIcon).not.toBeNull();
+    const filename = element.shadowRoot.querySelector("[title=filename]");
+    expect(filename.textContent).toBe("Test.pdf");
+  });
+
+  it("Displays the file size", () => {
+    const element = createElement("c-file-upload-tile", {
+      is: FileUploadTile
+    });
+    element.file = {
+      Id: 1,
+      Title: "Test.pdf",
+      ContentDocumentId: "12345",
+      Type__c: "Category A",
+      ContentSize: 3500
+    };
+    document.body.appendChild(element);
+
+    const fileSize = element.shadowRoot.querySelector("span");
+    expect(fileSize.textContent).toBe("3500 bytes");
   });
 });

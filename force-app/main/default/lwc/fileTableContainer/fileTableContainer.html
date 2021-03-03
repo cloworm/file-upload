@@ -1,0 +1,106 @@
+<template>
+  <h2
+    class="slds-text-color_weak slds-text-title_bold slds-p-top_large slds-p-bottom_small"
+  >
+    All Files ({fileCount})
+  </h2>
+
+  <div class="slds-p-bottom_medium">
+    <lightning-input
+      type="search"
+      label="Search by Filename"
+      onchange={handleInputChange}
+    ></lightning-input>
+  </div>
+
+  <lightning-accordion
+    allow-multiple-sections-open
+    active-section-name={activeSections}
+  >
+    <template for:each={filteredFiles} for:item="group">
+      <lightning-accordion-section
+        class={group.class}
+        key={group.type}
+        name={group.type}
+        label={group.label}
+      >
+        <c-file-table
+          data-id="table"
+          file-data={group.data}
+          columns={columns}
+          onrowaction={handleRowAction}
+        ></c-file-table>
+      </lightning-accordion-section>
+    </template>
+  </lightning-accordion>
+
+  <c-modal data-id="delete" header="Confirm Delete">
+    <p class="slds-text-align_center">
+      Are you sure you want to delete this file?
+    </p>
+    <div slot="footer">
+      <lightning-button
+        label="Cancel"
+        variant="neutral"
+        onclick={handleCancelDelete}
+        class="slds-p-right_x-small"
+      ></lightning-button>
+      <lightning-button
+        label="Delete"
+        variant="destructive"
+        onclick={handleConfirmDelete}
+      ></lightning-button>
+    </div>
+  </c-modal>
+
+  <c-modal data-id="preview" header="Preview" size="large">
+    <c-file-preview
+      content-version-id={previewContentVersionId}
+      content-document-id={previewContentDocumentId}
+      type={previewType}
+    ></c-file-preview>
+    <div slot="footer">
+      <lightning-button
+        label="Close"
+        variant="neutral"
+        onclick={handleHidePreview}
+        class="slds-p-right_x-small"
+      ></lightning-button>
+    </div>
+  </c-modal>
+
+  <c-modal data-id="edit" header="Edit">
+    <lightning-input
+      if:true={recordToEdit}
+      type="text"
+      label="Filename"
+      value={recordToEdit.Title}
+      readonly
+    ></lightning-input>
+
+    <label class="slds-form-element__label">Type</label>
+
+    <c-select
+      if:true={recordToEdit}
+      select-id={recordToEdit.Id}
+      options={types}
+      onchange={handleTypeChange}
+      required
+    ></c-select>
+
+    <div slot="footer">
+      <lightning-button
+        label="Cancel"
+        variant="neutral"
+        onclick={handleHideEdit}
+        class="slds-p-right_x-small"
+      ></lightning-button>
+      <lightning-button
+        label="Save"
+        variant="brand"
+        onclick={handleTypeSave}
+        class="slds-p-right_x-small"
+      ></lightning-button>
+    </div>
+  </c-modal>
+</template>

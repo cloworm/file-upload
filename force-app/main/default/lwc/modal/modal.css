@@ -1,0 +1,9 @@
+.modal-hidden {
+  display: none;
+}
+
+/* Keeps modal content within viewport */
+.scroll-container {
+  max-height: 80vh;
+  overflow-y: auto;
+}

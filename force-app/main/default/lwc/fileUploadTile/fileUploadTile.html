@@ -1,10 +1,8 @@
 <template>
   <template if:true={file}>
-    <!-- Uploading Component State -->
     <div
       class="flex file-container items-center slds-p-bottom_medium"
-      key={file.id}
-      if:false={isUploaded}
+      key={file.Id}
     >
       <div class="slds-p-right_large">
         <lightning-icon
@@ -16,73 +14,25 @@
 
       <div class="flex-grow flex flex-col">
         <div class="flex justify-between">
-          <div>{file.filename}</div>
-        </div>
-        <div>
-          <span
-            class="slds-text-body_small slds-text-color_weak"
-            if:false={file.error}
-          >
-            Uploading...
-          </span>
-          <span
-            class="slds-text-body_small slds-text-color_error"
-            if:true={file.error}
-          >
-            {file.error}
-          </span>
-        </div>
-      </div>
-
-      <div class="slds-p-left_medium">
-        <lightning-icon
-          class="loading-icon"
-          icon-name="utility:spinner"
-          alternative-text="uploading"
-          title="uploading"
-          size="small"
-          if:false={file.error}
-        ></lightning-icon>
-        <lightning-icon
-          icon-name="utility:error"
-          alternative-text="error"
-          title="error"
-          size="small"
-          if:true={file.error}
-          variant="error"
-        ></lightning-icon>
-      </div>
-    </div>
-
-    <!-- Uploaded Component State -->
-    <div
-      class="flex file-container items-center slds-p-bottom_medium"
-      key={file.id}
-      if:true={isUploaded}
-    >
-      <div class="slds-p-right_large">
-        <lightning-icon
-          icon-name={iconName}
-          alternative-text="doctype"
-          title="doctype"
-        ></lightning-icon>
-      </div>
-
-      <div class="flex-grow flex flex-col">
-        <div class="flex justify-between">
-          <a data-id={file.ContentDocumentId} onclick={handlePreview}
-            >{file.filename}</a
+          <a
+            title="filename"
+            data-id={file.ContentDocumentId}
+            onclick={handlePreview}
+            >{file.Title}</a
           >
         </div>
         <div>
           <span class="slds-text-body_small slds-text-color_weak">
-            {file.size} bytes
+            {file.ContentSize} bytes
           </span>
         </div>
       </div>
 
-      <div class="slds-p-left_medium">
+      <div>
+        <lightning-badge class="badge" label={file.Type__c}></lightning-badge>
+
         <lightning-icon
+          class="slds-p-left_medium"
           icon-name="utility:success"
           alternative-text="success"
           title="success"
@@ -92,4 +42,20 @@
       </div>
     </div>
   </template>
+
+  <c-modal data-id="preview" header="Preview" size="large">
+    <c-file-preview
+      content-version-id={previewContentVersionId}
+      content-document-id={previewContentDocumentId}
+      type={previewType}
+    ></c-file-preview>
+    <div slot="footer">
+      <lightning-button
+        label="Close"
+        variant="neutral"
+        onclick={handleHidePreview}
+        class="slds-p-right_x-small"
+      ></lightning-button>
+    </div>
+  </c-modal>
 </template>
