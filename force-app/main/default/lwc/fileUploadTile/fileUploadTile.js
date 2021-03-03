@@ -66,7 +66,6 @@ export default class FileUploadTile extends NavigationMixin(LightningElement) {
   }
 
   get iconName() {
-    console.log("filetype", this.filetype);
     if (!this.filetype) return "doctype:unknown";
 
     return extensionToMimeType[this.filetype] || "doctype:unknown";
