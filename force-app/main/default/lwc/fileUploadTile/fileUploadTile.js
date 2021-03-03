@@ -35,11 +35,24 @@ const extensionToMimeType = {
 };
 
 export default class FileUploadTile extends NavigationMixin(LightningElement) {
-  @api file;
+  @api filename;
+  @api contentDocumentId;
+  @api tag;
+  @api contentVersionId;
+  @api filetype;
   isExperienceCloud;
   previewContentVersionId;
   previewContentDocumentId;
   previewType;
+  _size;
+
+  @api
+  set size(value) {
+    this._size = this.formatBytes(value);
+  }
+  get size() {
+    return this._size;
+  }
 
   @wire(getSiteUrl)
   wiredSite({ error, data }) {
@@ -53,14 +66,10 @@ export default class FileUploadTile extends NavigationMixin(LightningElement) {
   }
 
   get iconName() {
-    if (!this.file || !this.file.FileType) return "doctype:unknown";
+    console.log("filetype", this.filetype);
+    if (!this.filetype) return "doctype:unknown";
 
-    return extensionToMimeType[this.file.FileType] || "doctype:unknown";
-  }
-
-  getFileExtension(filename) {
-    if (!filename) return "";
-    return filename.split(".").pop();
+    return extensionToMimeType[this.filetype] || "doctype:unknown";
   }
 
   // Open custom filePreview component for Experience Cloud as native file preview is not yet available for LWC
@@ -95,5 +104,15 @@ export default class FileUploadTile extends NavigationMixin(LightningElement) {
   handleHidePreview() {
     const modal = this.template.querySelector(`[data-id="preview"]`);
     modal.hide();
+  }
+
+  formatBytes(bytes) {
+    if (bytes === 0) return "0 Bytes";
+    const i = Math.floor(Math.log(bytes) / Math.log(1000));
+    return (
+      (bytes / Math.pow(1000, i)).toFixed(2) * 1 +
+      " " +
+      ["B", "kB", "MB", "GB", "TB"][i]
+    );
   }
 }

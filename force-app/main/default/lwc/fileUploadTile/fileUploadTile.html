@@ -1,8 +1,8 @@
 <template>
-  <template if:true={file}>
+  <template if:true={filename}>
     <div
       class="flex file-container items-center slds-p-bottom_medium"
-      key={file.Id}
+      key={contentVersionId}
     >
       <div class="slds-p-right_large">
         <lightning-icon
@@ -16,20 +16,20 @@
         <div class="flex justify-between">
           <a
             title="filename"
-            data-id={file.ContentDocumentId}
+            data-id={contentDocumentId}
             onclick={handlePreview}
-            >{file.Title}</a
+            >{filename}</a
           >
         </div>
         <div>
           <span class="slds-text-body_small slds-text-color_weak">
-            {file.ContentSize} bytes
+            {size}
           </span>
         </div>
       </div>
 
       <div>
-        <lightning-badge class="badge" label={file.Type__c}></lightning-badge>
+        <lightning-badge class="badge" label={tag}></lightning-badge>
 
         <lightning-icon
           class="slds-p-left_medium"
