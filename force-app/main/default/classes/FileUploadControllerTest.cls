@@ -1,0 +1,86 @@
+/**
+ * @description       :
+ * @author            : Chloe Echikson
+ * @group             : Gerent LLC
+ * @last modified on  : 03-01-2021
+ * @last modified by  : Chloe Echikson
+ * Modifications Log
+ * Ver   Date         Author           Modification
+ * 1.0   03-01-2021   Chloe Echikson   Initial Version
+ **/
+@isTest
+private class FileUploadControllerTest {
+  @TestSetup
+  static void setup() {
+    Account testAcct = new Account(Name = 'Test Account');
+    insert testAcct;
+
+    ContentVersion cv = new ContentVersion(
+      Title = 'Test.jpg',
+      Type__c = 'Category A',
+      VersionData = Blob.valueOf('test'),
+      PathOnClient = 'Test.jpg'
+    );
+    insert cv;
+
+    ContentVersion cvCreated = [
+      SELECT ContentDocumentid
+      FROM ContentVersion
+      WHERE Id = :cv.Id
+    ];
+
+    ContentDocumentLink cdl = new ContentDocumentLink(
+      ContentDocumentId = cvCreated.ContentDocumentId,
+      LinkedEntityId = testAcct.Id,
+      ShareType = 'V'
+    );
+    insert cdl;
+  }
+
+  @isTest
+  static void testGetVersionInfo() {
+    List<String> versionIds = new List<String>();
+    for (ContentVersion cv : [SELECT Id FROM ContentVersion]) {
+      versionIds.add(cv.Id);
+    }
+    List<ContentVersion> versions = FileUploadController.getVersionInfo(
+      versionIds
+    );
+    System.assertEquals(versions.size(), 1);
+    System.assertEquals(versions[0].Id, versionIds[0]);
+  }
+
+  @isTest
+  static void testGetVersionInfoError() {
+    List<String> versionIds = new List<String>();
+    versionIds.add('12345');
+    List<ContentVersion> versions = FileUploadController.getVersionInfo(
+      versionIds
+    );
+  }
+
+  @isTest
+  static void testUpdateVersionTypes() {
+    List<ContentVersion> versions = [SELECT Id, Type__c FROM ContentVersion];
+    versions[0].Type__c = 'Category B';
+    List<ContentVersion> versionsUpdated = FileUploadController.updateVersionTypes(
+      versions
+    );
+    System.assertEquals(versionsUpdated[0].Type__c, 'Category B');
+  }
+
+  @isTest
+  static void testUpdateVersionTypesError() {
+    try {
+      List<ContentVersion> versions = [SELECT Id, Type__c FROM ContentVersion];
+      versions[0].Type__c = 'Category B';
+      versions[0].Title = null;
+      List<ContentVersion> versionsUpdated = FileUploadController.updateVersionTypes(
+        versions
+      );
+      System.assertEquals(versionsUpdated[0].Type__c, 'Category B');
+    } catch (AuraHandledException e) {
+      System.assert(e.getMessage()).contains('System.AuraHandledException');
+    }
+  }
+}

@@ -1,75 +1,31 @@
 # File Upload LWC
 
-> The File Upload Lightning Web Component uses the HTML Drag and Drop API to let your users upload files via drag and drop or browse on any Salesforce record page.
+> The File Upload Lightning Web Component let you upload files via drag and drop or browse on any Salesforce record page in Lightning or Experience Cloud.
 
-## Demo
+## Preview
 
-![Demo](https://user-images.githubusercontent.com/5566310/108149734-73379480-70a1-11eb-96fe-1a9eb3588a83.png)
+![Demo](https://user-images.githubusercontent.com/5566310/109728442-303aee00-7b84-11eb-9ef4-5a2fddbbb8d3.png)
 
 ## Features
 
 - Drag and Drop to upload files
-- Configurable mimetypes
+- Assign uploaded files a ContentVersion.Type\_\_c value
+- Filter files by Filename
 - Optional table component to display all files on a record which can be filtered by filename
+- Optional table columns: Edit, Delete, Download
 
 ## Component Properties
 
 <!-- ![Component Properties](https://user-images.githubusercontent.com/5566310/108149925-c3165b80-70a1-11eb-9072-e8de416fc4ec.png) -->
 
-| Property                | Required | Type     | Default Value   |
-| ----------------------- | -------- | -------- | --------------- |
-| Allowed File Extensions | X        | String   | .png,.gif,.docx |
-| Show Table Component    |          | Checkbox | Checked         |
-| Allow Record Deletion   |          | Checkbox | Checked         |
-
-## Allowed File Types
-
-The _Allowed File Extensions_ property should be a comma separated list of the extensions you'd like users to be able to upload with this component. Choose from the list of supported file extensions below.
-
-Ex: .png,.gif,.docx
-
-| Extension | Mime Type                                                                 |
-| --------- | ------------------------------------------------------------------------- |
-| .csv      | text/csv                                                                  |
-| .doc      | application/msword                                                        |
-| .docx     | application/vnd.openxmlformats-officedocument.wordprocessingml.document   |
-| .dot      | application/msword                                                        |
-| .ics      | text/calendar                                                             |
-| .mdb      | application/vnd.ms-access                                                 |
-| .pdf      | application/pdf                                                           |
-| .pps      | application/vnd.ms-powerpoint                                             |
-| .ppsx     | application/vnd.openxmlformats-officedocument.presentationml.slideshow    |
-| .ppt      | application/vnd.ms-powerpoint                                             |
-| .pptx     | application/vnd.openxmlformats-officedocument.presentationml.presentation |
-| .rtf      | application/rtf                                                           |
-| .sxc      | application/vnd.sun.xml.calc                                              |
-| .sxi      | application/vnd.sun.xml.impress                                           |
-| .sxw      | application/vnd.sun.xml.writer                                            |
-| .txt      | text/plain                                                                |
-| .xls      | application/vnd.ms-excel                                                  |
-| .xlsx     | application/vnd.openxmlformats-officedocument.spreadsheetml.sheet         |
-| .bmp      | image/bmp                                                                 |
-| .gif      | image/gif                                                                 |
-| .jpeg     | image/jpeg                                                                |
-| .jpg      | image/jpeg                                                                |
-| .png      | image/png                                                                 |
-| .tif      | image/tiff                                                                |
-| .tiff     | image/tiff                                                                |
-| .vsd      | application/vnd.visio                                                     |
-| .mp3      | audio/mpeg                                                                |
-| .ogg      | application/ogg                                                           |
-| .wav      | audio/wav                                                                 |
-| .mov      | video/quicktime                                                           |
-| .mpeg     | video/mpeg                                                                |
-| .mpg      | video/mpeg                                                                |
-| .zip      | application/zip                                                           |
-| .css      | text/css                                                                  |
-| .htm      | text/html                                                                 |
-| .html     | text/html                                                                 |
-| .js       | text/javascript                                                           |
-| .xml      | text/xml                                                                  |
-| .xsl      | text/xsl                                                                  |
-| .xslt     | application/xslt+xml                                                      |
+| Property                     | Description                                                                                                            | Type     | Default Value |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------- | -------- | ------------- |
+| Record Id                    | Enter recordId if used on a Lightning Record Page or {!recordId} if used on an Experience Cloud record page (Required) | String   | recordId      |
+| Allowed File Extensions      | Comma-separated list of file extensions that can be uploaded in the format .ext, such as .pdf, .jpg, or png.           | String   |               |
+| Show Table Component         | Display tables of files underneath the file upload component, grouped by ContentVersion.Type\_\_c                      | Checkbox | Checked       |
+| Use Delete Column in Table   | Let users delete files within the table component                                                                      | Checkbox | Checked       |
+| Use Edit Column in Table     | Let users delete the file Type of a file within the table component                                                    | Checkbox | Checked       |
+| Use Download Column in Table | Let users download files from the table component                                                                      | Checkbox | Checked       |
 
 ## Requirements
 
@@ -88,6 +44,24 @@ Install dependencies
 
 ```
 npm i
+```
+
+Run LWC tests
+
+```
+npm run test
+```
+
+Run Apex tests
+
+```
+npm run test:apex
+```
+
+Lint LWC
+
+```
+npm run lint
 ```
 
 Deploy to a sandbox
