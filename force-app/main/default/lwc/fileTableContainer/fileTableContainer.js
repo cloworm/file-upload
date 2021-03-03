@@ -158,6 +158,23 @@ export default class FileGridContainer extends NavigationMixin(
   get columns() {
     const cols = [...defaultColumns];
 
+    if (this.downloadColumn) {
+      cols.push({
+        name: "download",
+        label: "",
+        type: "button-icon",
+        typeAttributes: {
+          alternativeText: "Download",
+          title: "Download",
+          name: "Download",
+          variant: "border-filled",
+          iconName: "utility:download",
+          iconPosition: "left"
+        },
+        fixedWidth: 35
+      });
+    }
+
     if (this.editColumn) {
       cols.push({
         name: "edit",
@@ -187,23 +204,6 @@ export default class FileGridContainer extends NavigationMixin(
           name: "Delete",
           variant: "border-filled",
           iconName: "utility:delete",
-          iconPosition: "left"
-        },
-        fixedWidth: 35
-      });
-    }
-
-    if (this.downloadColumn) {
-      cols.push({
-        name: "download",
-        label: "",
-        type: "button-icon",
-        typeAttributes: {
-          alternativeText: "Download",
-          title: "Download",
-          name: "Download",
-          variant: "border-filled",
-          iconName: "utility:download",
           iconPosition: "left"
         },
         fixedWidth: 35
