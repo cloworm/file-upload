@@ -32,7 +32,11 @@
     edit-column={editColumn}
   ></c-file-table-container>
 
-  <c-modal data-id="types" header="Assign Types">
+  <c-modal
+    data-id="types"
+    header="Assign Types"
+    onclosedialog={handleCancelModal}
+  >
     <lightning-layout>
       <lightning-layout-item size="6">
         <p class="slds-text-align_center slds-p-bottom_small">Filename</p>

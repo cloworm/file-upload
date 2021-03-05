@@ -47,7 +47,14 @@ export default class UploadFilesByType extends LightningElement {
     const modal = this.template.querySelector(`[data-id="types"]`);
     modal.hide();
 
-    this.files = [];
+    // Refresh the fileTableContainer apex query
+    this.template.querySelector("c-file-table-container").refresh();
+
+    // Move files to uploaded list
+    this.filesUploaded.push(...this.fileQueue);
+
+    // Clear file queue
+    this.fileQueue = [];
   }
 
   async handleCloseModal() {

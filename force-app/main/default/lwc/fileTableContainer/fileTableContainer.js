@@ -376,7 +376,7 @@ export default class FileGridContainer extends NavigationMixin(
   applyFilter() {
     this.availableSections = this.files
       .reduce((sections, file) => {
-        const type = file.Type__c ? file.Type__c : "Uncategorized";
+        const type = file.Type__c ? file.Type__c : "Other";
 
         if (!sections.includes(type)) {
           sections.push(type);
@@ -396,7 +396,7 @@ export default class FileGridContainer extends NavigationMixin(
         return file.Title.match(re);
       })
       .reduce((group, file) => {
-        const key = file.Type__c ? file.Type__c : "Uncategorized";
+        const key = file.Type__c ? file.Type__c : "Other";
 
         if (Object.prototype.hasOwnProperty.call(group, key)) {
           group[key].push(file);
