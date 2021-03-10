@@ -5,8 +5,11 @@
     onuploaded={handleUploaded}
   ></c-file-upload>
 
-  <div if:true={hasFiles} class="slds-p-top_large">
-    <h2 class="slds-text-color_weak slds-text-title_bold slds-p-bottom_large">
+  <div>
+    <h2
+      if:true={hasFiles}
+      class="slds-p-top_large slds-text-color_weak slds-text-title_bold slds-p-bottom_large"
+    >
       Uploaded Files
     </h2>
 
