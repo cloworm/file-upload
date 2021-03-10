@@ -3,6 +3,9 @@ import updateVersions from "@salesforce/apex/FileUploadController.updateVersions
 import { getPicklistValues, getObjectInfo } from "lightning/uiObjectInfoApi";
 import CONTENT_VERSION_OBJECT from "@salesforce/schema/ContentVersion";
 import TYPE_FIELD from "@salesforce/schema/ContentVersion.Type__c";
+import { fireEvent, onNewListeners } from "c/pubsub";
+import { CurrentPageReference } from "lightning/navigation";
+import { BADGE_COLOR_EVENT_NAME } from "c/constants";
 
 export default class UploadFilesByType extends LightningElement {
   @api recordId;
@@ -13,7 +16,30 @@ export default class UploadFilesByType extends LightningElement {
   @api editColumn;
   @track filesUploaded = [];
   @track fileQueue = [];
+  @api badgeColor;
   formValid = true;
+  _badgeColor;
+  hasRendered;
+
+  // Get Current pageReference to allow PubSub to function
+  @wire(CurrentPageReference) pageRef;
+
+  connectedCallback() {
+    this.publishStyles();
+  }
+
+  renderedCallback() {
+    if (this.hasRendered) return;
+
+    onNewListeners(BADGE_COLOR_EVENT_NAME, this.publishStyles, this);
+    this.hasRendered = true;
+  }
+
+  publishStyles() {
+    fireEvent(this.pageRef, BADGE_COLOR_EVENT_NAME, {
+      badgeColor: this.badgeColor
+    });
+  }
 
   types = [];
 
