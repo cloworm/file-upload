@@ -52,9 +52,15 @@
       />
       <property
         name="badgeColor"
-        label="Badge Color"
+        label="Badge BG Color"
         type="String"
         placeholder="#ecebea"
+      />
+      <property
+        name="badgeTextColor"
+        label="Badge Text Color"
+        type="String"
+        placeholder="#000"
       />
     </targetConfig>
     <targetConfig targets="lightningCommunity__Default">
@@ -96,6 +102,18 @@
         label="Use Download Column in Table"
         type="Boolean"
         default="true"
+      />
+      <property
+        name="badgeColor"
+        label="Badge BG Color"
+        type="Color"
+        default="#ecebea"
+      />
+      <property
+        name="badgeTextColor"
+        label="Badge Text Color"
+        type="Color"
+        default="#ecebea"
       />
     </targetConfig>
   </targetConfigs>

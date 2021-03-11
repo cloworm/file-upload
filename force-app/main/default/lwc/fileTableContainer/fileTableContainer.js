@@ -387,7 +387,7 @@ export default class FileGridContainer extends NavigationMixin(
       .sort();
 
     //TODO delete
-    this.openSections = [...this.availableSections];
+    this.activeSections = [...this.availableSections];
 
     const filesByType = this.files
       .filter((file) => {

@@ -17,6 +17,7 @@ export default class UploadFilesByType extends LightningElement {
   @track filesUploaded = [];
   @track fileQueue = [];
   @api badgeColor;
+  @api badgeTextColor;
   formValid = true;
   _badgeColor;
   hasRendered;
@@ -37,7 +38,8 @@ export default class UploadFilesByType extends LightningElement {
 
   publishStyles() {
     fireEvent(this.pageRef, BADGE_COLOR_EVENT_NAME, {
-      badgeColor: this.badgeColor
+      badgeColor: this.badgeColor,
+      badgeTextColor: this.badgeTextColor
     });
   }
 
