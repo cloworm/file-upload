@@ -21,6 +21,7 @@ const defaultColumns = [
     typeAttributes: {
       filename: { fieldName: "Title" }
     },
+    wrapText: true,
     hideDefaultActions: true,
     sortable: true
   },
@@ -39,6 +40,7 @@ const defaultColumns = [
     typeAttributes: {
       size: { fieldName: "ContentSize" }
     },
+    wrapText: true,
     hideDefaultActions: true,
     sortable: true
   },
@@ -61,6 +63,7 @@ const defaultColumns = [
       name: { fieldName: "Owner" },
       photo: { fieldName: "OwnerSmallPhotoUrl" }
     },
+    wrapText: true,
     hideDefaultActions: true,
     sortable: true
   },
