@@ -16,8 +16,11 @@ const SUCCESS_VARIANT = "success";
 const defaultColumns = [
   {
     label: "Filename",
-    fieldName: "Title",
-    wrapText: true,
+    type: "filename",
+    fieldName: "Id",
+    typeAttributes: {
+      filename: { fieldName: "Title" }
+    },
     hideDefaultActions: true,
     sortable: true
   },
@@ -78,15 +81,12 @@ const defaultColumns = [
   },
   {
     label: "",
-    type: "button-icon",
+    type: "preview",
+    fieldName: "Id",
     typeAttributes: {
-      alternativeText: "Preview",
-      title: "Preview",
-      name: "Preview",
-      variant: "border-filled",
-      iconName: "utility:preview",
-      iconPosition: "left"
+      id: { fieldName: "Id" }
     },
+    hideDefaultActions: true,
     fixedWidth: 35
   }
 ];
@@ -160,52 +160,39 @@ export default class FileGridContainer extends NavigationMixin(
 
     if (this.downloadColumn) {
       cols.push({
-        name: "download",
         label: "",
-        type: "button-icon",
+        type: "download",
+        fieldName: "Id",
         typeAttributes: {
-          alternativeText: "Download",
-          title: "Download",
-          name: "Download",
-          variant: "border-filled",
-          iconName: "utility:download",
-          iconPosition: "left"
+          id: { fieldName: "Id" }
         },
+        hideDefaultActions: true,
         fixedWidth: 35
       });
     }
 
     if (this.editColumn) {
       cols.push({
-        name: "edit",
         label: "",
-        type: "button-icon",
+        type: "edit",
+        fieldName: "Id",
         typeAttributes: {
-          alternativeText: "Edit",
-          title: "Edit",
-          name: "Edit",
-          variant: "border-filled",
-          iconName: "utility:edit",
-          iconPosition: "left"
+          id: { fieldName: "Id" }
         },
+        hideDefaultActions: true,
         fixedWidth: 35
       });
     }
 
     if (this.deleteColumn) {
       cols.push({
-        name: "delete",
         label: "",
-        type: "button-icon",
+        type: "delete",
+        fieldName: "Id",
         typeAttributes: {
-          alternativeText: "Delete",
-          iconClass: "slds-text-color_destructive",
-          title: "Delete",
-          name: "Delete",
-          variant: "border-filled",
-          iconName: "utility:delete",
-          iconPosition: "left"
+          id: { fieldName: "Id" }
         },
+        hideDefaultActions: true,
         fixedWidth: 35
       });
     }
@@ -217,32 +204,14 @@ export default class FileGridContainer extends NavigationMixin(
     return this.files && this.files.length ? this.files.length : 0;
   }
 
-  handleRowAction({ detail: { actionName, row } }) {
-    switch (actionName) {
-      case "Preview":
-        this.handlePreview(row);
-        break;
-
-      case "Delete":
-        this.handleDelete(row);
-        break;
-
-      case "Download":
-        this.handleDownload(row);
-        break;
-
-      case "Edit":
-        this.handleEdit(row);
-        break;
-
-      default:
-        break;
-    }
-  }
-
   // Open custom filePreview component for Experience Cloud as native file preview is not yet available for LWC
   // Refer to https://developer.salesforce.com/docs/component-library/documentation/en/lwc/use_open_files for more information
-  handlePreview(file) {
+  handlePreview(event) {
+    const id = event.detail.id;
+    const file = this.files.find((row) => row.Id === id);
+
+    if (!file) return;
+
     if (this.isExperienceCloud) {
       this.previewContentVersionId = file.Id;
       this.previewContentDocumentId = file.ContentDocumentId;
@@ -263,7 +232,12 @@ export default class FileGridContainer extends NavigationMixin(
   }
 
   // Returns different download url for Lightning vs Experience Cloud
-  handleDownload(file) {
+  handleDownload(event) {
+    const id = event.detail.id;
+    const file = this.files.find((row) => row.Id === id);
+
+    if (!file) return;
+
     this[NavigationMixin.Navigate]({
       type: "standard__webPage",
       attributes: {
@@ -276,7 +250,12 @@ export default class FileGridContainer extends NavigationMixin(
   }
 
   // Open modal allowing user to edit file type
-  handleEdit(file) {
+  handleEdit(event) {
+    const id = event.detail.id;
+    const file = this.files.find((row) => row.Id === id);
+
+    if (!file) return;
+
     const modal = this.template.querySelector(`[data-id="edit"]`);
     this.recordToEdit = file;
     modal.show();
@@ -288,7 +267,12 @@ export default class FileGridContainer extends NavigationMixin(
   }
 
   // Display confirmation modal to user before deleting
-  handleDelete(file) {
+  handleDelete(event) {
+    const id = event.detail.id;
+    const file = this.files.find((row) => row.Id === id);
+
+    if (!file) return;
+
     if (!this.deleteColumn) return;
     this.recordToDelete = file.ContentDocumentId;
 

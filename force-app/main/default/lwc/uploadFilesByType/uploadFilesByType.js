@@ -3,9 +3,6 @@ import updateVersions from "@salesforce/apex/FileUploadController.updateVersions
 import { getPicklistValues, getObjectInfo } from "lightning/uiObjectInfoApi";
 import CONTENT_VERSION_OBJECT from "@salesforce/schema/ContentVersion";
 import TYPE_FIELD from "@salesforce/schema/ContentVersion.Type__c";
-import { fireEvent, onNewListeners } from "c/pubsub";
-import { CurrentPageReference } from "lightning/navigation";
-import { BADGE_COLOR_EVENT_NAME } from "c/constants";
 
 export default class UploadFilesByType extends LightningElement {
   @api recordId;
@@ -16,31 +13,48 @@ export default class UploadFilesByType extends LightningElement {
   @api editColumn;
   @track filesUploaded = [];
   @track fileQueue = [];
+
+  // Theming
   @api badgeColor;
   @api badgeTextColor;
+  @api editIconColor;
+  @api previewIconColor;
+  @api downloadIconColor;
+  @api deleteIconColor;
+  @api uploaderOutlineColor;
+  @api uploaderBackgroundColor;
+  @api boldFilename;
+
   formValid = true;
   _badgeColor;
   hasRendered;
 
-  // Get Current pageReference to allow PubSub to function
-  @wire(CurrentPageReference) pageRef;
-
-  connectedCallback() {
-    this.publishStyles();
-  }
-
   renderedCallback() {
     if (this.hasRendered) return;
 
-    onNewListeners(BADGE_COLOR_EVENT_NAME, this.publishStyles, this);
-    this.hasRendered = true;
-  }
+    const el = this.template.querySelector(".gerent-file-upload");
+    if (el) {
+      el.style.setProperty(
+        "--gerent-file-upload-weight",
+        this.boldFilename ? 700 : 500
+      );
+      el.style.setProperty("--sds-c-badge-color-background", this.badgeColor);
+      el.style.setProperty("--sds-c-badge-text-color", this.badgeTextColor);
+      el.style.setProperty("--gerent-delete-color", this.deleteIconColor);
+      el.style.setProperty("--gerent-edit-color", this.editIconColor);
+      el.style.setProperty("--gerent-preview-color", this.previewIconColor);
+      el.style.setProperty("--gerent-download-color", this.downloadIconColor);
+      el.style.setProperty(
+        "--gerent-uploader-background-color",
+        this.uploaderBackgroundColor
+      );
+      el.style.setProperty(
+        "--gerent-uploader-border-color",
+        this.uploaderOutlineColor
+      );
+    }
 
-  publishStyles() {
-    fireEvent(this.pageRef, BADGE_COLOR_EVENT_NAME, {
-      badgeColor: this.badgeColor,
-      badgeTextColor: this.badgeTextColor
-    });
+    this.hasRendered = true;
   }
 
   types = [];

@@ -28,7 +28,9 @@
           data-id="table"
           file-data={group.data}
           columns={columns}
-          onrowaction={handleRowAction}
+          onrowpreview={handlePreview}
+          onrowedit={handleEdit}
+          onrowdownload={handleDownload}
         ></c-file-table>
       </lightning-accordion-section>
     </template>

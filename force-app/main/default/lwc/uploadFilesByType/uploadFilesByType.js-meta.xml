@@ -33,6 +33,12 @@
         default="true"
       />
       <property
+        name="boldFilename"
+        label="Bold Filename"
+        type="Boolean"
+        default="false"
+      />
+      <property
         name="deleteColumn"
         label="Use Delete Column in Table"
         type="Boolean"
@@ -54,13 +60,57 @@
         name="badgeColor"
         label="Badge BG Color"
         type="String"
+        default="#ecebea"
         placeholder="#ecebea"
       />
       <property
         name="badgeTextColor"
         label="Badge Text Color"
         type="String"
+        default="#000"
         placeholder="#000"
+      />
+      <property
+        name="editIconColor"
+        label="Edit Icon Color"
+        type="String"
+        default="#706e6b"
+        placeholder="#706e6b"
+      />
+      <property
+        name="previewIconColor"
+        label="Preview Icon Color"
+        type="String"
+        default="#706e6b"
+        placeholder="#706e6b"
+      />
+      <property
+        name="downloadIconColor"
+        label="Download Icon Color"
+        type="String"
+        default="#706e6b"
+        placeholder="#706e6b"
+      />
+      <property
+        name="deleteIconColor"
+        label="Delete Icon Color"
+        type="String"
+        default="#c23934"
+        placeholder="#c23934"
+      />
+      <property
+        name="uploaderOutlineColor"
+        label="Uploader Outline Color"
+        type="String"
+        default="#5eb4ff"
+        placeholder="#5eb4ff"
+      />
+      <property
+        name="uploaderBackgroundColor"
+        label="Uploader Background Color"
+        type="String"
+        default="#fafcfe"
+        placeholder="#fafcfe"
       />
     </targetConfig>
     <targetConfig targets="lightningCommunity__Default">
@@ -86,6 +136,12 @@
         default="true"
       />
       <property
+        name="boldFilename"
+        label="Bole Filename"
+        type="Boolean"
+        default="false"
+      />
+      <property
         name="deleteColumn"
         label="Use Delete Column in Table"
         type="Boolean"
@@ -114,6 +170,42 @@
         label="Badge Text Color"
         type="Color"
         default="#ecebea"
+      />
+      <property
+        name="editIconColor"
+        label="Edit Icon Color"
+        type="Color"
+        default="#706e6b"
+      />
+      <property
+        name="previewIconColor"
+        label="Preview Icon Color"
+        type="Color"
+        default="#706e6b"
+      />
+      <property
+        name="downloadIconColor"
+        label="Preview Icon Color"
+        type="Color"
+        default="#706e6b"
+      />
+      <property
+        name="deleteIconColor"
+        label="Delete Icon Color"
+        type="Color"
+        default="#c23934"
+      />
+      <property
+        name="uploaderOutlineColor"
+        label="Uploader Outline Color"
+        type="Color"
+        default="#5eb4ff"
+      />
+      <property
+        name="uploaderBackgroundColor"
+        label="Uploader Background Color"
+        type="Color"
+        default="#fafcfe"
       />
     </targetConfig>
   </targetConfigs>

@@ -1,0 +1,8 @@
+.delete-button {
+  transition: all 0.05s ease-out;
+  color: var(--gerent-delete-color);
+}
+
+.delete-button:hover {
+  filter: brightness(0.9);
+}

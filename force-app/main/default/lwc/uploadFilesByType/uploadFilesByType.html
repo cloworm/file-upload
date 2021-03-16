@@ -1,100 +1,102 @@
 <template>
-  <c-file-upload
-    record-id={recordId}
-    file-extensions={fileExtensions}
-    onuploaded={handleUploaded}
-  ></c-file-upload>
+  <div class="gerent-file-upload">
+    <c-file-upload
+      record-id={recordId}
+      file-extensions={fileExtensions}
+      onuploaded={handleUploaded}
+    ></c-file-upload>
 
-  <div>
-    <h2
-      if:true={hasFiles}
-      class="slds-p-top_large slds-text-color_weak slds-text-title_bold slds-p-bottom_large"
-    >
-      Uploaded Files
-    </h2>
+    <div>
+      <h2
+        if:true={hasFiles}
+        class="slds-p-top_large slds-text-color_weak slds-text-title_bold slds-p-bottom_large"
+      >
+        Uploaded Files
+      </h2>
 
-    <template for:each={filesUploaded} for:item="file">
-      <c-file-upload-tile
-        filename={file.Title}
-        filetype={file.FileType}
-        size={file.ContentSize}
-        tag={file.Type__c}
-        content-document-id={file.ContentDocumentId}
-        content-version-id={file.Id}
-        key={file.Id}
-      ></c-file-upload-tile>
-    </template>
-  </div>
-
-  <c-file-table-container
-    if:true={table}
-    types={types}
-    record-id={recordId}
-    delete-column={deleteColumn}
-    download-column={downloadColumn}
-    edit-column={editColumn}
-  ></c-file-table-container>
-
-  <c-modal
-    data-id="types"
-    header="Assign Types"
-    onclosedialog={handleCancelModal}
-  >
-    <lightning-layout>
-      <lightning-layout-item size="6">
-        <p class="slds-text-align_center slds-p-bottom_small">Filename</p>
-      </lightning-layout-item>
-      <lightning-layout-item size="6">
-        <p class="slds-text-align_center slds-p-bottom_small">File Type</p>
-      </lightning-layout-item>
-    </lightning-layout>
-    <form>
-      <template for:each={fileQueue} for:item="file">
-        <lightning-layout horizontal-align="spread" key={file.Id}>
-          <lightning-layout-item size="6">
-            <p class="slds-p-vertical_x-small">{file.Title}</p>
-          </lightning-layout-item>
-          <lightning-layout-item size="6">
-            <p
-              if:true={file.error}
-              class="slds-text-color_error slds-p-vertical_x-small"
-            >
-              {file.error}
-            </p>
-            <c-select
-              if:false={file.error}
-              select-id={file.Id}
-              options={types}
-              onchange={handleTypeChange}
-              required
-            ></c-select>
-          </lightning-layout-item>
-        </lightning-layout>
+      <template for:each={filesUploaded} for:item="file">
+        <c-file-upload-tile
+          filename={file.Title}
+          filetype={file.FileType}
+          size={file.ContentSize}
+          tag={file.Type__c}
+          content-document-id={file.ContentDocumentId}
+          content-version-id={file.Id}
+          key={file.Id}
+        ></c-file-upload-tile>
       </template>
-    </form>
-    <div slot="footer">
-      <lightning-icon
-        class="slds-p-right_x-small"
-        icon-name="utility:error"
-        alternative-text="error"
-        title="error"
-        size="small"
-        if:false={formValid}
-        variant="error"
-      ></lightning-icon>
-      <lightning-button
-        label="Cancel"
-        variant="neutral"
-        onclick={handleCancelModal}
-        class="slds-p-right_x-small"
-      ></lightning-button>
-      <lightning-button
-        label="Save"
-        variant="brand"
-        icon-name="utility:save"
-        onclick={handleCloseModal}
-        type="submit"
-      ></lightning-button>
     </div>
-  </c-modal>
+
+    <c-file-table-container
+      if:true={table}
+      types={types}
+      record-id={recordId}
+      delete-column={deleteColumn}
+      download-column={downloadColumn}
+      edit-column={editColumn}
+    ></c-file-table-container>
+
+    <c-modal
+      data-id="types"
+      header="Assign Types"
+      onclosedialog={handleCancelModal}
+    >
+      <lightning-layout>
+        <lightning-layout-item size="6">
+          <p class="slds-text-align_center slds-p-bottom_small">Filename</p>
+        </lightning-layout-item>
+        <lightning-layout-item size="6">
+          <p class="slds-text-align_center slds-p-bottom_small">File Type</p>
+        </lightning-layout-item>
+      </lightning-layout>
+      <form>
+        <template for:each={fileQueue} for:item="file">
+          <lightning-layout horizontal-align="spread" key={file.Id}>
+            <lightning-layout-item size="6">
+              <p class="slds-p-vertical_x-small">{file.Title}</p>
+            </lightning-layout-item>
+            <lightning-layout-item size="6">
+              <p
+                if:true={file.error}
+                class="slds-text-color_error slds-p-vertical_x-small"
+              >
+                {file.error}
+              </p>
+              <c-select
+                if:false={file.error}
+                select-id={file.Id}
+                options={types}
+                onchange={handleTypeChange}
+                required
+              ></c-select>
+            </lightning-layout-item>
+          </lightning-layout>
+        </template>
+      </form>
+      <div slot="footer">
+        <lightning-icon
+          class="slds-p-right_x-small"
+          icon-name="utility:error"
+          alternative-text="error"
+          title="error"
+          size="small"
+          if:false={formValid}
+          variant="error"
+        ></lightning-icon>
+        <lightning-button
+          label="Cancel"
+          variant="neutral"
+          onclick={handleCancelModal}
+          class="slds-p-right_x-small"
+        ></lightning-button>
+        <lightning-button
+          label="Save"
+          variant="brand"
+          icon-name="utility:save"
+          onclick={handleCloseModal}
+          type="submit"
+        ></lightning-button>
+      </div>
+    </c-modal>
+  </div>
 </template>

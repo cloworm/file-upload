@@ -1,16 +1,5 @@
 import { createElement } from "lwc";
 import UploadFilesByType from "c/uploadFilesByType";
-// import { registerListener, unregisterAllListeners } from 'c/pubsub'
-
-//mock the pubSub methods
-jest.mock("c/pubsub", () => {
-  return {
-    registerListener: jest.fn(),
-    unregisterAllListeners: jest.fn(),
-    fireEvent: jest.fn(),
-    onNewListeners: jest.fn()
-  };
-});
 
 describe("c-upload-files-by-type", () => {
   afterEach(() => {

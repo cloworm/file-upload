@@ -29,14 +29,6 @@ export default class FileGrid extends LightningElement {
     return this.data && this.data.length > 0;
   }
 
-  handleRowAction(event) {
-    const actionName = event.detail.action.name;
-    const row = event.detail.row;
-
-    const evt = new CustomEvent("rowaction", { detail: { actionName, row } });
-    this.dispatchEvent(evt);
-  }
-
   sortBy(field, reverse, primer) {
     const key = primer
       ? function (x) {
