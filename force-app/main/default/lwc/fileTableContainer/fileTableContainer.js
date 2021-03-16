@@ -259,7 +259,7 @@ export default class FileGridContainer extends NavigationMixin(
     if (!file) return;
 
     const modal = this.template.querySelector(`[data-id="edit"]`);
-    this.recordToEdit = file;
+    this.recordToEdit = { ...file };
     modal.show();
   }
 
@@ -324,11 +324,15 @@ export default class FileGridContainer extends NavigationMixin(
     modal.hide();
   }
 
+  handleTitleChange({ detail: { value } }) {
+    this.recordToEdit.Title = value;
+  }
+
   handleTypeChange({ detail: { value } }) {
     this.recordToEdit.Type__c = value;
   }
 
-  async handleTypeSave() {
+  async handleSaveEdit() {
     try {
       await updateVersions({ contentVersions: [this.recordToEdit] });
 
@@ -340,7 +344,7 @@ export default class FileGridContainer extends NavigationMixin(
 
       const evt = new ShowToastEvent({
         title: SUCCESS_TITLE,
-        message: "File Type updated",
+        message: `File ${this.recordToEdit.Title} updated`,
         variant: SUCCESS_VARIANT
       });
       this.dispatchEvent(evt);
