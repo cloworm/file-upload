@@ -30,8 +30,7 @@ const defaultColumns = [
     fieldName: "FileType",
     wrapText: true,
     hideDefaultActions: true,
-    sortable: true,
-    fixedWidth: 100
+    sortable: true
   },
   {
     label: "Size",
