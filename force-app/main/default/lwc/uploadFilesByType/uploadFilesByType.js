@@ -13,7 +13,49 @@ export default class UploadFilesByType extends LightningElement {
   @api editColumn;
   @track filesUploaded = [];
   @track fileQueue = [];
+
+  // Theming
+  @api badgeColor;
+  @api badgeTextColor;
+  @api editIconColor;
+  @api previewIconColor;
+  @api downloadIconColor;
+  @api deleteIconColor;
+  @api uploaderOutlineColor;
+  @api uploaderBackgroundColor;
+  @api boldFilename;
+
   formValid = true;
+  _badgeColor;
+  hasRendered;
+
+  renderedCallback() {
+    if (this.hasRendered) return;
+
+    const el = this.template.querySelector(".gerent-file-upload");
+    if (el) {
+      el.style.setProperty(
+        "--gerent-file-upload-weight",
+        this.boldFilename ? 700 : 500
+      );
+      el.style.setProperty("--sds-c-badge-color-background", this.badgeColor);
+      el.style.setProperty("--sds-c-badge-text-color", this.badgeTextColor);
+      el.style.setProperty("--gerent-delete-color", this.deleteIconColor);
+      el.style.setProperty("--gerent-edit-color", this.editIconColor);
+      el.style.setProperty("--gerent-preview-color", this.previewIconColor);
+      el.style.setProperty("--gerent-download-color", this.downloadIconColor);
+      el.style.setProperty(
+        "--gerent-uploader-background-color",
+        this.uploaderBackgroundColor
+      );
+      el.style.setProperty(
+        "--gerent-uploader-border-color",
+        this.uploaderOutlineColor
+      );
+    }
+
+    this.hasRendered = true;
+  }
 
   types = [];
 
@@ -47,7 +89,14 @@ export default class UploadFilesByType extends LightningElement {
     const modal = this.template.querySelector(`[data-id="types"]`);
     modal.hide();
 
-    this.files = [];
+    // Refresh the fileTableContainer apex query
+    this.template.querySelector("c-file-table-container").refresh();
+
+    // Move files to uploaded list
+    this.filesUploaded.push(...this.fileQueue);
+
+    // Clear file queue
+    this.fileQueue = [];
   }
 
   async handleCloseModal() {

@@ -1,0 +1,8 @@
+.download-button {
+  transition: all 0.05s ease-out;
+  color: var(--gerent-download-color);
+}
+
+.download-button:hover {
+  filter: brightness(0.9);
+}

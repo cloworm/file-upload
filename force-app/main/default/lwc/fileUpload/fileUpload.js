@@ -5,13 +5,13 @@ export default class FileUpload extends LightningElement {
   @api recordId;
   @api fileExtensions;
 
+  borderColor = "transparent";
+  backgroundColor = "transparent";
   hasRendered;
   isDragging = false;
-
   // Apply custom styles to lightning-file-upload component
   renderedCallback() {
     if (this.hasRendered) return;
-    this.hasRendered = true;
 
     const style = document.createElement("style");
     style.innerText = `
@@ -49,6 +49,7 @@ export default class FileUpload extends LightningElement {
       }
     `;
     this.template.querySelector(".uploader").appendChild(style);
+    this.hasRendered = true;
   }
 
   // Apply dropzone hover styles ondragenter

@@ -28,7 +28,10 @@
           data-id="table"
           file-data={group.data}
           columns={columns}
-          onrowaction={handleRowAction}
+          onrowpreview={handlePreview}
+          onrowedit={handleEdit}
+          onrowdownload={handleDownload}
+          onrowdelete={handleDelete}
         ></c-file-table>
       </lightning-accordion-section>
     </template>
@@ -75,7 +78,8 @@
       type="text"
       label="Filename"
       value={recordToEdit.Title}
-      readonly
+      onchange={handleTitleChange}
+      required
     ></lightning-input>
 
     <label class="slds-form-element__label">Type</label>
@@ -83,6 +87,7 @@
     <c-select
       if:true={recordToEdit}
       select-id={recordToEdit.Id}
+      value={recordToEdit.Type__c}
       options={types}
       onchange={handleTypeChange}
       required
@@ -98,7 +103,7 @@
       <lightning-button
         label="Save"
         variant="brand"
-        onclick={handleTypeSave}
+        onclick={handleSaveEdit}
         class="slds-p-right_x-small"
       ></lightning-button>
     </div>
