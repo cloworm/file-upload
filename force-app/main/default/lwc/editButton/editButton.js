@@ -1,4 +1,4 @@
-import { LightningElement, wire, api } from "lwc";
+import { LightningElement, api } from "lwc";
 
 export default class EditButton extends LightningElement {
   @api rowId;
