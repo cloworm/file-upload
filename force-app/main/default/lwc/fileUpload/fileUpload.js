@@ -1,4 +1,4 @@
-import { LightningElement, api, wire } from "lwc";
+import { LightningElement, api } from "lwc";
 import getVersionInfo from "@salesforce/apex/FileUploadController.getVersionInfo";
 
 export default class FileUpload extends LightningElement {
