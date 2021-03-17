@@ -185,7 +185,7 @@
       />
       <property
         name="downloadIconColor"
-        label="Preview Icon Color"
+        label="Download Icon Color"
         type="Color"
         default="#706e6b"
       />
