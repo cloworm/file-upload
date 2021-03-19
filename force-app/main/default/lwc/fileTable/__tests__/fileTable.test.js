@@ -28,14 +28,14 @@ describe("c-file-table", () => {
         Id: "28395",
         Title: "Test.pdf",
         ContentDocumentId: "12345",
-        Type__c: "Category A",
+        Type: "Category A",
         ContentSize: 3500
       },
       {
         Id: "12345",
         Title: "Test2.pdf",
         ContentDocumentId: "12345",
-        Type__c: "Category B",
+        Type: "Category B",
         ContentSize: 3500
       }
     ];

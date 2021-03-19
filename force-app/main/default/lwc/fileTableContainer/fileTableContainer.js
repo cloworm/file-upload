@@ -1,11 +1,11 @@
 import { LightningElement, wire, api, track } from "lwc";
-import getFiles from "@salesforce/apex/FileTableController.getFiles";
+// import getFiles from "@salesforce/apex/FileTableController.getFiles";
 import { NavigationMixin } from "lightning/navigation";
 import { deleteRecord } from "lightning/uiRecordApi";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
-import { refreshApex } from "@salesforce/apex";
+// import { refreshApex } from "@salesforce/apex";
 import getSiteUrl from "@salesforce/apex/GetSite.getSiteUrl";
-import updateVersions from "@salesforce/apex/FileUploadController.updateVersions";
+// import updateVersions from "@salesforce/apex/FileUploadController.updateVersions";
 
 const ERROR_TITLE = "Error";
 const ERROR_VARIANT = "error";
@@ -45,11 +45,11 @@ const defaultColumns = [
   },
   {
     label: "Type",
-    fieldName: "Type__c",
+    fieldName: "Type",
     type: "badge",
     typeAttributes: {
       id: { fieldName: "Id" },
-      label: { fieldName: "Type__c" }
+      label: { fieldName: "Type" }
     },
     hideDefaultActions: true
   },
@@ -93,7 +93,7 @@ const defaultColumns = [
   }
 ];
 
-export default class FileGridContainer extends NavigationMixin(
+export default class FileTableContainer extends NavigationMixin(
   LightningElement
 ) {
   @api recordId;
@@ -105,8 +105,8 @@ export default class FileGridContainer extends NavigationMixin(
   @track availableSections;
   @track activeSections;
   _recordId;
-  files;
-  wiredFilesResult;
+  _tableData = [];
+  // wiredFilesResult;
   searchTerm;
   isExperienceCloud;
 
@@ -116,33 +116,20 @@ export default class FileGridContainer extends NavigationMixin(
   recordToDelete;
   recordToEdit;
 
-  // Refresh apex query
   @api
-  async refresh() {
-    refreshApex(this.wiredFilesResult);
+  get tableData() {
+    return this._tableData;
+  }
+  set tableData(value) {
+    this._tableData = value ? value : [];
+
+    this.applyFilter();
   }
 
-  @wire(getFiles, { recordId: "$recordId" })
-  wiredFiles(result) {
-    this.wiredFilesResult = result;
-
-    if (!result.data) return;
-    this.files = result.data.map((row) => {
-      const file = {
-        ...row,
-        FileType: row.ContentDocument?.FileType,
-        Title: row.ContentDocument?.Title,
-        ContentModifiedDate: row.ContentDocument?.ContentModifiedDate,
-        Owner: row.Owner?.Name,
-        OwnerSmallPhotoUrl: row.Owner?.SmallPhotoUrl,
-        ContentSize: row.ContentDocument?.ContentSize
-      };
-
-      return file;
-    });
-
-    // Set value of filteredFiles
-    this.applyFilter();
+  // Refresh apex query
+  refresh() {
+    const evt = new CustomEvent("refreshdata");
+    this.dispatchEvent(evt);
   }
 
   @wire(getSiteUrl)
@@ -203,14 +190,16 @@ export default class FileGridContainer extends NavigationMixin(
   }
 
   get fileCount() {
-    return this.files && this.files.length ? this.files.length : 0;
+    return this.filteredFiles && this._tableData.length
+      ? this._tableData.length
+      : 0;
   }
 
   // Open custom filePreview component for Experience Cloud as native file preview is not yet available for LWC
   // Refer to https://developer.salesforce.com/docs/component-library/documentation/en/lwc/use_open_files for more information
   handlePreview(event) {
     const id = event.detail.id;
-    const file = this.files.find((row) => row.Id === id);
+    const file = this._tableData.find((row) => row.Id === id);
 
     if (!file) return;
 
@@ -236,7 +225,7 @@ export default class FileGridContainer extends NavigationMixin(
   // Returns different download url for Lightning vs Experience Cloud
   handleDownload(event) {
     const id = event.detail.id;
-    const file = this.files.find((row) => row.Id === id);
+    const file = this._tableData.find((row) => row.Id === id);
 
     if (!file) return;
 
@@ -254,7 +243,7 @@ export default class FileGridContainer extends NavigationMixin(
   // Open modal allowing user to edit file type
   handleEdit(event) {
     const id = event.detail.id;
-    const file = this.files.find((row) => row.Id === id);
+    const file = this._tableData.find((row) => row.Id === id);
 
     if (!file) return;
 
@@ -271,7 +260,7 @@ export default class FileGridContainer extends NavigationMixin(
   // Display confirmation modal to user before deleting
   handleDelete(event) {
     const id = event.detail.id;
-    const file = this.files.find((row) => row.Id === id);
+    const file = this._tableData.find((row) => row.Id === id);
 
     if (!file) return;
 
@@ -306,7 +295,8 @@ export default class FileGridContainer extends NavigationMixin(
       this.recordToDelete = null;
 
       // Refresh file list
-      await this.refresh();
+      // await this.refresh();
+      this.refresh();
     } catch (error) {
       const evt = new ShowToastEvent({
         title: ERROR_TITLE,
@@ -329,30 +319,23 @@ export default class FileGridContainer extends NavigationMixin(
   }
 
   handleTypeChange({ detail: { value } }) {
-    this.recordToEdit.Type__c = value;
+    this.recordToEdit.Type = value;
   }
 
-  async handleSaveEdit() {
-    try {
-      await updateVersions({ contentVersions: [this.recordToEdit] });
+  handleSaveEdit() {
+    const evt = new CustomEvent("saveedit", {
+      detail: {
+        Id: this.recordToEdit.Id,
+        Title: this.recordToEdit.Title,
+        Type: this.recordToEdit.Type
+      }
+    });
+    this.dispatchEvent(evt);
 
-      // Refresh apex query
-      this.refresh();
+    const modal = this.template.querySelector(`[data-id="edit"]`);
+    modal.hide();
 
-      const modal = this.template.querySelector(`[data-id="edit"]`);
-      modal.hide();
-
-      const evt = new ShowToastEvent({
-        title: SUCCESS_TITLE,
-        message: `File ${this.recordToEdit.Title} updated`,
-        variant: SUCCESS_VARIANT
-      });
-      this.dispatchEvent(evt);
-
-      this.recordToEdit = null;
-    } catch (error) {
-      console.log("handleTypeChange error", error);
-    }
+    this.recordToEdit = null;
   }
 
   handleInputChange(event) {
@@ -362,11 +345,11 @@ export default class FileGridContainer extends NavigationMixin(
   }
 
   // Filter files by title
-  // Group files by Type__c
+  // Group files by Type
   applyFilter() {
-    this.availableSections = this.files
+    this.availableSections = this._tableData
       .reduce((sections, file) => {
-        const type = file.Type__c ? file.Type__c : "Other";
+        const type = file.Type ? file.Type : "Other";
 
         if (!sections.includes(type)) {
           sections.push(type);
@@ -379,7 +362,7 @@ export default class FileGridContainer extends NavigationMixin(
     //TODO delete
     this.activeSections = [...this.availableSections];
 
-    const filesByType = this.files
+    const filesByType = this._tableData
       .filter((file) => {
         if (!this.searchTerm || this.searchTerm.trim().length === 0) {
           return true;
@@ -389,7 +372,7 @@ export default class FileGridContainer extends NavigationMixin(
         return file.Title.match(re);
       })
       .reduce((group, file) => {
-        const key = file.Type__c ? file.Type__c : "Other";
+        const key = file.Type ? file.Type : "Other";
 
         if (Object.prototype.hasOwnProperty.call(group, key)) {
           group[key].push(file);

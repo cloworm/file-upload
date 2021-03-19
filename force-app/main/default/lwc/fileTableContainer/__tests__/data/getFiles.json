@@ -6,7 +6,7 @@
     "FileType": "PNG",
     "ContentModifiedDate": 1613417232115,
     "ContentDocumentId": "12345",
-    "Type__c": "Category A"
+    "Type": "Category A"
   },
   {
     "Id": "238948",
@@ -15,6 +15,6 @@
     "FileType": "JPG",
     "ContentModifiedDate": 1613417232115,
     "ContentDocumentId": "238948",
-    "Type__c": "Category B"
+    "Type": "Category B"
   }
 ]

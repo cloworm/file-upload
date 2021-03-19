@@ -3,6 +3,12 @@ import updateVersions from "@salesforce/apex/FileUploadController.updateVersions
 import { getPicklistValues, getObjectInfo } from "lightning/uiObjectInfoApi";
 import CONTENT_VERSION_OBJECT from "@salesforce/schema/ContentVersion";
 import TYPE_FIELD from "@salesforce/schema/ContentVersion.Type__c";
+import getFiles from "@salesforce/apex/FileTableController.getFiles";
+import { refreshApex } from "@salesforce/apex";
+import { ShowToastEvent } from "lightning/platformShowToastEvent";
+
+const SUCCESS_TITLE = "Success";
+const SUCCESS_VARIANT = "success";
 
 export default class UploadFilesByType extends LightningElement {
   @api recordId;
@@ -25,9 +31,32 @@ export default class UploadFilesByType extends LightningElement {
   @api uploaderBackgroundColor;
   @api boldFilename;
 
-  formValid = true;
   _badgeColor;
+  formValid = true;
   hasRendered;
+  tableData;
+  wiredFilesResult;
+
+  @wire(getFiles, { recordId: "$recordId" })
+  wiredFiles(result) {
+    this.wiredFilesResult = result;
+
+    if (!result.data) return;
+    this.tableData = result.data.map((row) => {
+      const file = {
+        ...row,
+        FileType: row.ContentDocument?.FileType,
+        Title: row.ContentDocument?.Title,
+        ContentModifiedDate: row.ContentDocument?.ContentModifiedDate,
+        Owner: row.Owner?.Name,
+        OwnerSmallPhotoUrl: row.Owner?.SmallPhotoUrl,
+        ContentSize: row.ContentDocument?.ContentSize,
+        Type: row.Type__c
+      };
+
+      return file;
+    });
+  }
 
   renderedCallback() {
     if (this.hasRendered) return;
@@ -80,17 +109,22 @@ export default class UploadFilesByType extends LightningElement {
     return this.filesUploaded && this.filesUploaded.length > 0;
   }
 
+  handleRefresh() {
+    refreshApex(this.wiredFilesResult);
+  }
+
   handleOpenModal() {
     const modal = this.template.querySelector(`[data-id="types"]`);
     modal.show();
   }
 
-  handleCancelModal() {
+  async handleCancelModal() {
     const modal = this.template.querySelector(`[data-id="types"]`);
     modal.hide();
 
     // Refresh the fileTableContainer apex query
-    this.template.querySelector("c-file-table-container").refresh();
+    // this.template.querySelector("c-file-table-container").refresh();
+    await this.handleRefresh();
 
     // Move files to uploaded list
     this.filesUploaded.push(...this.fileQueue);
@@ -141,7 +175,7 @@ export default class UploadFilesByType extends LightningElement {
 
   handleTypeUpdate(files) {
     updateVersions({ contentVersions: files })
-      .then(() => {
+      .then(async () => {
         // reset file queue
         this.fileQueue = [];
 
@@ -150,11 +184,35 @@ export default class UploadFilesByType extends LightningElement {
 
         if (this.table) {
           // Refresh the fileTableContainer apex query
-          this.template.querySelector("c-file-table-container").refresh();
+          // this.template.querySelector("c-file-table-container").refresh();
+          await this.handleRefresh();
         }
       })
       .catch((error) => {
         console.log("updateVersions error", error);
       });
+  }
+
+  async handleSaveEdit({ detail: { Id, Title, Type } }) {
+    try {
+      const version = {
+        Id,
+        Title,
+        Type__c: Type
+      };
+      await updateVersions({ contentVersions: [version] });
+
+      // Refresh apex query
+      await this.handleRefresh();
+
+      const evt = new ShowToastEvent({
+        title: SUCCESS_TITLE,
+        message: `File ${this.recordToEdit.Title} updated`,
+        variant: SUCCESS_VARIANT
+      });
+      this.dispatchEvent(evt);
+    } catch (error) {
+      console.log("handleSaveEdit error", error);
+    }
   }
 }
