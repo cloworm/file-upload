@@ -20,24 +20,11 @@
         description="Enter recordId for Lightning or {!recordId} for Experience Cloud"
       />
       <property
-        name="uploadTypeName"
-        label="Upload DocumentType Name"
-        type="String"
-        default=""
-        required="true"
-      />
-      <property
-        name="viewTypeName"
-        label="View DocumentType Name"
-        type="String"
-        default=""
-        required="true"
-      />
-      <property
         name="lob"
         label="LOB"
         type="String"
-        default=""
+        datasource="LOB 1,LOB 2,LOB 3,LOB 4,LOB 5,LOB 6"
+        default="LOB 1"
         required="true"
       />
       <property
@@ -144,24 +131,11 @@
         description="Enter recordId for Lightning or {!recordId} for Experience Cloud"
       />
       <property
-        name="uploadTypeName"
-        label="Upload DocumentType Name"
-        type="String"
-        default=""
-        required="true"
-      />
-      <property
-        name="viewTypeName"
-        label="View DocumentType Name"
-        type="String"
-        default=""
-        required="true"
-      />
-      <property
         name="lob"
         label="LOB"
         type="String"
-        default=""
+        datasource="LOB 1,LOB 2,LOB 3,LOB 4,LOB 5,LOB 6"
+        default="LOB 1"
         required="true"
       />
       <property

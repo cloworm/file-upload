@@ -4,7 +4,7 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
 >
-    <label>CategoryAUpload</label>
+    <label>PartnerLOB1View</label>
     <protected>false</protected>
     <values>
         <field>LOB__c</field>
@@ -12,16 +12,16 @@
     </values>
     <values>
         <field>Profile__c</field>
-        <value xsi:type="xsd:string">System Administrator</value>
+        <value xsi:type="xsd:string">Customer Community User</value>
     </values>
     <values>
         <field>Type__c</field>
         <value
       xsi:type="xsd:string"
-    >Category A;Category B;Category C;Category F</value>
+    >Category A;Category B;Category C;Category D;Category E</value>
     </values>
     <values>
         <field>View_Upload__c</field>
-        <value xsi:type="xsd:string">Upload</value>
+        <value xsi:type="xsd:string">View</value>
     </values>
 </CustomMetadata>

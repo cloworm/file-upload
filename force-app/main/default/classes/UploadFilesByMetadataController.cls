@@ -1,20 +1,26 @@
 public with sharing class UploadFilesByMetadataController {
   @AuraEnabled(cacheable=true)
   public static DocumentType__mdt getViewDefinition(
-    String Name,
+    String LOB,
     String Profile,
-    String LOB
+    Boolean isPortalEnabled
   ) {
+    String name =
+      (isPortalEnabled ? 'Partner' : 'Internal') +
+      LOB.replace(' ', '') +
+      'View';
     try {
-      return [
+      DocumentType__mdt[] records = [
         SELECT Id, DeveloperName, LOB__c, Profile__c, Type__c, View_Upload__c
         FROM DocumentType__mdt
         WHERE
-          DeveloperName = :Name
-          AND Profile__c = :profile
+          DeveloperName = :name
+          AND Profile__c = :Profile
           AND LOB__c = :LOB
           AND View_Upload__c = 'View'
       ];
+
+      return records.size() > 0 ? records[0] : null;
     } catch (Exception e) {
       throw new AuraHandledException(e.getMessage());
     }
@@ -22,20 +28,26 @@ public with sharing class UploadFilesByMetadataController {
 
   @AuraEnabled(cacheable=true)
   public static DocumentType__mdt getUploadDefinition(
-    String Name,
+    String LOB,
     String Profile,
-    String LOB
+    Boolean isPortalEnabled
   ) {
+    String name =
+      (isPortalEnabled ? 'Partner' : 'Internal') +
+      LOB.replace(' ', '') +
+      'Upload';
     try {
-      return [
+      DocumentType__mdt[] records = [
         SELECT Id, DeveloperName, LOB__c, Profile__c, Type__c, View_Upload__c
         FROM DocumentType__mdt
         WHERE
-          DeveloperName = :Name
-          AND Profile__c = :profile
+          DeveloperName = :name
+          AND Profile__c = :Profile
           AND LOB__c = :LOB
           AND View_Upload__c = 'Upload'
       ];
+
+      return records.size() > 0 ? records[0] : null;
     } catch (Exception e) {
       throw new AuraHandledException(e.getMessage());
     }

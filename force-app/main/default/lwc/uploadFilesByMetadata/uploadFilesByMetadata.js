@@ -11,6 +11,7 @@ const SUCCESS_VARIANT = "success";
 
 import USER_ID from "@salesforce/user/Id";
 import PROFILE_FIELD from "@salesforce/schema/User.Profile.Name";
+import IS_PORTAL_ENABLED_FIELD from "@salesforce/schema/User.IsPortalEnabled";
 
 export default class UploadFilesByMetadata extends LightningElement {
   @api recordId;
@@ -34,8 +35,6 @@ export default class UploadFilesByMetadata extends LightningElement {
   @api boldFilename;
 
   // access rules
-  @api uploadTypeName;
-  @api viewTypeName;
   @api lob;
   allowedViewTypes = [];
   allowedUploadTypes = [];
@@ -46,41 +45,46 @@ export default class UploadFilesByMetadata extends LightningElement {
   tableData = [];
   types = [];
 
-  @wire(getRecord, { recordId: USER_ID, fields: [PROFILE_FIELD] })
+  @wire(getRecord, {
+    recordId: USER_ID,
+    fields: [PROFILE_FIELD, IS_PORTAL_ENABLED_FIELD]
+  })
   wiredUser({ error, data }) {
     if (data) {
       const profile = getFieldValue(data, PROFILE_FIELD);
-      console.log("profile", profile);
-      this.getAccessRules(profile);
+      const isPortalEnabled = getFieldValue(data, IS_PORTAL_ENABLED_FIELD);
+      this.getAccessRules(profile, isPortalEnabled);
     }
     if (error) {
       console.error("wiredUser error", error);
     }
   }
 
-  async getAccessRules(profile) {
+  async getAccessRules(profile, isPortalEnabled) {
     try {
       const viewDefinition = await getViewDefinition({
-        Name: this.viewTypeName,
+        LOB: this.lob,
         Profile: profile,
-        LOB: this.lob
+        isPortalEnabled
       });
-      this.allowedViewTypes = viewDefinition.Type__c.split(";");
+      this.allowedViewTypes = viewDefinition
+        ? viewDefinition.Type__c.split(";")
+        : [];
       console.log("view", JSON.parse(JSON.stringify(this.allowedViewTypes)));
 
       const uploadDefinition = await getUploadDefinition({
-        Name: this.uploadTypeName,
+        LOB: this.lob,
         Profile: profile,
-        LOB: this.lob
+        isPortalEnabled
       });
-      this.allowedUploadTypes = uploadDefinition.Type__c.split(";").map(
-        (val) => {
-          return {
-            label: val,
-            value: val
-          };
-        }
-      );
+      this.allowedUploadTypes = uploadDefinition
+        ? uploadDefinition.Type__c.split(";").map((val) => {
+            return {
+              label: val,
+              value: val
+            };
+          })
+        : [];
       console.log(
         "upload",
         JSON.parse(JSON.stringify(this.allowedUploadTypes))
