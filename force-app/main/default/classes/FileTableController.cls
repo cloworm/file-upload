@@ -1,5 +1,5 @@
 /**
- * @description       : Controller for fileTableContainer LWC
+ * @description       : Used by UploadFilesByType LWC to retrieve ContentVersion records
  * @author            : Chloe Echikson
  * @group             : Gerent LLC
  * @last modified on  : 03-01-2021
@@ -10,9 +10,9 @@
  **/
 public with sharing class FileTableController {
   /**
-   * @description  Returns latest ContentVersion for all files related to recordId
+   * @description  Returns List<ContentVersion> of all latest versions of files attached to recordId, filtered by type
    * @author       Chloe Echikson | 03-01-2021
-   * @param        recordId
+   * @param        ID of record files are attached to
    * @return       List<ContentVersion>
    **/
   @AuraEnabled(cacheable=true)

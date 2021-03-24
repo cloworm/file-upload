@@ -1,11 +1,8 @@
 import { LightningElement, wire, api, track } from "lwc";
-// import getFiles from "@salesforce/apex/FileTableController.getFiles";
 import { NavigationMixin } from "lightning/navigation";
 import { deleteRecord } from "lightning/uiRecordApi";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
-// import { refreshApex } from "@salesforce/apex";
 import getSiteUrl from "@salesforce/apex/GetSite.getSiteUrl";
-// import updateVersions from "@salesforce/apex/FileUploadController.updateVersions";
 
 const ERROR_TITLE = "Error";
 const ERROR_VARIANT = "error";

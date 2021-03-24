@@ -1,18 +1,7 @@
-/**
- * @description       :
- * @author            : Chloe Echikson
- * @group             : Gerent LLC
- * @last modified on  : 03-01-2021
- * @last modified by  : Chloe Echikson
- * Modifications Log
- * Ver   Date         Author           Modification
- * 1.0   03-01-2021   Chloe Echikson   Initial Version
- **/
 @isTest
 private class FileTableControllerTest {
   @testSetup
   static void setup() {
-    // Create Account
     Account testAcct = new Account(Name = 'Test Account');
     insert testAcct;
 

@@ -2,7 +2,6 @@
 private class FileTableByMetadataControllerTest {
   @testSetup
   static void setup() {
-    // Create Account
     Account testAcct = new Account(Name = 'Test Account');
     insert testAcct;
 
