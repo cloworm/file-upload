@@ -100,13 +100,12 @@ export default class FileTableContainer extends NavigationMixin(
   @api deleteColumn;
   @api downloadColumn;
   @api editColumn;
-  @api types;
+  @api allowedUploadTypes;
   @track filteredFiles = [];
   @track availableSections;
   @track activeSections;
   _recordId;
   _tableData = [];
-  // wiredFilesResult;
   searchTerm;
   isExperienceCloud;
 

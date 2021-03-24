@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>LOB__c</fullName>
+    <externalId>false</externalId>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <label>LOB</label>
+    <required>false</required>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>LOB 1</fullName>
+                <default>true</default>
+                <label>LOB 1</label>
+            </value>
+            <value>
+                <fullName>LOB 2</fullName>
+                <default>false</default>
+                <label>LOB 2</label>
+            </value>
+            <value>
+                <fullName>LOB 3</fullName>
+                <default>false</default>
+                <label>LOB 3</label>
+            </value>
+            <value>
+                <fullName>LOB 4</fullName>
+                <default>false</default>
+                <label>LOB 4</label>
+            </value>
+            <value>
+                <fullName>LOB 5</fullName>
+                <default>false</default>
+                <label>LOB 5</label>
+            </value>
+            <value>
+                <fullName>LOB 6</fullName>
+                <default>false</default>
+                <label>LOB 6</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -29,7 +29,7 @@
 
     <c-file-table-container
       if:true={table}
-      allowed-upload-types={types}
+      allowed-upload-types={allowedUploadTypes}
       record-id={recordId}
       delete-column={deleteColumn}
       download-column={downloadColumn}
@@ -68,7 +68,7 @@
               <c-select
                 if:false={file.error}
                 select-id={file.Id}
-                options={types}
+                options={allowedUploadTypes}
                 onchange={handleTypeChange}
                 required
               ></c-select>
