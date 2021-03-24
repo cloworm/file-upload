@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+  <apiVersion>50.0</apiVersion>
+  <isExposed>true</isExposed>
+  <targets>
+    <target>lightning__RecordPage</target>
+    <target>lightning__AppPage</target>
+    <target>lightning__HomePage</target>
+    <target>lightningCommunity__Page</target>
+    <target>lightningCommunity__Default</target>
+  </targets>
+  <targetConfigs>
+    <targetConfig targets="lightning__RecordPage">
+      <property
+        name="recordId"
+        label="Record Id"
+        type="String"
+        required="true"
+        default="recordId"
+        description="Enter recordId for Lightning or {!recordId} for Experience Cloud"
+      />
+      <property
+        name="lob"
+        label="LOB"
+        type="String"
+        datasource="LOB 1,LOB 2,LOB 3,LOB 4,LOB 5,LOB 6"
+        default="LOB 1"
+        required="true"
+      />
+      <property
+        name="fileExtensions"
+        label="Allowed File Extensions"
+        type="String"
+        default=""
+        description="Comma separated list of file extensions that can be uploaded"
+      />
+      <property
+        name="table"
+        label="Show Table Component"
+        type="Boolean"
+        default="true"
+      />
+      <property
+        name="boldFilename"
+        label="Bold Filename"
+        type="Boolean"
+        default="false"
+      />
+      <property
+        name="deleteColumn"
+        label="Use Delete Column in Table"
+        type="Boolean"
+        default="true"
+      />
+      <property
+        name="editColumn"
+        label="Use Edit Column in Table"
+        type="Boolean"
+        default="true"
+      />
+      <property
+        name="downloadColumn"
+        label="Use Download Column in Table"
+        type="Boolean"
+        default="true"
+      />
+      <property
+        name="badgeColor"
+        label="Badge BG Color"
+        type="String"
+        default="#ecebea"
+        placeholder="#ecebea"
+      />
+      <property
+        name="badgeTextColor"
+        label="Badge Text Color"
+        type="String"
+        default="#000"
+        placeholder="#000"
+      />
+      <property
+        name="editIconColor"
+        label="Edit Icon Color"
+        type="String"
+        default="#706e6b"
+        placeholder="#706e6b"
+      />
+      <property
+        name="previewIconColor"
+        label="Preview Icon Color"
+        type="String"
+        default="#706e6b"
+        placeholder="#706e6b"
+      />
+      <property
+        name="downloadIconColor"
+        label="Download Icon Color"
+        type="String"
+        default="#706e6b"
+        placeholder="#706e6b"
+      />
+      <property
+        name="deleteIconColor"
+        label="Delete Icon Color"
+        type="String"
+        default="#c23934"
+        placeholder="#c23934"
+      />
+      <property
+        name="uploaderOutlineColor"
+        label="Uploader Outline Color"
+        type="String"
+        default="#5eb4ff"
+        placeholder="#5eb4ff"
+      />
+      <property
+        name="uploaderBackgroundColor"
+        label="Uploader Background Color"
+        type="String"
+        default="#fafcfe"
+        placeholder="#fafcfe"
+      />
+    </targetConfig>
+    <targetConfig targets="lightningCommunity__Default">
+      <property
+        name="recordId"
+        label="Record Id"
+        type="String"
+        required="true"
+        default="recordId"
+        description="Enter recordId for Lightning or {!recordId} for Experience Cloud"
+      />
+      <property
+        name="lob"
+        label="LOB"
+        type="String"
+        datasource="LOB 1,LOB 2,LOB 3,LOB 4,LOB 5,LOB 6"
+        default="LOB 1"
+        required="true"
+      />
+      <property
+        name="fileExtensions"
+        label="Allowed File Extensions"
+        type="String"
+        default=""
+        description="Comma separated list of file extensions that can be uploaded"
+      />
+      <property
+        name="table"
+        label="Show Table Component"
+        type="Boolean"
+        default="true"
+      />
+      <property
+        name="boldFilename"
+        label="Bold Filename"
+        type="Boolean"
+        default="false"
+      />
+      <property
+        name="deleteColumn"
+        label="Use Delete Column in Table"
+        type="Boolean"
+        default="true"
+      />
+      <property
+        name="editColumn"
+        label="Use Edit Column in Table"
+        type="Boolean"
+        default="true"
+      />
+      <property
+        name="downloadColumn"
+        label="Use Download Column in Table"
+        type="Boolean"
+        default="true"
+      />
+      <property
+        name="badgeColor"
+        label="Badge BG Color"
+        type="Color"
+        default="#ecebea"
+      />
+      <property
+        name="badgeTextColor"
+        label="Badge Text Color"
+        type="Color"
+        default="#000"
+      />
+      <property
+        name="editIconColor"
+        label="Edit Icon Color"
+        type="Color"
+        default="#706e6b"
+      />
+      <property
+        name="previewIconColor"
+        label="Preview Icon Color"
+        type="Color"
+        default="#706e6b"
+      />
+      <property
+        name="downloadIconColor"
+        label="Download Icon Color"
+        type="Color"
+        default="#706e6b"
+      />
+      <property
+        name="deleteIconColor"
+        label="Delete Icon Color"
+        type="Color"
+        default="#c23934"
+      />
+      <property
+        name="uploaderOutlineColor"
+        label="Uploader Outline Color"
+        type="Color"
+        default="#5eb4ff"
+      />
+      <property
+        name="uploaderBackgroundColor"
+        label="Uploader Background Color"
+        type="Color"
+        default="#fafcfe"
+      />
+    </targetConfig>
+  </targetConfigs>
+</LightningComponentBundle>

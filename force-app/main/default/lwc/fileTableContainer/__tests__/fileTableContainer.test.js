@@ -1,9 +1,6 @@
 import { createElement } from "lwc";
 import FileTableContainer from "c/fileTableContainer";
-import getFiles from "@salesforce/apex/FileTableController.getFiles";
-const mockGetFiles = require("./data/getFiles.json");
-import { registerLdsTestWireAdapter } from "@salesforce/sfdx-lwc-jest";
-const getFilesWireAdapter = registerLdsTestWireAdapter(getFiles);
+const mockTableData = require("./data/tableData.json");
 
 describe("c-file-table-container", () => {
   afterEach(() => {
@@ -13,7 +10,7 @@ describe("c-file-table-container", () => {
     }
   });
 
-  it("Displays the file count in a header tag when there are no files", () => {
+  it('Displays the header "All Files (0)" when there are no files', () => {
     const element = createElement("c-file-table-container", {
       is: FileTableContainer
     });
@@ -24,14 +21,13 @@ describe("c-file-table-container", () => {
     expect(message.textContent).toContain("All Files (0)");
   });
 
-  it("Displays a file count of 2 if getFiles returns 2 files", () => {
+  it('Displays the header "All Files (2)" if getFiles returns 2 files', () => {
     const element = createElement("c-file-table-container", {
       is: FileTableContainer
     });
     element.recordId = "12345";
+    element.tableData = mockTableData;
     document.body.appendChild(element);
-
-    getFilesWireAdapter.emit(mockGetFiles);
 
     return Promise.resolve().then(() => {
       const message = element.shadowRoot.querySelector("h2");
@@ -39,14 +35,13 @@ describe("c-file-table-container", () => {
     });
   });
 
-  it("Will create 2 accordion sections if getFiles returns 2 unique Type__c values", () => {
+  it("Will create 2 accordion sections if getFiles returns 2 unique Type values", () => {
     const element = createElement("c-file-table-container", {
       is: FileTableContainer
     });
     element.recordId = "12345";
+    element.tableData = mockTableData;
     document.body.appendChild(element);
-
-    getFilesWireAdapter.emit(mockGetFiles);
 
     return Promise.resolve().then(() => {
       const input = element.shadowRoot.querySelector("lightning-input");

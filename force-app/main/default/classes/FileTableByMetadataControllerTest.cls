@@ -1,5 +1,5 @@
 @isTest
-private class FileTableControllerTest {
+private class FileTableByMetadataControllerTest {
   @testSetup
   static void setup() {
     Account testAcct = new Account(Name = 'Test Account');
@@ -12,7 +12,8 @@ private class FileTableControllerTest {
       Title = 'Test File',
       PathOnClient = 'Test File.jpg',
       VersionData = Blob.valueOf('Test File'),
-      IsMajorVersion = true
+      IsMajorVersion = true,
+      Type__c = 'Category A'
     );
     insert testVersion;
 
@@ -32,37 +33,50 @@ private class FileTableControllerTest {
       PathOnClient = 'Test File v2.jpg',
       VersionData = Blob.valueOf('Test File v2'),
       IsMajorVersion = true,
-      ContentDocumentId = testCDL.ContentDocumentId
+      Type__c = 'Category B'
     );
     insert testVersion2;
 
-    ContentVersion testVersion3 = new ContentVersion(
-      Title = 'Another Test File',
-      PathOnClient = 'Another Test File.jpg',
-      VersionData = Blob.valueOf('Another Test File'),
-      IsMajorVersion = true
-    );
-    insert testVersion3;
-
-    ContentDocumentLink testCDL3 = new ContentDocumentLink();
-    testCDL3.ContentDocumentId = [
+    ContentDocumentLink testCDL2 = new ContentDocumentLink();
+    testCDL2.ContentDocumentId = [
       SELECT ContentDocumentId
       FROM ContentVersion
-      WHERE Id = :testVersion3.Id
+      WHERE Id = :testVersion2.Id
     ]
     .ContentDocumentId;
-    testCDL3.LinkedEntityId = testAcct.Id;
-    testCDL3.ShareType = 'V';
-    insert testCDL3;
+    testCDL2.LinkedEntityId = testAcct.Id;
+    testCDL2.ShareType = 'V';
+    insert testCDL2;
   }
 
   @isTest
-  static void testFileOrder() {
+  static void testGetFiles() {
     Account testAccount = [SELECT Id FROM Account WHERE Name = 'Test Account'];
-    List<ContentVersion> files = FileTableController.getFiles(testAccount.Id);
+    List<String> types = new List<String>();
+    types.add('Category A');
+    types.add('Category B');
+
+    List<ContentVersion> files = FileTableByMetadataController.getFiles(
+      testAccount.Id,
+      types
+    );
 
     System.assertEquals(files.size(), 2);
-    System.assertEquals(files[0].ContentDocument.Title, 'Another Test File');
+  }
+
+  @isTest
+  static void testTypes() {
+    Account testAccount = [SELECT Id FROM Account WHERE Name = 'Test Account'];
+    List<String> types = new List<String>();
+    types.add('Category A');
+
+    List<ContentVersion> files = FileTableByMetadataController.getFiles(
+      testAccount.Id,
+      types
+    );
+
+    System.assertEquals(files.size(), 1);
+    System.assertEquals(files[0].Type__c, 'Category A');
   }
 
   @isTest
@@ -72,7 +86,13 @@ private class FileTableControllerTest {
       FROM Account
       WHERE Name = 'Another Test Account'
     ];
-    List<ContentVersion> files = FileTableController.getFiles(testAccount.Id);
+    List<String> types = new List<String>();
+    types.add('Category C');
+
+    List<ContentVersion> files = FileTableByMetadataController.getFiles(
+      testAccount.Id,
+      types
+    );
 
     System.assertEquals(files.size(), 0);
   }
@@ -80,7 +100,13 @@ private class FileTableControllerTest {
   @isTest
   static void testNoRecord() {
     String recordId = null;
-    List<ContentVersion> files = FileTableController.getFiles(recordId);
+    List<String> types = new List<String>();
+    types.add('Category C');
+
+    List<ContentVersion> files = FileTableByMetadataController.getFiles(
+      recordId,
+      types
+    );
 
     System.assertEquals(files, null);
   }

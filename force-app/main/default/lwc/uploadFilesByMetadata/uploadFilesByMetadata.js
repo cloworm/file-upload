@@ -1,16 +1,19 @@
 import { LightningElement, api, track, wire } from "lwc";
+import { getRecord, getFieldValue } from "lightning/uiRecordApi";
+import getViewDefinition from "@salesforce/apex/UploadFilesByMetadataController.getViewDefinition";
+import getUploadDefinition from "@salesforce/apex/UploadFilesByMetadataController.getUploadDefinition";
+import getFiles from "@salesforce/apex/FileTableByMetadataController.getFiles";
 import updateVersions from "@salesforce/apex/FileUploadController.updateVersions";
-import { getPicklistValues, getObjectInfo } from "lightning/uiObjectInfoApi";
-import CONTENT_VERSION_OBJECT from "@salesforce/schema/ContentVersion";
-import TYPE_FIELD from "@salesforce/schema/ContentVersion.Type__c";
-import getFiles from "@salesforce/apex/FileTableController.getFiles";
-import { refreshApex } from "@salesforce/apex";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 
 const SUCCESS_TITLE = "Success";
 const SUCCESS_VARIANT = "success";
 
-export default class UploadFilesByType extends LightningElement {
+import USER_ID from "@salesforce/user/Id";
+import PROFILE_FIELD from "@salesforce/schema/User.Profile.Name";
+import IS_PORTAL_ENABLED_FIELD from "@salesforce/schema/User.IsPortalEnabled";
+
+export default class UploadFilesByMetadata extends LightningElement {
   @api recordId;
   @api fileExtensions;
   @api table;
@@ -31,31 +34,93 @@ export default class UploadFilesByType extends LightningElement {
   @api uploaderBackgroundColor;
   @api boldFilename;
 
+  // access rules
+  @api lob;
+  allowedViewTypes = [];
+  allowedUploadTypes = [];
+
   _badgeColor;
   formValid = true;
   hasRendered;
-  tableData;
-  wiredFilesResult;
+  tableData = [];
+  types = [];
 
-  @wire(getFiles, { recordId: "$recordId" })
-  wiredFiles(result) {
-    this.wiredFilesResult = result;
+  @wire(getRecord, {
+    recordId: USER_ID,
+    fields: [PROFILE_FIELD, IS_PORTAL_ENABLED_FIELD]
+  })
+  wiredUser({ error, data }) {
+    if (data) {
+      const profile = getFieldValue(data, PROFILE_FIELD);
+      const isPortalEnabled = getFieldValue(data, IS_PORTAL_ENABLED_FIELD);
+      this.getAccessRules(profile, isPortalEnabled);
+    }
+    if (error) {
+      console.error("wiredUser error", error);
+    }
+  }
 
-    if (!result.data) return;
-    this.tableData = result.data.map((row) => {
-      const file = {
-        ...row,
-        FileType: row.ContentDocument?.FileType,
-        Title: row.ContentDocument?.Title,
-        ContentModifiedDate: row.ContentDocument?.ContentModifiedDate,
-        Owner: row.Owner?.Name,
-        OwnerSmallPhotoUrl: row.Owner?.SmallPhotoUrl,
-        ContentSize: row.ContentDocument?.ContentSize,
-        Type: row.Type__c
-      };
+  async getAccessRules(profile, isPortalEnabled) {
+    try {
+      const viewDefinition = await getViewDefinition({
+        LOB: this.lob,
+        Profile: profile,
+        isPortalEnabled
+      });
+      this.allowedViewTypes = viewDefinition
+        ? viewDefinition.Type__c.split(";")
+        : [];
+      console.log("view", JSON.parse(JSON.stringify(this.allowedViewTypes)));
 
-      return file;
-    });
+      const uploadDefinition = await getUploadDefinition({
+        LOB: this.lob,
+        Profile: profile,
+        isPortalEnabled
+      });
+      this.allowedUploadTypes = uploadDefinition
+        ? uploadDefinition.Type__c.split(";").map((val) => {
+            return {
+              label: val,
+              value: val
+            };
+          })
+        : [];
+      console.log(
+        "upload",
+        JSON.parse(JSON.stringify(this.allowedUploadTypes))
+      );
+
+      this.getFiles();
+    } catch (error) {
+      console.error("getAccessRules error", error);
+    }
+  }
+
+  getFiles() {
+    return getFiles({
+      recordId: this.recordId,
+      types: this.allowedViewTypes
+    })
+      .then((data) => {
+        if (!data) return;
+        this.tableData = data.map((row) => {
+          const file = {
+            ...row,
+            FileType: row.ContentDocument?.FileType,
+            Title: row.ContentDocument?.Title,
+            ContentModifiedDate: row.ContentDocument?.ContentModifiedDate,
+            Owner: row.Owner?.Name,
+            OwnerSmallPhotoUrl: row.Owner?.SmallPhotoUrl,
+            ContentSize: row.ContentDocument?.ContentSize,
+            Type: row.Type__c
+          };
+
+          return file;
+        });
+      })
+      .catch((error) => {
+        console.error("getFiles error", error);
+      });
   }
 
   renderedCallback() {
@@ -86,31 +151,12 @@ export default class UploadFilesByType extends LightningElement {
     this.hasRendered = true;
   }
 
-  types = [];
-
-  @wire(getObjectInfo, { objectApiName: CONTENT_VERSION_OBJECT })
-  objectInfo;
-
-  @wire(getPicklistValues, {
-    recordTypeId: "$objectInfo.data.defaultRecordTypeId",
-    fieldApiName: TYPE_FIELD
-  })
-  wiredTypes({ error, data }) {
-    if (data) {
-      this.types = data.values;
-    }
-
-    if (error) {
-      console.error("error", error);
-    }
-  }
-
   get hasFiles() {
     return this.filesUploaded && this.filesUploaded.length > 0;
   }
 
   handleRefresh() {
-    refreshApex(this.wiredFilesResult);
+    return this.getFiles();
   }
 
   handleOpenModal() {
@@ -123,7 +169,6 @@ export default class UploadFilesByType extends LightningElement {
     modal.hide();
 
     // Refresh the fileTableContainer apex query
-    // this.template.querySelector("c-file-table-container").refresh();
     await this.handleRefresh();
 
     // Move files to uploaded list
@@ -184,7 +229,6 @@ export default class UploadFilesByType extends LightningElement {
 
         if (this.table) {
           // Refresh the fileTableContainer apex query
-          // this.template.querySelector("c-file-table-container").refresh();
           await this.handleRefresh();
         }
       })
@@ -201,7 +245,6 @@ export default class UploadFilesByType extends LightningElement {
         Type__c: Type
       };
       await updateVersions({ contentVersions: [version] });
-
       // Refresh apex query
       await this.handleRefresh();
 
